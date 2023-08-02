@@ -1,34 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# EnternFlix
 
-## Getting Started
+This is movie application where viewers can manage movies tv-shows and watch online even they can download it as well. 
 
-First, run the development server:
+## Features
+
+### 👤 Users
+- Browse Movies/Shows
+- Search Movies/Shows
+- Login/Sign Up
+
+## Run Locally
+
+Clone the project
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
+  git clone https://github.com/MsRachael/Entern-Flix.git
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Go to the project directory
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+  cd acharya
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Install dependencies
 
-## Learn More
+```bash
+  npm install
+```
 
-To learn more about Next.js, take a look at the following resources:
+Start the server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+  npm run start
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Support
 
-## Deploy on Vercel
+For support, [email](mailto:dev.lailadulce@protonmail.com) or message on [Instagram](https://instagram.com/i3ewomen).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Appendix
+
+This project is prohibited to use for commercial purpose.
+
+## Authors
+
+- [Ms Rachael Lee](https://www.github.com/MsRachael)
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)

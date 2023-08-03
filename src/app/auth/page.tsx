@@ -19,10 +19,10 @@ const Auth = () => {
     const register = useCallback(async () => {
         try {
             await axios.post('/api/register', {
-            email, username, password
+                email, username, password
             });
         } catch (error) {
-            console.log(error);    
+            console.log(error);
         }
     }, [email, username, password])
 
@@ -30,10 +30,17 @@ const Auth = () => {
         <div className="relative h-full w-full 
     bg-[url('https://assets.nflxext.com/ffe/siteui/vlv3/5eab1b22-c5ea-48b0-8ef4-862b3fa6df2c/4af43238-4df9-4946-9920-a4bd55f2e50b/IN-en-20230724-popsignuptwoweeks-perspective_alpha_website_medium.jpg')] 
     bg-no-repeat bg-fixed bg-center bg-cover">
-            <div className="bg-black w-full h-full lg:bg-opacity-50">
-                <nav className="px-44 py-5">
-                    <img className="h-12" src="/img/logo.png" alt="logo" />
-                </nav>
+               <div className="bg-black w-full h-full lg:bg-opacity-50">
+        <nav className="px-44 py-5 bg-gradient-to-b from-neutral-900 flex items-center justify-between">
+          <img className="h-12" src="/img/logo.png" alt="logo" />
+          <div className="flex items-center justify-center gap-3">
+            <select name="" id="" className="text-white w-auto min-w-fit rounded-md m-3 py-2 px-4 
+            bg-transparent border border-solid border-zinc-600 focus:outline-none">
+              <option value="">English</option>
+              <option value="">Other</option>
+            </select>
+          </div>
+        </nav>
                 <div className="flex justify-center">
                     <div className="bg-black bg-opacity-70 py-16 px-16 self-center mt-2 lg:w2/5
                 lg:max-w-md rounded-e-md w-full">

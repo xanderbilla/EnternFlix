@@ -5,6 +5,7 @@ import axios from '@/helper/axios';
 import React, { useEffect, useState } from 'react'
 import {AiOutlineInfoCircle} from 'react-icons/ai'
 import {BsPlayFill} from 'react-icons/bs'
+import Image from 'next/image';
 
 const Banner = () => {
 
@@ -20,18 +21,19 @@ const Banner = () => {
         return request
     }
 
+    console.log(movie);
+
     useEffect(() => {
         fetchData()
     }, [])
 
-    console.log(movie);
-
-    const truncate = (string, n) => {
+    const truncate = (string:string, n:number) => {
         return string?.length > n ? string.substr(0, n - 1) + '...' : string
     }
     return (
         <div className="relative h-4/5">
-            <img className='w-full h-full object-cover brightness-[60%]' 
+            <Image className='w-full h-full object-cover brightness-[60%]' 
+            fill
             src={`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`} 
             alt="" />
             <div className='absolute top-[30%] md:top-[40%] ml-4 md:ml-16'>
@@ -46,7 +48,7 @@ const Banner = () => {
                     <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
                         <button className="bg-white text-black rounded-[4px] 
                         py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold 
-                        flex flex-row items-center hover:bg-opacity-90 transition">
+                        flex flex-row items-center hover:bg-neutral-300 transition">
                             <BsPlayFill className="mr-1"/> Play
                         </button>
                         <button className="bg-white text-white bg-opacity-30 rounded-[4px] 

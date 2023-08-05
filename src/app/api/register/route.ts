@@ -2,7 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import bcrypt from "bcrypt";
 import prismadb from "@/lib/prismadb";
 
-export default async function handler(request) {
+export default async function handler(request: NextRequest) {
   try {
     if (request.method !== "POST") {
       return new NextResponse("Method not allowed", {
@@ -10,7 +10,8 @@ export default async function handler(request) {
       });
     }
 
-    const { email, password, username } = await request.json();
+    const { email, password, username, image } = await request.json(); // Added 'image'
+
     const existingUser = await prismadb.user.findUnique({
       where: {
         email,
@@ -23,7 +24,7 @@ export default async function handler(request) {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10); // Increased the cost factor
+    const hashedPassword = await bcrypt.hash(password, 12); // Increased the cost factor
 
     const user = await prismadb.user.create({
       data: {
@@ -35,14 +36,13 @@ export default async function handler(request) {
       },
     });
 
-    return new NextResponse("User has been created", {
+    return new NextResponse(JSON.stringify(user), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(user),
     });
-  } catch (error) {
+  } catch (error: any) {
     return new NextResponse(error.message, {
       status: 500,
     });

@@ -1,4 +1,4 @@
-import react from 'react'
+import { twMerge } from 'tailwind-merge'
 
 interface InputProps {
     id: string;
@@ -6,17 +6,18 @@ interface InputProps {
     value: string;
     label: string;
     type: string;
+    className: string;
 }
 
 const Input: React.FC<InputProps> = ({
-    id, onChange, type, label, value
+    id, onChange, type, label, value, className
 }) => {
     return (
         <div className="relative">
             <input
-                className="block rounded-md px-6 pt-6 pb-1 w-full text-md
+                className={twMerge(`block rounded-md px-6 pt-6 pb-1 w-full text-md
     text-white bg-neutral-700 appearance-none focus:outline-none 
-    focus:ring-0 peer"
+    focus:ring-0 peer`, className)}
                 id={id}
                 type={type}
                 value={value}

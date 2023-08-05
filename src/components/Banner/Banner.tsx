@@ -36,13 +36,13 @@ const Banner = () => {
             fill
             src={`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`} 
             alt="" />
-            <div className='absolute top-[30%] md:top-[40%] ml-4 md:ml-16'>
-                <p className='text-white text-1xl md:text-5xl h-full w-[50%] lg:text-6xl 
+            <div className='absolute top-[40%] ml-4 md:ml-16'>
+                <p className='text-white text-2xl md:text-5xl h-full w-[50%] lg:text-6xl 
                 font-bold drop-shadow-xl'>
                     {movie?.title || movie?.name || movie?.original_name}
                     </p>
-                    <p className="text-white text-[8px] md:text-lg mt-3 md:mt-8 
-                    w-[90%] md:w-[80%] lg:w-[50%] drop-shadow-xl">
+                    <p className="text-white text-xs md:text-base mt-3 md:mt-8 
+                    w-[90%] md:w-[80%] lg:w-[50%] lg:text-lg drop-shadow-xl">
                         {truncate(movie?.overview, 150)}
                     </p>
                     <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">

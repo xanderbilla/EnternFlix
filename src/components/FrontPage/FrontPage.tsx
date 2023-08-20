@@ -1,6 +1,7 @@
 "use client"
 
 import Input from "@/components/Input/Input"
+import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
 import {IoIosArrowForward} from 'react-icons/io'
@@ -15,7 +16,7 @@ export default function Home() {
     bg-no-repeat bg-fixed bg-center bg-cover">
       <div className="bg-black w-full h-full lg:bg-opacity-50">
         <nav className="px-44 py-5 bg-gradient-to-b from-neutral-900 flex items-center justify-between">
-          <img className="h-12" src="/img/logo.png" alt="logo" />
+          <Image height={60} width={120} src="/img/logo.png" alt="logo" />
           <div className="flex items-center justify-center gap-3">
             <select name="" id="" className="text-white w-auto min-w-fit rounded-md m-3 py-2 px-4 
             bg-transparent border border-solid border-zinc-600 focus:outline-none">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import axios from "@/helper/axios";
 import MovieCard from "../MovieCard/MovieCard";
 
@@ -20,7 +20,7 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
     const [movies, setMovies] = useState<Movie[]>([]);
     const base_url = 'https://image.tmdb.org/t/p/original/';
 
-    const fetchData = async () => {
+    const fetchData = useCallback(async () => {
         try {
             const request = await axios.get(data);
             setMovies(request.data.results);
@@ -29,11 +29,11 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
             console.error('Error fetching data:', error);
             return null;
         }
-    };
+    }, [data]);
 
     useEffect(() => {
         fetchData();
-    }, [data]);
+    }, [fetchData]);
 
     if (!movies || movies.length === 0) {
         return null;

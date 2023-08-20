@@ -13,7 +13,7 @@ const Home = () => {
 
   return (
     <>
-    <InfoModal visible={isOpen} onClose={closeModal}/>
+    <InfoModal visible={isOpen} onClose={closeModal} movieId={123}/>
       <Navbar />
       <Banner />
       <div className="pb-40">

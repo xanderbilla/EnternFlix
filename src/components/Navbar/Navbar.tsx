@@ -5,6 +5,7 @@ import MobileMenu from "@/components/MobileMenu/MobileMenu"
 import AccountMenu from "@/components/AccountMenu/AccountMenu"
 import { BsBell, BsChevronDown, BsSearch } from 'react-icons/bs'
 import { useState, useCallback, useEffect } from "react"
+import Image from "next/image"
 
 const TOP_OFFSET = 66;
 
@@ -43,7 +44,7 @@ const Navbar = () => {
         <nav className="w-full fixed z-40">
             <div className={`px-4 md:px-16 py-6 flex flex-row items-center transition
     duration-500 ${showBackground ? 'bg-zinc-900 bg-opacity-95' : ''}`}>
-                <img className="h-4 lg:h-7" src="/img/logo.png" alt="logo" />
+                <Image height={70} width={80} src="/img/logo.png" alt="logo" />
                 <div className="flex-row ml-8 gap-7 hidden lg:flex">
                     <NavbarItems label="Home" />
                     <NavbarItems label="TV Shows" />
@@ -66,7 +67,7 @@ const Navbar = () => {
                     </div>
                     <div onClick={toggleAccountMenu} className="flex flex-row items-center gap-2 cursor-pointer relative">
                         <div className="w-6 h-6 lg:w-10 lg:h-10 rounded-md overflow-hidden">
-                            <img src="/img/default-blue.png" alt="avatar" />
+                            <Image height={40} width={40} src="/img/default-blue.png" alt="avatar" />
                         </div>
                         <BsChevronDown className={`text-white transition ${showAccountMenu ? 'rotate-180' : 'rotate-0'}`} />
                         <AccountMenu visible={showAccountMenu} />

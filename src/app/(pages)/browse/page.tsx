@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 
@@ -9,7 +10,7 @@ const Page = () => {
 
   return (
     <div className="relative h-screen flex flex-col items-center justify-center">
-      <div className="absolute h-16 md:h-24 top-6 lg:left-6 lg:top-6">
+      <Link href="/" className="absolute h-16 md:h-24 top-6 lg:left-6 lg:top-6">
         <Image
           className="rounded-sm"
           src="/img/logo.png"
@@ -18,7 +19,7 @@ const Page = () => {
           width={80}
           onClick={() => router.push("/")}
         />
-      </div>
+      </Link>
       <div className=" flex flex-col items-center justify-center gap-14 md:gap-10 h-4/5 md:mt-16">
         <h1 className="text-white text-4xl md:text-5xl lg:text-5xl">
           Who&#39;s Watching?

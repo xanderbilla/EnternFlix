@@ -6,13 +6,22 @@ import AccountMenu from "@/components/AccountMenu/AccountMenu";
 import { BsBell, BsChevronDown, BsSearch } from "react-icons/bs";
 import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { twMerge } from "tailwind-merge";
 
 const TOP_OFFSET = 66;
 
-const Navbar = () => {
+type NavbarProps = {
+  classname?: string;
+};
+
+const Navbar = (
+  { classname = "" }: NavbarProps
+) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showBackground, setShowBackground] = useState(false);
+  const router = useRouter();
 
   const toggleAccountMenu = useCallback(() => {
     setShowAccountMenu((current) => !current);
@@ -39,12 +48,12 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="w-full fixed z-40">
+    <nav className={twMerge("w-full fixed z-40", classname)}>
       <div
         className={`px-4 md:px-16 py-6 flex flex-row items-center transition
     duration-500 ${showBackground ? "bg-zinc-900 bg-opacity-95" : ""}`}
       >
-        <Image height={70} width={80} src="/img/logo.png" alt="logo" />
+        <Image height={70} width={80} src="/img/logo.png" alt="logo" onClick={() => router.push("/")} className="cursor-pointer"/>
         <div className="flex-row ml-8 gap-7 hidden lg:flex">
           <NavbarItems label="Home" />
           <NavbarItems label="TV Shows" />
@@ -67,7 +76,7 @@ const Navbar = () => {
         </div>
         <div className="flex flex-row ml-auto gap-7 items-center">
           <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-            <BsSearch size={20} />
+            <BsSearch size={20} onClick={() => router.push("/search")}/>
           </div>
           <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
             <BsBell size={20} />

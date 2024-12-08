@@ -39,6 +39,10 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
         return null;
     }
 
+
+    console.log(movies);
+    
+
     return (
         <div className="px-4 md:px-12 mt-4 space-y-8">
             <div className="mb-8">
@@ -46,7 +50,7 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
                     {title}
                 </p>
                 <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-                    {movies.map((movie) => (
+                    {movies.slice(0, 7).map((movie) => (
                         <MovieCard key={movie.id} data={movie} />
                     ))}
                 </div>

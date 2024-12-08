@@ -3,7 +3,7 @@ import React from "react";
 import { BsFillPlayFill } from "react-icons/bs";
 import { IoIosArrowDown, IoMdAdd } from "react-icons/io";
 import { SlLike } from "react-icons/sl";
-import { RxCross1 } from "react-icons/rx";
+// import { RxCross1 } from "react-icons/rx";
 import useInfoModal from "@/hooks/useInfoModal/useInfoModal";
 interface MovieCardProps {
   data: Record<string, any>;
@@ -11,7 +11,6 @@ interface MovieCardProps {
 
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
   const { openModal } = useInfoModal();
-
   return (
     <div className="group flex flex-col bg-zinc-900 col-span relative w-full h-[36vh] lg:h-[36vh] md:h-[36vh]">
       <Image
@@ -41,7 +40,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
               flex justify-center items-center transition hover:bg-neutral-300"
                 onClick={() => {}}
               >
-                <BsFillPlayFill size={26} />
+                <BsFillPlayFill size={26} color="black" />
               </div>
               <div
                 className="cursor-pointer ml-auto w-6 h-6 lg:w-10 lg:h-10 border-white 

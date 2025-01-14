@@ -3,6 +3,8 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "@/helper/axios";
 import MovieCard from "../MovieCard/MovieCard";
+import Image from "next/image";
+import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 interface Movie {
   id: number;
@@ -12,51 +14,80 @@ interface Movie {
 interface MovieListProps {
   // data: Record<string, any>[];
   data: string;
-//   data: { results: Movie[] };
+  //   data: { results: Movie[] };
   title: string;
 }
 
 const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
-    const [movies, setMovies] = useState<Movie[]>([]);
-    const base_url = 'https://image.tmdb.org/t/p/original/';
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
 
-    const fetchData = useCallback(async () => {
-        try {
-            const request = await axios.get(data);
-            setMovies(request.data.results);
-            return request;
-        } catch (error) {
-            console.error('Error fetching data:', error);
-            return null;
-        }
-    }, [data]);
-
-    useEffect(() => {
-        fetchData();
-    }, [fetchData]);
-
-    if (!movies || movies.length === 0) {
-        return null;
+  const scroll = (direction: "left" | "right") => {
+    if (scrollRef.current) {
+      const { current } = scrollRef;
+      const scrollAmount =
+        direction === "left" ? -current.offsetWidth : current.offsetWidth;
+      current.scrollBy({ left: scrollAmount, behavior: "smooth" });
     }
+  };
 
+  const fetchData = useCallback(async () => {
+    try {
+      const request = await axios.get(data);
+      setMovies(request.data.results);
+      return request;
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      return null;
+    }
+  }, [data]);
 
-    console.log(movies);
-    
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
-    return (
-        <div className="px-4 md:px-12 mt-4 space-y-8">
-            <div className="mb-8">
-                <p className="text-white text-md md:text-xl lg:text-2xl font-semibold mb-4">
-                    {title}
-                </p>
-                <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
-                    {movies.slice(0, 7).map((movie) => (
-                        <MovieCard key={movie.id} data={movie} />
-                    ))}
-                </div>
-            </div>
+  if (!movies || movies.length === 0) {
+    return null;
+  }
+
+  console.log(movies);
+
+  return (
+    <div className="px-4 md:px-12 mt-4 space-y-8 relative">
+      <div className="mb-8 flex flex-col md:gap-2 lg:gap-4">
+        <p className="text-white text-md text-lg md:text-xl lg:text-2xl font-semibold mb-4">
+          {title}
+        </p>
+        <div className="relative">
+            <button
+            onClick={() => scroll("left")}
+            className="absolute left-0 top-0 bottom-0 z-[60] w-12 bg-black bg-opacity-30 items-center justify-center cursor-pointer hover:bg-opacity-50 transition hidden md:flex"
+            >
+            <BsChevronLeft className="w-6 h-6 text-white" />
+            </button>
+
+          <div
+            id="movie-list"
+            ref={scrollRef}
+            className="flex space-x-3 overflow-x-scroll md:overflow-x-hidden w-full h-full"
+          >
+            {movies.map((movie) => (
+              <div key={movie.id} className="flex-shrink-0 w-48 md:w-64">
+                <MovieCard data={movie} />
+              </div>
+            ))}
+          </div>
+
+            <button
+            onClick={() => scroll("right")}
+            className="absolute right-0 top-0 bottom-0 z-[60] w-12 bg-black bg-opacity-30 items-center justify-center cursor-pointer hover:bg-opacity-50 transition hidden md:flex"
+            >
+            <BsChevronRight className="w-6 h-6 text-white" />
+            </button>
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default MovieList;

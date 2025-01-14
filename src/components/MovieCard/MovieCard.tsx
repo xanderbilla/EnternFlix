@@ -12,7 +12,7 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
   const { openModal } = useInfoModal();
   return (
-    <div className="group flex flex-col bg-zinc-900 col-span relative w-full h-[36vh] lg:h-[36vh] md:h-[36vh]">
+    <div className="group flex flex-col bg-zinc-900 col-span relative w-48 md:w-64 h-72 md:h-96">
       <Image
         className="cursor-pointer object-fill lg:object-fill transition duration shadow-xl rounded-md 
         group-hover:opacity-90 sm:group-hover:opacity-0 delay-300 w-full h-full"
@@ -23,7 +23,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
       <div
         className="h-[56vh] opacity-0 absolute top-0 transition duration-500 z-10
       invisible sm:visible delay-300 w-[350px] scale-0 group-hover:scale-110 
-      group-hover:-translate-y-[6vw] group-hover:translate-x-[2vw] group-hover:opacity-100"
+      group-hover:-translate-y-[6vw] group-hover:translate-x-[2vw] group-hover:opacity-100 hidden sm:block"
       >
         <Image
           className="cursor-pointer absolute object-scale-down transition duration shadow-xl 

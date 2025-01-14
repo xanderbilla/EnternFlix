@@ -37,7 +37,7 @@ const Banner: React.FC = () => {
   };
 
   return (
-    <div className="relative h-4/5">
+    <div className="relative h-[80vh] w-full"> 
       {movie && ( // Added a conditional rendering check for movie
         <>
           <Image
@@ -47,36 +47,38 @@ const Banner: React.FC = () => {
             width={1920} // Adjust width and height as needed
             height={1080}
           />
-          <div className="absolute top-[40%] ml-4 md:ml-16">
-            <p
+            <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-black to-transparent">
+            <div className="absolute top-[40%] ml-4 md:ml-16">
+              <p
               className="text-white text-2xl md:text-5xl h-full w-[50%] lg:text-6xl 
-                  font-bold drop-shadow-xl"
-            >
+                font-bold drop-shadow-xl"
+              >
               {movie.title || movie.name || movie.original_name}
-            </p>
-            <p
+              </p>
+              <p
               className="text-white text-xs md:text-base mt-3 md:mt-8 
-                  w-[90%] md:w-[80%] lg:w-[50%] lg:text-lg drop-shadow-xl"
-            >
+                w-[90%] md:w-[80%] lg:w-[50%] lg:text-lg drop-shadow-xl"
+              >
               {truncate(movie.overview, 150)}
-            </p>
-            <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
+              </p>
+              <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
               <button
                 className="bg-white text-black rounded-[4px] 
-                    py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold 
-                    flex flex-row items-center hover:bg-neutral-300 transition"
+                  py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold 
+                  flex flex-row items-center hover:bg-neutral-300 transition"
               >
                 <BsPlayFill className="mr-1" /> Play
               </button>
               <button
                 className="bg-white text-white bg-opacity-30 rounded-[4px] 
-                    py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold 
-                    flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
+                  py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold 
+                  flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
               >
                 <AiOutlineInfoCircle className="mr-1" /> More Info
               </button>
+              </div>
             </div>
-          </div>
+            </div>
         </>
       )}
     </div>

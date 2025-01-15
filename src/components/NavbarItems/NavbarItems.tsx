@@ -13,7 +13,7 @@ const NavbarItems: React.FC<NavbarItemProps> = ({ label, path }) => {
   return (
     <div
       className="text-white cursor-pointer hover:text-gray-300 transition"
-      onClick={() => path && router.push(path)}
+      onClick={() => path && router.push(`/category/${path}`)}
     >
       {label}
     </div>

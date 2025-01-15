@@ -83,7 +83,7 @@ const InfoModal: React.FC<InfoModalProps> = ({ visible, onClose, movieId }) => {
                         <div className="flex flex-[0.5] items-center gap-2 mb-8">
                             <div className="w-full flex-col items-center justify-center">
                                 <div className="w-full h-14 flex items-center justify-center py-4">
-                                    <Image src="/img/logo.png" width={100} height={100} alt="" />
+                                    <Image src="/logo.png" width={100} height={100} alt="" />
                                 </div>
                                 <div className="flex gap-2 items-center justify-center mb-2">
                                     <p className="text-green-400 font-semibold text-lg">

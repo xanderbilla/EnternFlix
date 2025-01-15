@@ -6,7 +6,7 @@ const BasicNav = () => {
   return (
     <nav className="px-24 py-5 bg-gradient-to-b from-neutral-900 flex items-center 
     justify-between">
-      <Image height={60} width={120} src="/img/logo.png" alt="logo" />
+      <Image height={60} width={120} src="/logo.png" alt="logo" />
       <div className="flex items-center justify-center gap-3">
         <select
           name=""

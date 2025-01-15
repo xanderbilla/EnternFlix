@@ -83,8 +83,8 @@ const route = useRouter();
                 </button>
               </div>
             </div>
-            <div className="absolute bottom-0 inset-x-0 w-full h-16 bg-gradient-to-t 
-          from-zinc-900 to-transparent"/>
+          <div className="absolute bottom-0 inset-x-0 w-full h-16 bg-gradient-to-t 
+            from-zinc-900 to-transparent"/>
           </div>
         </>
       )}

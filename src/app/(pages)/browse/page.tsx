@@ -13,7 +13,7 @@ const Page = () => {
       <Link href="/" className="absolute h-16 md:h-24 top-6 lg:left-6 lg:top-6">
         <Image
           className="rounded-sm"
-          src="/img/logo.png"
+          src="/logo.png"
           alt="Logo"
           height={70}
           width={80}

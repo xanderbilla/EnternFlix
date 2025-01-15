@@ -28,7 +28,7 @@ const Auth = () => {
     >
       <div className="bg-black w-full h-full lg:bg-opacity-50">
         <nav className="px-44 py-5 bg-gradient-to-b from-neutral-900 flex items-center justify-between">
-          <Image height={48} src="/img/logo.png" alt="logo" />
+          <Image height={70} width={120} src="/logo.png" alt="logo" />
           <div className="flex items-center justify-center gap-3">
             <select
               name=""

@@ -25,7 +25,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
       <div
         className="h-[56vh] opacity-0 absolute top-0 transition duration-500 z-10
       invisible ease-in-out sm:visible delay-500 w-[460px] scale-0 group-hover:scale-105 
-      group-hover:-translate-y-[4vw] group-hover:translate-x-[1vw] group-hover:opacity-100"
+      group-hover:-translate-y-[4vw] group-hover:translate-x-[1vw] group-hover:opacity-100 hidden sm:block"
       >
         <Image
           className="cursor-pointer absolute object-scale-down transition duration shadow-xl 

@@ -17,6 +17,14 @@ type NavbarProps = {
   classname?: string;
 };
 
+const navbarItems = [
+  { label: "TV Shows", path: "/tv" },
+  { label: "Anime", path: "/anime" },
+  { label: "Movies", path: "/movies" },
+  { label: "New & Popular", path: "/new" },
+  { label: "My List", path: "/my-list" },
+];
+
 const Navbar = ({ classname = "" }: NavbarProps) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showAccountMenu, setShowAccountMenu] = useState(false);
@@ -60,21 +68,17 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
           <BsList className="text-white" size={24} />
         </div>
         <Image
-          height={70}
-          width={80}
-          src="/img/logo.png"
+          height={90}
+          width={150}
+          src="/logo.png"
           alt="logo"
           onClick={() => router.push("/")}
           className="cursor-pointer ml-4"
         />
         <div className="flex-row ml-8 gap-7 hidden lg:flex">
-          <NavbarItems label="Home" />
-          <NavbarItems label="TV Shows" />
-          <NavbarItems label="Anime" />
-          <NavbarItems label="Movies" />
-          <NavbarItems label="New & Popular" />
-          <NavbarItems label="My List" />
-          <NavbarItems label="Browse by Language" />
+          {navbarItems.map((item, index) => (
+            <NavbarItems key={index} label={item.label} path={item.path} />
+          ))}
         </div>
         <div className="flex flex-row ml-auto gap-7 items-center">
           <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">

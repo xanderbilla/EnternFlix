@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "@/helper/axios";
 import MovieCard from "../MovieCard/MovieCard";
-import Image from "next/image";
 import { BsChevronLeft, BsChevronRight } from "react-icons/bs";
 
 interface Movie {
@@ -56,8 +55,8 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
 
   return (
     <div className="px-4 md:px-12 mt-4 space-y-8 relative">
-      <div className="mb-8 flex flex-col md:gap-2 lg:gap-4">
-        <p className="text-white text-md text-lg md:text-xl lg:text-2xl font-semibold mb-4">
+      <div className="flex flex-col md:gap-2 lg:gap-4">
+        <p className="text-white text-md text-lg md:text-xl lg:text-2xl font-medium">
           {title}
         </p>
         <div

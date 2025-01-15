@@ -8,10 +8,7 @@ import InfoModal from "@/components/InfoModal/InfoModal";
 import useInfoModal from "@/hooks/useInfoModal/useInfoModal";
 
 const Home = () => {  
-
   const {isOpen, closeModal} = useInfoModal();
-  
-
   return (
     <>
     <InfoModal visible={isOpen} onClose={closeModal} movieId={123}/>

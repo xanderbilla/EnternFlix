@@ -17,7 +17,7 @@ const Home = () => {
     <InfoModal visible={isOpen} onClose={closeModal} movieId={123}/>
       <Navbar />
       <Banner />
-      <div className="pb-4 mt-4 md:mt-8 lg:mt-10">
+      <div className="pb-4 mt-2 md:mt-4 lg:mt-6">
         <MovieList title="Trending" data={requests.fetchTrending} />
         <MovieList title="Popular" data={requests.fetchNetflixOriginals} />
         <MovieList title="Top Rated" data={requests.fetchTopRated} />

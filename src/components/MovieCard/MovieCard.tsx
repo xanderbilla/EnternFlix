@@ -5,11 +5,13 @@ import { IoIosArrowDown, IoMdAdd } from "react-icons/io";
 import { SlLike } from "react-icons/sl";
 // import { RxCross1 } from "react-icons/rx";
 import useInfoModal from "@/hooks/useInfoModal/useInfoModal";
+import { useRouter } from "next/navigation";
 interface MovieCardProps {
   data: Record<string, any>;
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
+  const route = useRouter();
   const { openModal } = useInfoModal();
   return (
     <div className="group flex flex-col bg-zinc-900 col-span relative w-48 md:w-64 h-72 md:h-[52vh]">
@@ -22,8 +24,8 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
       />
       <div
         className="h-[56vh] opacity-0 absolute top-0 transition duration-500 z-10
-      invisible sm:visible delay-300 w-[350px] scale-0 group-hover:scale-110 
-      group-hover:-translate-y-[6vw] group-hover:translate-x-[2vw] group-hover:opacity-100"
+      invisible ease-in-out sm:visible delay-500 w-[460px] scale-0 group-hover:scale-105 
+      group-hover:-translate-y-[4vw] group-hover:translate-x-[1vw] group-hover:opacity-100"
       >
         <Image
           className="cursor-pointer absolute object-scale-down transition duration shadow-xl 
@@ -67,7 +69,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
               {/* <div
               className="cursor-pointer w-6 h-6 lg:w-10 lg:h-10 border border-neutral-100 text-white rounded-full 
               flex justify-center items-center transition hover:bg-white hover:text-black"
-              onClick={() => {}}F
+              onClick={() => {}}
             >
               <RxCross1 size={18} />
             </div> */}
@@ -75,7 +77,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
             <div
               className="cursor-pointer ml-auto group/item w-6 h-6 lg:w-10 lg:h-10 border-white 
               border-2 rounded-full flex justify-center items-center transition hover:border-neutral-300"
-              onClick={() => openModal("45")}
+              onClick={() => route.push('/title/70205012')} //Route to movie details page
             >
               <IoIosArrowDown
                 size={24}

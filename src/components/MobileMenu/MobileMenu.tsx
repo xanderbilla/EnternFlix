@@ -1,39 +1,38 @@
-import React from 'react'
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
-interface MobileMenuProps{
-    visible: boolean
+interface MobileMenuProps {
+  visible: boolean;
+  items: { path: string; label: string }[];
 }
 
-const MobileMenu: React.FC<MobileMenuProps> = ({
-    visible
-}) => {
-    if(!visible) {
-        return null
-    }
+const MobileMenu: React.FC<MobileMenuProps> = ({ items, visible }) => {
+  if (!visible) {
+    return null;
+  }
   return (
-    <div className='w-full h-[50vh] flex-col flex items-center justify-center'>
-        <div className="flex flex-col gap-4">
-            <div className="px-3 text-center text-white hover:underline">
-                Home
-            </div>
-            <div className="px-3 text-center text-white hover:underline">
-                TV Shows
-            </div>
-            <div className="px-3 text-center text-white hover:underline">
-                Movies
-            </div>
-            <div className="px-3 text-center text-white hover:underline">
-                New & Popular
-            </div>
-            <div className="px-3 text-center text-white hover:underline">
-                My List
-            </div>
-            <div className="px-3 text-center text-white hover:underline">
-                Browse by Language
-            </div>
-        </div>
+    <div className="w-full h-[50vh] flex-col flex items-center justify-center">
+      <div className="flex flex-col gap-4">
+        <Image
+          src="/logo.png"
+          alt="logo"
+          width={200}
+          height={90}
+          className="cursor-pointer"
+        />
+        {items.map((item, index) => (
+          <Link
+            href={item.path}
+            key={index}
+            className="px-3 text-xl text-center text-white hover:underline"
+          >
+            {item.label}
+          </Link>
+        ))}
+      </div>
     </div>
-  )
-}
+  );
+};
 
-export default MobileMenu
+export default MobileMenu;

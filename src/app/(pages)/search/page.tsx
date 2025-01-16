@@ -6,6 +6,8 @@ import axios from "@/helper/axios";
 import requests from "@/helper/request";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar/Navbar";
+import instance from "@/helper/axios";
+import SearchList from "./component/SearchList";
 
 interface Movie {
   backdrop_path: string;
@@ -13,14 +15,26 @@ interface Movie {
   name: string;
   original_name: string;
   overview: string;
+  media_type: string;
 }
 
 const Page: React.FC = () => {
   const [movie, setMovie] = useState<Movie | null>(null); // Changed initial state type
-  const route = useRouter();
+  const [searchRes, setSearchRes] = useState<Movie[]>([]); // Changed initial state type
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  const fetchSearchResults = async () => {
+    try {
+      const res = await instance.get(`${requests.searchRequest}${searchQuery}`);
+      setSearchRes(res.data.results);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
+
   const fetchData = async () => {
     try {
-      const request = await axios.get(requests.fetchNetflixOriginals);
+      const request = await instance.get(requests.fetchTrending);
       const randomIndex = Math.floor(
         Math.random() * request.data.results.length
       );
@@ -30,102 +44,72 @@ const Page: React.FC = () => {
     }
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTimeout(() => {
+      setSearchQuery(e.target.value);
+    }, 2000);
+  };
+
   useEffect(() => {
     fetchData();
   }, []);
 
-  console.log(movie);
+  useEffect(() => {
+    fetchSearchResults();
+  }, [searchQuery]);
+
+  console.log(searchRes);
 
   return (
     <>
-    <Navbar />
-      <div className="relative w-full">
-        {movie && ( // Added a conditional rendering check for movie
+      <Navbar />
+      <div className="relative w-full ">
+        {movie && (
           <>
-            <Image
-              className="w-full h-64 object-cover brightness-[80%]"
-              src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
-              alt=""
-              width={1920} // Adjust width and height as needed
-              height={1080}
-            />
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-10 w-10/12 flex items-center justify-center h-36">
+            <div className="relative w-full h-80">
+              <Image
+                className="w-full h-full object-cover brightness-[80%]"
+                src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
+                alt=""
+                width={1920} // Adjust width and height as needed
+                height={1080}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 to-transparent"></div>
+            </div>
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-10 w-10/12 flex flex-col sm:flex-row items-center justify-center h-auto sm:h-36 gap-2 p-4">
               <input
                 type="text"
                 placeholder="Search for movies, TV shows, videos, or cast..."
-                className="w-full p-4 rounded bg-zinc-800 text-white text-lg focus:border-red-500"
+                className="w-full sm:w-3/4 p-4 rounded bg-zinc-800 text-white text-lg focus:border-red-500"
+                onChange={handleSearch}
               />
             </div>
           </>
         )}
       </div>
       <div className="flex flex-col gap-4 px-12">
-        <div className="py-4">
-          <h1 className="text-4xl font-bold mb-6 text-white">Movie</h1>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
-            {Array.from({ length: 7 }).map((_, index) => (
-              <div
-                key={index}
-                className="bg-zinc-800 w-48 h-72 p-1 rounded shadow"
-              >
-                <div className="animate-pulse h-full">
-                  <div className="bg-zinc-900 h-full rounded"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="py-4">
-          <h1 className="text-4xl font-bold mb-6 text-white">Tv Shows</h1>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
-            {Array.from({ length: 7 }).map((_, index) => (
-              <div
-                key={index}
-                className="bg-zinc-800 w-48 h-72 p-1 rounded shadow"
-              >
-                <div className="animate-pulse h-full">
-                  <div className="bg-zinc-900 h-full rounded"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="py-4">
-          <h1 className="text-4xl font-bold mb-6 text-white">Videos</h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="bg-zinc-800 p-1 rounded shadow">
-                <div className="animate-pulse">
-                  <div className="bg-zinc-900 h-40 mb-2 rounded"></div>
-                  <div className="p-2">
-                    <div className="w-full flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 lg:w-10 lg:h-10 bg-zinc-900 rounded-full"></div>
-                        <div className="w-8 h-8 lg:w-10 lg:h-10 bg-zinc-900 rounded-full"></div>
-                        <div className="w-8 h-8 lg:w-10 lg:h-10 bg-zinc-900 rounded-full"></div>
-                      </div>
-                      <div className="w-8 h-8 lg:w-10 lg:h-10 bg-zinc-900 rounded-full"></div>
-                    </div>
-                    <div className="h-6 bg-zinc-900 rounded mt-2"></div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="py-4">
-          <h1 className="text-4xl font-bold mb-6 text-white">Cast</h1>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
-            {Array.from({ length: 7 }).map((_, index) => (
-              <div key={index} className="w-48 h-56 p-1 rounded shadow">
-                <div className="animate-pulse h-full">
-                  <div className="bg-zinc-800 h-44 w-44 rounded-full"></div>
-                  <div className="h-6 bg-zinc-800 rounded mt-2"></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {searchRes.some((item: Movie) => item.media_type === "tv") && (
+          <SearchList
+            title="TV Shows"
+            data={searchRes.filter((item: Movie) => item.media_type === "tv")}
+          />
+        )}
+        {searchRes.some((item: Movie) => item.media_type === "movie") && (
+          <SearchList
+            title="Movies"
+            data={searchRes.filter(
+              (item: Movie) => item.media_type === "movie"
+            )}
+          />
+        )}
+        {searchRes.some((item: Movie) => item.media_type === "person") && (
+          <SearchList
+            title="Cast"
+            data={searchRes.filter(
+              (item: Movie) => item.media_type === "person"
+            )}
+          />
+        )}
       </div>
     </>
   );

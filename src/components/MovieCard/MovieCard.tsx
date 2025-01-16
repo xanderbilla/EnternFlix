@@ -4,6 +4,7 @@ import { BsFillPlayFill } from "react-icons/bs";
 import { IoIosArrowDown, IoMdAdd } from "react-icons/io";
 import { SlLike } from "react-icons/sl";
 import { useRouter } from "next/navigation";
+
 interface MovieCardProps {
   data: Record<string, any>;
 }

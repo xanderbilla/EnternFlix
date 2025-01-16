@@ -17,16 +17,11 @@ export default function Footer({}: Props) {
           className="h-12"
         />
         <div className="flex space-x-4 mt-4">
-        <Link href="#">
+          <Link href="#">
             <BsFacebook size={24} />
           </Link>
           <Link href="#">
-            <Image
-                src="/x.svg"
-                width={24}
-                height={24}
-                alt="Twitter"
-                />
+            <Image src="/x.svg" width={24} height={24} alt="Twitter" />
           </Link>
           <Link href="#">
             <BsGithub size={24} />

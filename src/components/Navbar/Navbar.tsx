@@ -8,8 +8,6 @@ import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import { LiaUserEditSolid } from "react-icons/lia";
-import { GoPerson } from "react-icons/go";
 
 const TOP_OFFSET = 66;
 
@@ -40,7 +38,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll: () => void = () => {
       if (window.scrollY >= TOP_OFFSET) {
         setShowBackground(true);
       } else {
@@ -117,7 +115,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
               </button>
             </div>
             <div className="flex flex-col p-4">
-              <MobileMenu visible={showMobileMenu} />
+              <MobileMenu visible={showMobileMenu} items={navbarItems}/>
             </div>
           </div>
         </div>

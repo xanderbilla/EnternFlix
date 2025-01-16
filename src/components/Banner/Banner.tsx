@@ -19,30 +19,29 @@ interface Movie {
 }
 
 const Banner: React.FC = () => {
-
   const [movie, setMovie] = useState<Movie | null>(null); // Changed initial state type
-   
+
   const releaeYear = movie?.first_air_date
     ? movie.first_air_date.substring(0, 4)
     : movie?.release_date
     ? movie.release_date.substring(0, 4)
     : "Unknown";
   const route = useRouter();
-    const fetchData = async () => {
-      try {
-        const request = await axios.get(requests.fetchNetflixOriginals);
-        const randomIndex = Math.floor(
-          Math.random() * request.data.results.length
-        );
-        setMovie(request.data.results[randomIndex]);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-  
-    useEffect(() => {
-      fetchData();
-    }, []);
+  const fetchData = async () => {
+    try {
+      const request = await axios.get(requests.fetchNetflixOriginals);
+      const randomIndex = Math.floor(
+        Math.random() * request.data.results.length
+      );
+      setMovie(request.data.results[randomIndex]);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const truncate = (string: string, n: number) => {
     return string?.length > n ? string.substr(0, n - 1) + "..." : string;
@@ -73,7 +72,9 @@ const Banner: React.FC = () => {
               </p>
               <div className="flex gap-2 md:gap-4 font-light text-zinc-400 text-sm md:text-base mt-2 md:mt-4 lg:text-lg drop-shadow-xl">
                 <p className="text-xs md:text-sm lg:text-lg">{releaeYear}</p>
-                <p className="border border-zinc-400 px-1 md:px-2 text-xs md:text-sm lg:text-lg">U/A 13+</p>
+                <p className="border border-zinc-400 px-1 md:px-2 text-xs md:text-sm lg:text-lg">
+                  U/A 13+
+                </p>
               </div>
               <p
                 className="text-white text-sm md:text-base mt-3 md:mt-8 
@@ -94,7 +95,7 @@ const Banner: React.FC = () => {
                   className="bg-white text-white bg-opacity-30 rounded-[4px] 
                   py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold 
                   flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
-                onClick={() => route.push('/title/70205012')} 
+                  onClick={() => route.push("/title/70205012")}
                 >
                   <AiOutlineInfoCircle className="mr-1" /> More Info
                 </button>

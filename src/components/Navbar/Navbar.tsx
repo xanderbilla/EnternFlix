@@ -18,10 +18,10 @@ type NavbarProps = {
 };
 
 const navbarItems = [
-  { label: "TV Shows", path: "/tv" },
+  { label: "TV Shows", path: "/tv-show" },
   { label: "Anime", path: "/anime" },
   { label: "Movies", path: "/movies" },
-  { label: "New & Popular", path: "/new" },
+  { label: "Trending", path: "/trending" },
   { label: "My List", path: "/my-list" },
 ];
 
@@ -63,7 +63,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
       >
         <div
           onClick={toggleMobileMenu}
-          className="flex flex-row items-center gap-2 cursor-pointer relative md:hidden"
+          className="flex flex-row items-center gap-2 cursor-pointer relative lg:hidden"
         >
           <BsList className="text-white" size={24} />
         </div>

@@ -11,9 +11,7 @@ interface Movie {
 }
 
 interface MovieListProps {
-  // data: Record<string, any>[];
   data: string;
-  //   data: { results: Movie[] };
   title: string;
 }
 
@@ -70,16 +68,16 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
                 scroll("left");
                 setShowLeftButton(true);
               }}
-              className="absolute left-0 top-0 bottom-0 z-[60] w-12 bg-gradient-to-r from-zinc-900 bg-opacity-0 items-center justify-center cursor-pointer hover:bg-opacity-20 transition-all duration-500 hidden md:flex ease-in-out"
+              className="absolute left-0 top-0 bottom-0 z-[60] w-8 md:w-10 lg:w-12 bg-gradient-to-r from-zinc-900 bg-opacity-0 items-center justify-center cursor-pointer hover:bg-opacity-20 transition-all duration-500 ease-in-out"
             >
-              <BsChevronLeft className="w-8 h-8 text-white" />
+              <BsChevronLeft className="w-4 h-4 md:w-6 md:h-6 lg:w-8 lg:h-8 text-white" />
             </button>
           )}
 
           <div
             id="movie-list"
             ref={scrollRef}
-            className="flex space-x-3 overflow-x-scroll md:overflow-x-hidden w-full h-full scrollbar-hide"
+            className="flex space-x-3 overflow-x-hidden w-full h-full scrollbar-hide"
           >
             {movies.map((movie) => (
               <div key={movie.id} className="flex-shrink-0 w-48 md:w-64">
@@ -94,9 +92,9 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
                 scroll("right");
                 setShowLeftButton(true);
               }}
-              className="absolute right-0 top-0 bottom-0 z-[60] w-12 bg-gradient-to-l from-zinc-900 bg-opacity-0 items-center justify-center cursor-pointer hover:bg-opacity-20 transition-all duration-500 hidden md:flex ease-in-out"
+              className="absolute right-0 top-0 bottom-0 z-[60] w-8 md:w-10 lg:w-12 bg-gradient-to-l from-zinc-900 bg-opacity-0 items-center justify-center cursor-pointer hover:bg-opacity-20 transition-all duration-500 ease-in-out"
             >
-              <BsChevronRight className="w-8 h-8 text-white" />
+              <BsChevronRight className="w-4 h-4 md:w-6 md:h-6 lg:w-8 lg:h-8 text-white" />
             </button>
           )}
         </div>

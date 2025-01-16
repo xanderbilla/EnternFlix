@@ -133,7 +133,7 @@ export default function Tabs({}: Props) {
                   {videosData[tab.id].map((video) => (
                     <div
                       key={video.id}
-                      className="h-auto bg-zinc-800 rounded-lg overflow-hidden shadow-lg transform transition-transform"
+                      className="h-auto bg-zinc-800 rounded-md overflow-hidden shadow-lg transform transition-transform"
                     >
                       <div className="relative group h-40 sm:h-48 md:h-48">
                         <Image

@@ -12,8 +12,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ items, visible }) => {
     return null;
   }
   return (
-    <div className="w-full h-[50vh] flex-col flex items-center justify-center">
-      <div className="flex flex-col gap-4">
+    <div className="w-full h-screen flex-col flex items-center justify-center">
+      <div className="flex flex-col gap-4 h-full py-14">
         <Image
           src="/logo.png"
           alt="logo"

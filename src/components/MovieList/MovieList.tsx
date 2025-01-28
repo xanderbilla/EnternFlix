@@ -77,10 +77,10 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
           <div
             id="movie-list"
             ref={scrollRef}
-            className="flex space-x-3 overflow-x-hidden w-full h-full scrollbar-hide"
+            className="flex space-x-6 overflow-x-hidden w-full h-full scrollbar-hide"
           >
             {movies.map((movie) => (
-              <div key={movie.id} className="flex-shrink-0 w-48 md:w-64">
+              <div key={movie.id} className="flex-shrink-0 w-44 md:w-72">
                 <MovieCard data={movie} />
               </div>
             ))}

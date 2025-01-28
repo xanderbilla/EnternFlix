@@ -12,7 +12,7 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
   const route = useRouter();
   return (
-    <div className="group flex flex-col bg-zinc-900 col-span relative w-48 md:w-64 h-72 md:h-[52vh]">
+    <div className="group flex flex-col bg-zinc-900 col-span relative w-48 md:w-[300px] h-72 md:h-[52vh]">
       <Image
         className="cursor-pointer object-fill lg:object-fill transition duration shadow-xl rounded-md 
         group-hover:opacity-90 sm:group-hover:opacity-0 delay-300 w-full h-full"
@@ -22,9 +22,9 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
         alt={data?.title || data?.name || data?.original_name}
       />
       <div
-        className="md:h-[52vh] md:w-96 h-[56vh] w-[460px] opacity-0 absolute top-0 transition duration-500 z-10
+        className="hidden md:block md:h-[52vh] md:w-96 h-[56vh] w-[460px] opacity-0 absolute top-0 transition duration-500 z-10
       invisible ease-in-out sm:visible delay-500 scale-0 group-hover:scale-105 
-      group-hover:-translate-y-[8vw] lg:group-hover:-translate-y-[3vw] group-hover:translate-x-[1vw] group-hover:opacity-100 hidden sm:block"
+      group-hover:-translate-y-[8vw] lg:group-hover:-translate-y-[3vw] group-hover:translate-x-[1vw] group-hover:opacity-100"
       >
         <Image
           className="cursor-pointer absolute object-scale-down transition duration shadow-xl 

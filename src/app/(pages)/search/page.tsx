@@ -2,9 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import axios from "@/helper/axios";
 import requests from "@/helper/request";
-import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar/Navbar";
 import instance from "@/helper/axios";
 import SearchList from "./component/SearchList";

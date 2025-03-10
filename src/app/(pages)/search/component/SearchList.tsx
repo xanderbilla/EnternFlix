@@ -48,7 +48,7 @@ export default function SearchList({ title, data }: Props) {
       <h1 className="text-4xl font-bold mb-6 text-white">{title}</h1>
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4">
         {data.map((movie, index) => (
-          <div key={index} className="bg-zinc-800 w-48 h-72 rounded shadow">
+          <div key={index} className="bg-zinc-800 w-60 h-96 rounded shadow">
             <div
               className="h-full cursor-pointer"
               onClick={() => router.push(`/title/70205012`)}
@@ -60,7 +60,7 @@ export default function SearchList({ title, data }: Props) {
                   movie.poster_path || movie.backdrop_path
                 }`}
                 alt="Movie Poster"
-                className="h-full w-full object-cover rounded"
+                className="h-96 w-full object-fill rounded"
               />
             </div>
           </div>

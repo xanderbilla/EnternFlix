@@ -12,15 +12,18 @@ interface MovieCardProps {
 const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
   const route = useRouter();
   return (
-    <div className="group flex flex-col bg-zinc-900 col-span relative w-48 md:w-[300px] h-72 md:h-[52vh]">
-      <Image
-        className="cursor-pointer object-fill lg:object-fill transition duration shadow-xl rounded-md 
+    <div className="group flex flex-col bg-zinc-900 col-span relative w-48 md:w-60 lg:w-72 h-72 md:h-96 lg:h-[52vh]">
+      <div className="relative w-full h-full">
+        <Image
+          className="cursor-pointer object-cover transition duration-300 shadow-xl rounded-md 
         group-hover:opacity-90 sm:group-hover:opacity-0 delay-300 w-full h-full"
-        onClick={() => route.push("/title/70205012")}
-        fill
-        src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
-        alt={data?.title || data?.name || data?.original_name}
-      />
+          onClick={() => route.push("/title/70205012")}
+          layout="fill"
+          src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
+          alt={data?.title || data?.name || data?.original_name}
+        />
+      </div>
+
       <div
         className="hidden md:block md:h-[52vh] md:w-96 h-[56vh] w-[460px] opacity-0 absolute top-0 transition duration-500 z-10
       invisible ease-in-out sm:visible delay-500 scale-0 group-hover:scale-105 
@@ -34,7 +37,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
           src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
           alt={data?.title || data?.name || data?.original_name}
         />
-        <div className="bg-gradient-to-t from-black via-zinc-800 to-transparent p-2 absolute bottom-0 h-36 lg:h-40 w-full lg:p-4 transition rounded shadow-md">
+        <div className="bg-gradient-to-t from-black via-zinc-800 to-transparent p-2 absolute bottom-0 h-36 lg:h-44 w-full lg:p-4 transition rounded shadow-md">
           <div className="flex flex-row items-center justify-between gap-2">
             <div className="flex flex-row items-center gap-3">
               <div

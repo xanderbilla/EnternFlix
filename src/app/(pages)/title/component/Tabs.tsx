@@ -129,13 +129,13 @@ export default function Tabs({}: Props) {
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                   Dolores nisi modi, officiis a quo optio obcaecati at.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {videosData[tab.id].map((video) => (
                     <div
                       key={video.id}
                       className="h-auto bg-zinc-800 rounded-md overflow-hidden shadow-lg transform transition-transform"
                     >
-                      <div className="relative group h-40 sm:h-48 md:h-48">
+                      <div className="relative group h-40 sm:h-48 md:h-56">
                         <Image
                           src={video.imageUrl}
                           alt={video.title}

@@ -5,6 +5,8 @@ const catReq = {
   fetchMovies: `discover/movie?api_key=${key}&with_genres=10749`,
   fetchNewPopular: `discover/movie?api_key=${key}&with_genres=27`,
   fetchAnimes: `discover/movie?api_key=${key}&with_genres=16`,
+  fetchTrending: `trending/all/week?api_key=${key}`,
+  fetchMyList: `discover/movie?api_key=${key}&with_genres=35`,
 };
 
 export default catReq;

@@ -64,9 +64,11 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
         >
           {(showButtons || window.innerWidth <= 768) && showLeftButton && (
             <button
+              type="button"
+              title="Scroll left"
               onClick={() => {
-          scroll("left");
-          setShowLeftButton(true);
+                scroll("left");
+                setShowLeftButton(true);
               }}
               className="absolute left-0 top-0 bottom-0 z-[30] w-8 md:w-10 lg:w-12 bg-gradient-to-r from-zinc-900 bg-opacity-0 items-center justify-center cursor-pointer hover:bg-opacity-20 transition-all duration-500 ease-in-out"
             >
@@ -81,16 +83,18 @@ const MovieList: React.FC<MovieListProps> = ({ data, title }) => {
           >
             {movies.map((movie) => (
               <div key={movie.id} className="flex-shrink-0 w-44 md:w-72">
-          <MovieCard data={movie} />
+                <MovieCard data={movie} />
               </div>
             ))}
           </div>
 
           {(showButtons || window.innerWidth <= 768) && (
             <button
+              type="button"
+              title="Scroll right"
               onClick={() => {
-          scroll("right");
-          setShowLeftButton(true);
+                scroll("right");
+                setShowLeftButton(true);
               }}
               className="absolute right-0 top-0 bottom-0 z-[30] w-8 md:w-10 lg:w-12 bg-gradient-to-l from-zinc-900 bg-opacity-0 items-center justify-center cursor-pointer hover:bg-opacity-20 transition-all duration-500 ease-in-out"
             >

@@ -1,53 +1,23 @@
-# EnternFlix
+# Enternflix (Archived)  
 
-This is movie application where viewers can manage movies tv-shows and watch online even they can download it as well. 
+![image](https://enternflix.xanderbilla.com/_next/image?url=%2Flogo.png&w=256&q=75)
 
-## Features
+🚀 **Enternflix** is a Netflix-inspired streaming platform clone. This project was a step towards building a modern movie streaming web app.  
 
-### 👤 Users
-- Browse Movies/Shows
-- Search Movies/Shows
-- Login/Sign Up
+## 🎬 Features  
 
-## Run Locally
+✅ View the latest releases  
+✅ Discover trending movies  
+✅ Search for movies  
 
-Clone the project
+## 📌 Project Status  
 
-```bash
-  git clone https://github.com/MsRachael/Entern-Flix.git
-```
+This repository has been **archived** as development has moved to **Enternflix 3.0**, a new and improved version.  
 
-Go to the project directory
+## 🚀 Next Steps  
 
-```bash
-  cd acharya
-```
+For future updates and improvements, stay tuned for **Enternflix 3.0**!  
 
-Install dependencies
+## 👨‍💻 Author  
 
-```bash
-  npm install
-```
-
-Start the server
-
-```bash
-  npm run start
-```
-
-## Support
-
-For support, [email](mailto:dev.lailadulce@protonmail.com) or message on [Instagram](https://instagram.com/i3ewomen).
-
-
-## Appendix
-
-This project is prohibited to use for commercial purpose.
-
-## Authors
-
-- [Ms Rachael Lee](https://www.github.com/MsRachael)
-
-## License
-
-[MIT](https://choosealicense.com/licenses/mit/)
+**[Vikas Singh](https://xanderbilla.com)**  

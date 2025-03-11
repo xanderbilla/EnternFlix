@@ -1,10 +1,12 @@
 "use client"
 
 import React from "react";
-import CategoryBanner from "./component/CategoryBanner";
-import MovieList from "@/components/MovieList/MovieList";
+import dynamic from "next/dynamic";
 import catReq from "@/helper/catReq";
 import { usePathname } from "next/navigation";
+
+const CategoryBanner = dynamic(() => import("./component/CategoryBanner"));
+const MovieList = dynamic(() => import("@/components/MovieList/MovieList"));
 
 type Props = {};
 

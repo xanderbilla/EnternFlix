@@ -31,6 +31,7 @@ const Auth = () => {
           <Image height={70} width={120} src="/logo.png" alt="logo" />
           <div className="flex items-center justify-center gap-3">
             <select
+              title="Language"
               name=""
               id=""
               className="text-white w-auto min-w-fit rounded-md m-3 py-2 px-4 

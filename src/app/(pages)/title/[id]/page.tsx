@@ -1,10 +1,12 @@
 "use client";
 
 import React from "react";
-import TitleBanner from "../component/TitleBanner";
 import axios from "axios";
-import Tabs from "../component/Tabs";
-import TitleInfo from "../component/TitleInfo";
+import dynamic from "next/dynamic";
+
+const TitleBanner = dynamic(() => import("../component/TitleBanner"));
+const Tabs = dynamic(() => import("../component/Tabs"));
+const TitleInfo = dynamic(() => import("../component/TitleInfo"));
 
 interface Movie {
   backdrop_path: string;
@@ -60,7 +62,7 @@ export default function Page() {
     <div className="flex flex-col text-white">
       <TitleBanner data={movie} mediaType={mediaType} />
       {mediaType === "tv" && <Tabs />}
-      <TitleInfo mediaType={mediaType}/>
+      <TitleInfo mediaType={mediaType} />
     </div>
   );
 }

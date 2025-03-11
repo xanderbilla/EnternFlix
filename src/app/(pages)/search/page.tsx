@@ -3,10 +3,11 @@
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import requests from "@/helper/request";
-import Navbar from "@/components/Navbar/Navbar";
 import instance from "@/helper/axios";
-import SearchList from "./component/SearchList";
+import dynamic from "next/dynamic";
 
+const Navbar = dynamic(() => import("@/components/Navbar/Navbar"));
+const SearchList = dynamic(() => import("./component/SearchList"));
 interface Movie {
   backdrop_path: string;
   title: string;

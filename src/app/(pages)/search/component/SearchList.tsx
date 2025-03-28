@@ -64,7 +64,7 @@ const SearchList: React.FC<SearchListProps> = ({ title, data }) => {
                     {(item.release_date || item.first_air_date) && (
                       <span className="flex items-center gap-1">
                         <BsCalendar />
-                        {formatDate(item.release_date || item.first_air_date)}
+                        {formatDate(item.release_date ?? item.first_air_date)}
                       </span>
                     )}
                   </div>

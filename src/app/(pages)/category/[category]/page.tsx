@@ -97,9 +97,9 @@ export default function Page() {
       />
 
       {/* Render different sections with their own fetch functions */}
-      {currentCategory.sections.map((section, index) => (
+      {currentCategory.sections.map((section) => (
         <MovieList
-          key={index}
+          key={section.title}
           title={section.title}
           data={section.fetchFunction}
         />

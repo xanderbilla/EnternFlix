@@ -84,8 +84,8 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
 
         {/* Desktop Navigation */}
         <div className="flex-row ml-8 gap-8 hidden lg:flex">
-          {navbarItems.map((item, index) => (
-            <NavbarItems key={index} label={item.label} path={item.path} />
+          {navbarItems.map((item) => (
+            <NavbarItems key={item.label} label={item.label} path={item.path} />
           ))}
         </div>
 

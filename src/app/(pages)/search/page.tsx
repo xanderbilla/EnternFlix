@@ -82,6 +82,57 @@ const Page: React.FC = () => {
     };
   }, []);
 
+  const renderSearchResults = () => {
+    if (isTyping) {
+      return (
+        <div className="text-center text-gray-400 py-12">Searching...</div>
+      );
+    }
+
+    if (isLoading) {
+      return (
+        <div className="text-center text-gray-400 py-12">
+          Loading results...
+        </div>
+      );
+    }
+
+    if (searchQuery && searchRes.length === 0) {
+      return (
+        <div className="text-center text-gray-400 py-12">
+          No results found for &ldquo;{searchQuery}&rdquo;
+        </div>
+      );
+    }
+
+    if (searchQuery) {
+      return (
+        <div className="space-y-8">
+          {searchRes.some((item) => item.media_type === "movie") && (
+            <SearchList
+              title="Movies"
+              data={searchRes.filter((item) => item.media_type === "movie")}
+            />
+          )}
+          {searchRes.some((item) => item.media_type === "tv") && (
+            <SearchList
+              title="TV Shows"
+              data={searchRes.filter((item) => item.media_type === "tv")}
+            />
+          )}
+          {searchRes.some((item) => item.media_type === "person") && (
+            <SearchList
+              title="Cast"
+              data={searchRes.filter((item) => item.media_type === "person")}
+            />
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <>
       <Navbar />
@@ -123,40 +174,7 @@ const Page: React.FC = () => {
 
       <div className="min-h-[50vh] bg-zinc-900 pt-8">
         <div className="max-w-7xl mx-auto px-4 md:px-8">
-          {isTyping ? (
-            <div className="text-center text-gray-400 py-12">Searching...</div>
-          ) : isLoading ? (
-            <div className="text-center text-gray-400 py-12">
-              Loading results...
-            </div>
-          ) : searchQuery && searchRes.length === 0 ? (
-            <div className="text-center text-gray-400 py-12">
-              No results found for &ldquo;{searchQuery}&rdquo;
-            </div>
-          ) : searchQuery ? (
-            <div className="space-y-8">
-              {searchRes.some((item) => item.media_type === "movie") && (
-                <SearchList
-                  title="Movies"
-                  data={searchRes.filter((item) => item.media_type === "movie")}
-                />
-              )}
-              {searchRes.some((item) => item.media_type === "tv") && (
-                <SearchList
-                  title="TV Shows"
-                  data={searchRes.filter((item) => item.media_type === "tv")}
-                />
-              )}
-              {searchRes.some((item) => item.media_type === "person") && (
-                <SearchList
-                  title="Cast"
-                  data={searchRes.filter(
-                    (item) => item.media_type === "person"
-                  )}
-                />
-              )}
-            </div>
-          ) : null}
+          {renderSearchResults()}
         </div>
       </div>
     </>

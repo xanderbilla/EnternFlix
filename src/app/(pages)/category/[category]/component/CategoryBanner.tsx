@@ -67,11 +67,11 @@ const CategoryBanner: React.FC<CategoryBannerProps> = ({
   return (
     <div className="relative h-[56.25vw] md:h-[44vw] lg:h-[36vw]">
       <div
-        className="absolute top-0 left-0 w-full h-full bg-cover bg-center transition-opacity duration-300"
+        className={`backdrop-image ${
+          backdropPath ? "opacity-100" : "opacity-0"
+        }`}
         style={{
           backgroundImage: backdropPath ? `url(${backdropPath})` : "none",
-          backgroundSize: "cover",
-          opacity: backdropPath ? 1 : 0,
         }}
       >
         <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />

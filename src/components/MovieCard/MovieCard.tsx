@@ -12,18 +12,53 @@ interface MovieCardProps {
 }
 
 const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
-  const route = useRouter();
+  const router = useRouter();
+
+  const getPositionClass = () => {
+    if (isFirst) return "left-0";
+    if (isLast) return "right-0";
+    return "left-1/2 -translate-x-1/2";
+  };
+
+  const getTruncatedTitle = () => {
+    const title = data?.title || data?.name || data?.original_name;
+    if (!title) return "";
+    return title.length > 25 ? title.slice(0, 25) + "..." : title;
+  };
+
+  const getReleaseYear = () => {
+    const date = data?.release_date || data?.first_air_date;
+    return date ? date.split("-")[0] : "";
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent, action: () => void) => {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      action();
+    }
+  };
+
+  const navigateToTitle = () => router.push(`/title/${data?.id}`);
+
   return (
     <div className="group/item relative w-full h-[240px] md:h-[280px] lg:h-[320px]">
       <div className="relative w-full h-full bg-zinc-900 rounded-md overflow-hidden">
-        <Image
-          className="cursor-pointer object-cover transition duration-300 shadow-xl rounded-md 
-          group-hover/item:opacity-0 delay-300 w-full h-full"
-          onClick={() => route.push(`/title/${data?.id}`)}
-          layout="fill"
-          src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
-          alt={data?.title || data?.name || data?.original_name}
-        />
+        <button
+          className="w-full h-full border-0 p-0 cursor-pointer"
+          onClick={navigateToTitle}
+          onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
+          aria-label={`View details for ${
+            data?.title || data?.name || "this title"
+          }`}
+        >
+          <Image
+            className="object-cover transition duration-300 shadow-xl rounded-md 
+            group-hover/item:opacity-0 delay-300 w-full h-full"
+            layout="fill"
+            src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
+            alt={data?.title || data?.name || data?.original_name}
+          />
+        </button>
       </div>
 
       <div
@@ -31,68 +66,77 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
         invisible sm:visible delay-300 scale-0 group-hover/item:scale-110 
         group-hover/item:translate-y-[5vh] group-hover/item:opacity-100
         w-[280px] md:w-[320px] lg:w-[360px] h-[180px] md:h-[200px] lg:h-[220px]
-        ${
-          isFirst ? "left-0" : isLast ? "right-0" : "left-1/2 -translate-x-1/2"
-        }`}
+        ${getPositionClass()}`}
       >
-        <Image
-          className="cursor-pointer absolute object-cover transition duration shadow-xl 
-          rounded-t-md w-full h-[60%]"
-          onClick={() => route.push(`/title/${data?.id}`)}
-          fill
-          src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
-          alt={data?.title || data?.name || data?.original_name}
-        />
+        <button
+          className="w-full h-[60%] border-0 p-0 cursor-pointer relative"
+          onClick={navigateToTitle}
+          onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
+          aria-label={`View details for ${
+            data?.title || data?.name || "this title"
+          }`}
+        >
+          <Image
+            className="object-cover transition duration shadow-xl rounded-t-md w-full h-full"
+            fill
+            src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
+            alt={data?.title || data?.name || data?.original_name}
+          />
+        </button>
         <div className="bg-gradient-to-t from-black via-zinc-800/90 to-transparent absolute bottom-0 w-full h-[45%] transition rounded-b-md shadow-md">
           <div className="absolute bottom-0 w-full p-4 flex flex-col gap-3">
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center gap-2">
-                <div
-                  className="cursor-pointer w-8 h-8 bg-white rounded-full 
+                <button
+                  className="w-8 h-8 bg-white rounded-full 
                   flex justify-center items-center transition hover:bg-neutral-300"
                   onClick={() => {}}
+                  onKeyDown={(e) => handleKeyPress(e, () => {})}
+                  aria-label="Play"
                 >
                   <BsFillPlayFill size={22} color="black" />
-                </div>
-                <div
-                  className="cursor-pointer w-8 h-8 bg-white rounded-full 
+                </button>
+                <button
+                  className="w-8 h-8 bg-white rounded-full 
                   flex justify-center items-center transition hover:bg-neutral-300"
                   onClick={() => {}}
+                  onKeyDown={(e) => handleKeyPress(e, () => {})}
+                  aria-label="Add to list"
                 >
                   <IoMdAdd size={22} color="black" />
-                </div>
-                <div
-                  className="cursor-pointer w-8 h-8 bg-white rounded-full 
+                </button>
+                <button
+                  className="w-8 h-8 bg-white rounded-full 
                   flex justify-center items-center transition hover:bg-neutral-300"
                   onClick={() => {}}
+                  onKeyDown={(e) => handleKeyPress(e, () => {})}
+                  aria-label="Like"
                 >
                   <SlLike size={18} color="black" />
-                </div>
+                </button>
               </div>
-              <div
-                className="cursor-pointer w-8 h-8 bg-white rounded-full 
+              <button
+                className="w-8 h-8 bg-white rounded-full 
                 flex justify-center items-center transition hover:bg-neutral-300"
-                onClick={() => route.push(`/title/${data?.id}`)}
+                onClick={navigateToTitle}
+                onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
+                aria-label="More information"
               >
                 <IoIosArrowDown size={22} color="black" />
-              </div>
+              </button>
             </div>
             <div className="flex flex-col gap-2">
-              <p
-                className="text-green-400 font-semibold text-base cursor-pointer flex items-center"
-                onClick={() => route.push(`/title/${data?.id}`)}
+              <button
+                className="text-green-400 font-semibold text-base cursor-pointer flex items-center bg-transparent border-0 p-0 hover:text-green-300"
+                onClick={navigateToTitle}
+                onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
+                aria-label={`View details for ${getTruncatedTitle()}`}
               >
-                {(data?.title || data?.name || data?.original_name)?.length > 25
-                  ? (data?.title || data?.name || data?.original_name)?.slice(
-                      0,
-                      25
-                    ) + "..."
-                  : data?.title || data?.name || data?.original_name}
+                {getTruncatedTitle()}
                 <span className="text-white text-sm ml-2">
-                  {data?.release_date?.split("-")[0] ||
-                    data?.first_air_date?.split("-")[0]}
+                  {getReleaseYear()}
                 </span>
-              </p>
+              </button>
               <div className="flex flex-row gap-2 items-center">
                 <span className="text-white text-xs border border-white/40 px-1.5 py-0.5 rounded">
                   U/A 16+

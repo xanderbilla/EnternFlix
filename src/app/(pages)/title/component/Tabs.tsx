@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { BsPlayFill } from "react-icons/bs";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 type Tab = {
   id: number;
@@ -18,11 +19,6 @@ type VideosData = {
     imageUrl: string;
   }[];
 };
-
-const tabsData: Tab[] = [
-  { id: 1, title: "Season 1", content: "Tab 1" },
-  { id: 2, title: "Season 2", content: "Tab 2" },
-];
 
 const videosData: VideosData = {
   1: [
@@ -90,7 +86,17 @@ const videosData: VideosData = {
 type Props = {};
 
 export default function Tabs({}: Props) {
-  const [activeTab, setActiveTab] = useState<number>(tabsData[0].id);
+  const [activeTab, setActiveTab] = useState<number>(1);
+  const [showLeftScroll, setShowLeftScroll] = useState(false);
+  const [showRightScroll, setShowRightScroll] = useState(false);
+  const tabsRef = useRef<HTMLDivElement>(null);
+
+  // Generate seasons data
+  const seasonsData = Array.from({ length: 2 }, (_, i) => ({
+    id: i + 1,
+    title: `Season ${i + 1}`,
+    content: `Tab ${i + 1}`,
+  }));
 
   const formatTime = (time: string): string => {
     const parts = time.split(":").map(Number);
@@ -98,35 +104,94 @@ export default function Tabs({}: Props) {
       return `${parts[0]}h ${parts[1]}m ${parts[2]}s`;
     } else if (parts.length === 2) {
       return `${parts[0]}m ${parts[1]}s`;
-    } else {
-      return time;
+    }
+    return time;
+  };
+
+  const checkScrollButtons = () => {
+    if (tabsRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsRef.current;
+      // Only show scroll buttons if there's content to scroll
+      const hasScroll = scrollWidth > clientWidth;
+      setShowLeftScroll(hasScroll && scrollLeft > 0);
+      setShowRightScroll(
+        hasScroll && scrollLeft < scrollWidth - clientWidth - 10
+      );
+    }
+  };
+
+  // Check scroll buttons on mount and window resize
+  useEffect(() => {
+    checkScrollButtons();
+    window.addEventListener("resize", checkScrollButtons);
+    return () => window.removeEventListener("resize", checkScrollButtons);
+  }, []);
+
+  const handleScroll = () => {
+    checkScrollButtons();
+  };
+
+  const scroll = (direction: "left" | "right") => {
+    if (tabsRef.current) {
+      const scrollAmount = 200;
+      const newScrollLeft =
+        tabsRef.current.scrollLeft +
+        (direction === "left" ? -scrollAmount : scrollAmount);
+      tabsRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: "smooth",
+      });
     }
   };
 
   return (
     <div className="px-4 py-6 sm:px-8 sm:py-8 md:px-12 md:py-10">
-      <div className="tabs flex flex-wrap space-x-4 sm:space-x-6 border-b border-zinc-800">
-        {tabsData.map((tab) => (
+      <div className="relative">
+        {showLeftScroll && (
           <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`pb-3 text-base sm:text-lg md:text-xl font-medium transition-all duration-300 relative ${
-              activeTab === tab.id
-                ? "text-white"
-                : "text-zinc-400 hover:text-white"
-            }`}
+            onClick={() => scroll("left")}
+            className="absolute -left-4 top-1/2 -translate-y-1/2 z-10 p-1.5 transition-all duration-300"
+            aria-label="Scroll seasons left"
           >
-            {tab.title}
-            <div
-              className={`absolute bottom-0 left-0 w-full h-0.5 bg-white transition-all duration-300 ${
-                activeTab === tab.id ? "scale-x-100" : "scale-x-0"
-              }`}
-            />
+            <IoIosArrowBack className="text-zinc-400 hover:text-white text-2xl" />
           </button>
-        ))}
+        )}
+        {showRightScroll && (
+          <button
+            onClick={() => scroll("right")}
+            className="absolute -right-4 top-1/2 -translate-y-1/2 z-10 p-1.5 transition-all duration-300"
+            aria-label="Scroll seasons right"
+          >
+            <IoIosArrowForward className="text-zinc-400 hover:text-white text-2xl" />
+          </button>
+        )}
+        <div
+          ref={tabsRef}
+          onScroll={handleScroll}
+          className="tabs flex space-x-10 overflow-x-auto no-scrollbar relative"
+        >
+          {seasonsData.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`pb-4 pt-1 text-base font-medium transition-all duration-300 relative whitespace-nowrap ${
+                activeTab === tab.id
+                  ? "text-white"
+                  : "text-zinc-500 hover:text-zinc-300"
+              }`}
+            >
+              {tab.title}
+              {activeTab === tab.id && (
+                <div className="absolute bottom-0 left-0 w-full h-[2px] bg-white" />
+              )}
+            </button>
+          ))}
+        </div>
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-zinc-800" />
       </div>
+
       <div className="tab-content mt-6 sm:mt-8 md:mt-10">
-        {tabsData.map(
+        {seasonsData.map(
           (tab) =>
             tab.id === activeTab && (
               <div key={tab.id}>
@@ -135,7 +200,7 @@ export default function Tabs({}: Props) {
                   Dolores nisi modi, officiis a quo optio obcaecati at.
                 </p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
-                  {videosData[tab.id].map((video) => (
+                  {videosData[tab.id]?.map((video) => (
                     <div
                       key={video.id}
                       className="group relative bg-zinc-900 rounded-xl overflow-hidden"

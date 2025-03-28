@@ -69,7 +69,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
         ${getPositionClass()}`}
       >
         <button
-          className="w-full h-[60%] border-0 p-0 cursor-pointer relative"
+          className="w-full h-full border-0 p-0 cursor-pointer relative"
           onClick={navigateToTitle}
           onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
           aria-label={`View details for ${
@@ -77,13 +77,13 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
           }`}
         >
           <Image
-            className="object-cover transition duration shadow-xl rounded-t-md w-full h-full"
+            className="object-cover transition duration shadow-xl rounded-md w-full h-full"
             fill
             src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
             alt={data?.title || data?.name || data?.original_name}
           />
         </button>
-        <div className="bg-gradient-to-t from-black via-zinc-800/90 to-transparent absolute bottom-0 w-full h-[45%] transition rounded-b-md shadow-md">
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent rounded-md">
           <div className="absolute bottom-0 w-full p-4 flex flex-col gap-3">
             <div className="flex flex-row items-center justify-between">
               <div className="flex flex-row items-center gap-2">

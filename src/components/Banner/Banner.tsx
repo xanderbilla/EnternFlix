@@ -95,7 +95,7 @@ const Banner: React.FC = () => {
                   className="bg-white text-white bg-opacity-30 rounded-[4px] 
                   py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold 
                   flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
-                  onClick={() => route.push("/title/70205012")}
+                  onClick={() => route.push(`/title/${movie.id}`)}
                 >
                   <AiOutlineInfoCircle className="mr-1" /> More Info
                 </button>

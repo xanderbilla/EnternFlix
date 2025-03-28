@@ -78,10 +78,10 @@ const CategoryBanner: React.FC<CategoryBannerProps> = ({
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 px-4 md:px-16 pb-16 md:pb-20">
-        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 leading-tight tracking-tight">
           {title}
         </h1>
-        <p className="text-lg md:text-xl text-white/90 max-w-2xl">
+        <p className="text-base sm:text-lg md:text-xl text-white/90 max-w-2xl leading-relaxed">
           {description}
         </p>
       </div>

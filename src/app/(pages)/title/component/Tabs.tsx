@@ -104,57 +104,74 @@ export default function Tabs({}: Props) {
   };
 
   return (
-    <div className="px-4 py-4 sm:px-8 sm:py-6 md:px-12 md:py-8">
-      <div className="tabs flex flex-wrap space-x-2 sm:space-x-4">
+    <div className="px-4 py-6 sm:px-8 sm:py-8 md:px-12 md:py-10">
+      <div className="tabs flex flex-wrap space-x-4 sm:space-x-6 border-b border-zinc-800">
         {tabsData.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`pb-2 text-base sm:text-lg md:text-xl w-24 sm:w-28 md:w-32 transition-all duration-300 ${
+            className={`pb-3 text-base sm:text-lg md:text-xl font-medium transition-all duration-300 relative ${
               activeTab === tab.id
-                ? "border-b-2 border-zinc-500 font-semibold border-opacity-100"
-                : "border-b-2 border-zinc-500 border-opacity-0"
+                ? "text-white"
+                : "text-zinc-400 hover:text-white"
             }`}
           >
             {tab.title}
+            <div
+              className={`absolute bottom-0 left-0 w-full h-0.5 bg-white transition-all duration-300 ${
+                activeTab === tab.id ? "scale-x-100" : "scale-x-0"
+              }`}
+            />
           </button>
         ))}
       </div>
-      <div className="tab-content mt-4">
+      <div className="tab-content mt-6 sm:mt-8 md:mt-10">
         {tabsData.map(
           (tab) =>
             tab.id === activeTab && (
               <div key={tab.id}>
-                <p className="my-4 sm:my-6 md:my-8">
+                <p className="text-base sm:text-lg md:text-xl text-zinc-300 mb-6 sm:mb-8 md:mb-10 leading-relaxed">
                   Lorem ipsum dolor, sit amet consectetur adipisicing elit.
                   Dolores nisi modi, officiis a quo optio obcaecati at.
                 </p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
                   {videosData[tab.id].map((video) => (
                     <div
                       key={video.id}
-                      className="h-auto bg-zinc-800 rounded-md overflow-hidden shadow-lg transform transition-transform"
+                      className="group relative bg-zinc-900 rounded-xl overflow-hidden"
                     >
-                      <div className="relative group h-40 sm:h-48 md:h-56">
+                      <div className="relative aspect-video">
                         <Image
                           src={video.imageUrl}
                           alt={video.title}
-                          width={300}
-                          height={200}
+                          width={400}
+                          height={225}
                           className="w-full h-full object-cover"
                         />
-                        <div className="absolute cursor-pointer inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          <BsPlayFill className="rounded-full bg-white text-black text-2xl sm:text-3xl md:text-4xl h-8 w-8 sm:h-10 sm:w-10 text-center" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="opacity-0 group-hover:opacity-100 transition-all duration-500">
+                            <BsPlayFill className="rounded-full bg-white text-black text-5xl sm:text-6xl p-4 shadow-2xl" />
+                          </div>
+                        </div>
+                        <div className="absolute top-3 right-3 bg-black/80 text-white text-sm px-3 py-1.5 rounded-full font-medium opacity-0 group-hover:opacity-100 transition-all duration-500">
+                          {formatTime(video.duration)}
                         </div>
                       </div>
-                      <div className="p-2 sm:p-3 md:p-4 bg-zinc-900">
-                        <div className="flex justify-between items-center">
-                          <h4 className="text-sm sm:text-base md:text-lg font-semibold text-white">
+                      <div className="relative p-4 bg-zinc-900">
+                        <div className="absolute inset-0 bg-gradient-to-b from-zinc-900/0 via-zinc-900/50 to-zinc-900 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <div className="relative">
+                          <h4 className="text-lg sm:text-xl font-bold text-white mb-2 line-clamp-2 group-hover:text-white/90 transition-colors duration-300">
                             {video.title}
                           </h4>
-                          <span className="text-xs sm:text-sm md:text-base text-gray-400">
-                            {formatTime(video.duration)}
-                          </span>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-zinc-400">
+                              Episode {video.id}
+                            </span>
+                            <span className="text-sm font-medium text-zinc-400">
+                              Season {tab.id}
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>

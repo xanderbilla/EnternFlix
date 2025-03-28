@@ -19,7 +19,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
         <Image
           className="cursor-pointer object-cover transition duration-300 shadow-xl rounded-md 
           group-hover/item:opacity-0 delay-300 w-full h-full"
-          onClick={() => route.push("/title/70205012")}
+          onClick={() => route.push(`/title/${data?.id}`)}
           layout="fill"
           src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
           alt={data?.title || data?.name || data?.original_name}
@@ -38,7 +38,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
         <Image
           className="cursor-pointer absolute object-cover transition duration shadow-xl 
           rounded-t-md w-full h-[60%]"
-          onClick={() => route.push("/title/70205012")}
+          onClick={() => route.push(`/title/${data?.id}`)}
           fill
           src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
           alt={data?.title || data?.name || data?.original_name}
@@ -72,7 +72,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
               <div
                 className="cursor-pointer w-8 h-8 bg-white rounded-full 
                 flex justify-center items-center transition hover:bg-neutral-300"
-                onClick={() => route.push("/title/70205012")}
+                onClick={() => route.push(`/title/${data?.id}`)}
               >
                 <IoIosArrowDown size={22} color="black" />
               </div>
@@ -80,7 +80,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
             <div className="flex flex-col gap-2">
               <p
                 className="text-green-400 font-semibold text-base cursor-pointer flex items-center"
-                onClick={() => route.push("/title/70205012")}
+                onClick={() => route.push(`/title/${data?.id}`)}
               >
                 {(data?.title || data?.name || data?.original_name)?.length > 25
                   ? (data?.title || data?.name || data?.original_name)?.slice(

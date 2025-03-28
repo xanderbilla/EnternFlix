@@ -1,66 +1,90 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import Image from "next/image";
 import axios from "@/helper/axios";
-import { usePathname } from "next/navigation";
 import catReq from "@/helper/catReq";
+
+interface CategoryBannerProps {
+  title: string;
+  description: string;
+  category: string;
+}
 
 interface Movie {
   backdrop_path: string;
 }
 
-const CategoryBanner: React.FC = () => {
-  const [movie, setMovie] = useState<Movie | null>(null); // Changed initial state type
-  const path = usePathname().split("/");
-  const categoryName = path[2].charAt(0).toUpperCase() + path[2].slice(1);
-  const formatCategoryName = (name: string) => {
-    return name
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-  };
-
-  const fetchData = async () => {
-    try {
-      const request = await axios.get(catReq.fetchAnimes);
-      const randomIndex = Math.floor(
-        Math.random() * request.data.results.length
-      );
-      setMovie(request.data.results[randomIndex]);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+const CategoryBanner: React.FC<CategoryBannerProps> = ({
+  title,
+  description,
+  category,
+}) => {
+  const [backdropPath, setBackdropPath] = useState<string>("");
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const fetchRandomBackdrop = async () => {
+      try {
+        // Get the appropriate fetch function based on category
+        let fetchUrl = catReq.fetchTrending; // default
+        switch (category) {
+          case "tv-show":
+            fetchUrl = catReq.fetchTvShows;
+            break;
+          case "movies":
+            fetchUrl = catReq.fetchMovies;
+            break;
+          case "anime":
+            fetchUrl = catReq.fetchAnimes;
+            break;
+          case "trending":
+            fetchUrl = catReq.fetchTrending;
+            break;
+          case "my-list":
+            fetchUrl = catReq.fetchMyList;
+            break;
+        }
+
+        const response = await axios.get(fetchUrl);
+        const results = response.data.results;
+        if (results && results.length > 0) {
+          // Get a random backdrop from the results
+          const randomIndex = Math.floor(Math.random() * results.length);
+          const randomMovie = results[randomIndex];
+          if (randomMovie.backdrop_path) {
+            setBackdropPath(
+              `https://image.tmdb.org/t/p/original${randomMovie.backdrop_path}`
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching backdrop:", error);
+      }
+    };
+
+    fetchRandomBackdrop();
+  }, [category]); // Re-fetch when category changes
 
   return (
-    <div className="relative w-full h-[40vh] md:h-[50vh] lg:h-[60vh] xl:h-[70vh]">
-      {movie && ( // Added a conditional rendering check for movie
-        <>
-          <Image
-            className="w-full h-full object-cover brightness-[80%]"
-            src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
-            alt=""
-            width={1920}
-            height={1080}
-          />
-          <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-10 w-full flex h-full">
-            <div className="bg-gradient-to-r from-black to-transparent w-full md:w-2/3 h-full flex flex-col justify-center items-start p-4 md:p-12">
-              <h1 className="text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white">
-                {formatCategoryName(categoryName)}
-              </h1>
-              <p className="mt-4 w-full md:w-1/2 text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl text-white">
-                Explore a wide range of anime series and movies. Dive into the
-                world of animation and enjoy your favorite shows.
-              </p>
-            </div>
-          </div>
-        </>
-      )}
+    <div className="relative h-[56.25vw] md:h-[44vw] lg:h-[36vw]">
+      <div
+        className="absolute top-0 left-0 w-full h-full bg-cover bg-center transition-opacity duration-300"
+        style={{
+          backgroundImage: backdropPath ? `url(${backdropPath})` : "none",
+          backgroundSize: "cover",
+          opacity: backdropPath ? 1 : 0,
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />
+      </div>
+
+      <div className="absolute bottom-0 left-0 right-0 px-4 md:px-16 pb-16 md:pb-20">
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+          {title}
+        </h1>
+        <p className="text-lg md:text-xl text-white/90 max-w-2xl">
+          {description}
+        </p>
+      </div>
     </div>
   );
 };

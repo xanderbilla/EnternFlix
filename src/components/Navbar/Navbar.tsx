@@ -56,67 +56,95 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
   return (
     <nav className={twMerge("w-full fixed z-40", classname)}>
       <div
-        className={`px-4 md:px-16 py-6 flex flex-row items-center transition
-    duration-500 ${showBackground ? "bg-zinc-900 bg-opacity-95" : ""}`}
+        className={`px-4 md:px-16 py-4 flex flex-row items-center transition duration-500
+        ${
+          showBackground
+            ? "bg-zinc-900/95 shadow-lg shadow-black/20"
+            : "bg-gradient-to-b from-black/70 to-transparent"
+        }`}
       >
-        <div
+        {/* Mobile Menu Toggle */}
+        <button
           onClick={toggleMobileMenu}
-          className="flex flex-row items-center gap-2 cursor-pointer relative lg:hidden"
+          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition lg:hidden"
+          aria-label="Toggle mobile menu"
         >
           <BsList className="text-white" size={24} />
-        </div>
+        </button>
+
+        {/* Logo */}
         <Image
           height={90}
           width={150}
           src="/logo.png"
           alt="logo"
           onClick={() => router.push("/")}
-          className="cursor-pointer ml-4"
+          className="cursor-pointer ml-2 md:ml-0 h-8 md:h-10 w-auto object-contain hover:opacity-90 transition"
         />
-        <div className="flex-row ml-8 gap-7 hidden lg:flex">
+
+        {/* Desktop Navigation */}
+        <div className="flex-row ml-8 gap-8 hidden lg:flex">
           {navbarItems.map((item, index) => (
             <NavbarItems key={index} label={item.label} path={item.path} />
           ))}
         </div>
-        <div className="flex flex-row ml-auto gap-7 items-center">
-          <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
-            <BsSearch size={20} onClick={() => router.push("/search")} />
-          </div>
-          <div className="text-gray-200 hover:text-gray-300 cursor-pointer transition">
+
+        {/* Right Side Icons */}
+        <div className="flex flex-row ml-auto gap-4 md:gap-7 items-center">
+          <button
+            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-gray-200 hover:text-white"
+            aria-label="Search"
+            onClick={() => router.push("/search")}
+          >
+            <BsSearch size={20} />
+          </button>
+
+          <button
+            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-gray-200 hover:text-white"
+            aria-label="Notifications"
+          >
             <BsBell size={20} />
-          </div>
+          </button>
+
+          {/* Account Menu */}
           <div
             onClick={toggleAccountMenu}
-            className="flex flex-row items-center gap-2 cursor-pointer relative md:flex"
+            className="flex items-center gap-2 cursor-pointer relative group"
           >
-            <div className="w-8 md:w-10 h-8 md:h-10 rounded-md overflow-hidden">
+            <div className="w-8 md:w-10 h-8 md:h-10 rounded-lg overflow-hidden">
               <Image
                 height={40}
                 width={40}
                 src="/img/default-blue.png"
                 alt="avatar"
+                className="object-cover hover:opacity-90 transition"
               />
             </div>
             <BsChevronDown
-              className={`text-white transition ${
+              className={`text-white transition-transform duration-300 ${
                 showAccountMenu ? "rotate-180" : "rotate-0"
-              }`}
+              } group-hover:text-white`}
             />
             <AccountMenu visible={showAccountMenu} />
           </div>
-          <div
-            className={`fixed top-0 left-0 h-full w-full bg-zinc-950 transition-transform transform ${
-              showMobileMenu ? "translate-x-0" : "-translate-x-full"
-            }`}
-          >
-            <div className="absolute flex w-full flex-row justify-end items-end p-4 z-50">
-              <button onClick={toggleMobileMenu} className="text-white">
-                X
-              </button>
-            </div>
-            <div className="flex flex-col">
-              <MobileMenu visible={showMobileMenu} items={navbarItems}/>
-            </div>
+        </div>
+
+        {/* Mobile Menu */}
+        <div
+          className={`fixed top-0 left-0 h-full w-full bg-black transition-transform duration-500 transform ${
+            showMobileMenu ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <div className="absolute top-4 right-4">
+            <button
+              onClick={toggleMobileMenu}
+              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition"
+            >
+              <span className="text-white text-2xl font-light">×</span>
+            </button>
+          </div>
+          <div className="flex flex-col pt-20 px-8 bg-gradient-to-b from-zinc-900 to-black h-full">
+            <MobileMenu visible={showMobileMenu} items={navbarItems} />
           </div>
         </div>
       </div>

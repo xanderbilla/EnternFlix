@@ -7,16 +7,18 @@ import { useRouter } from "next/navigation";
 
 interface MovieCardProps {
   data: Record<string, any>;
+  isFirst: boolean;
+  isLast: boolean;
 }
 
-const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
+const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
   const route = useRouter();
   return (
-    <div className="group flex flex-col bg-zinc-900 col-span relative w-48 md:w-60 lg:w-72 h-72 md:h-96 lg:h-[52vh]">
-      <div className="relative w-full h-full">
+    <div className="group/item relative w-full h-[240px] md:h-[280px] lg:h-[320px]">
+      <div className="relative w-full h-full bg-zinc-900 rounded-md overflow-hidden">
         <Image
           className="cursor-pointer object-cover transition duration-300 shadow-xl rounded-md 
-        group-hover:opacity-90 sm:group-hover:opacity-0 delay-300 w-full h-full"
+          group-hover/item:opacity-0 delay-300 w-full h-full"
           onClick={() => route.push("/title/70205012")}
           layout="fill"
           src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
@@ -25,99 +27,89 @@ const MovieCard: React.FC<MovieCardProps> = ({ data }) => {
       </div>
 
       <div
-        className="hidden md:block md:h-[52vh] md:w-96 h-[56vh] w-[460px] opacity-0 absolute top-0 transition duration-500 z-10
-      invisible ease-in-out sm:visible delay-500 scale-0 group-hover:scale-105 
-      group-hover:-translate-y-[8vw] lg:group-hover:-translate-y-[3vw] group-hover:translate-x-[1vw] group-hover:opacity-100"
+        className={`hidden md:block opacity-0 absolute top-0 transition duration-300 z-10
+        invisible sm:visible delay-300 scale-0 group-hover/item:scale-110 
+        group-hover/item:translate-y-[5vh] group-hover/item:opacity-100
+        w-[280px] md:w-[320px] lg:w-[360px] h-[180px] md:h-[200px] lg:h-[220px]
+        ${
+          isFirst ? "left-0" : isLast ? "right-0" : "left-1/2 -translate-x-1/2"
+        }`}
       >
         <Image
-          className="cursor-pointer absolute object-scale-down transition duration shadow-xl 
-          rounded-t-md w-full h-[2/3]"
+          className="cursor-pointer absolute object-cover transition duration shadow-xl 
+          rounded-t-md w-full h-[60%]"
           onClick={() => route.push("/title/70205012")}
           fill
           src={`https://image.tmdb.org/t/p/original${data?.backdrop_path}`}
           alt={data?.title || data?.name || data?.original_name}
         />
-        <div className="bg-gradient-to-t from-black via-zinc-800 to-transparent p-2 absolute bottom-0 h-36 lg:h-44 w-full lg:p-4 transition rounded shadow-md">
-          <div className="flex flex-row items-center justify-between gap-2">
-            <div className="flex flex-row items-center gap-3">
-              <div
-                className="cursor-pointer w-8 h-8 lg:w-10 lg:h-10 bg-white/90 rounded-full 
-          flex justify-center items-center transition hover:bg-neutral-300"
-                onClick={() => {}}
-              >
-                <BsFillPlayFill size={26} color="black" />
+        <div className="bg-gradient-to-t from-black via-zinc-800/90 to-transparent absolute bottom-0 w-full h-[45%] transition rounded-b-md shadow-md">
+          <div className="absolute bottom-0 w-full p-4 flex flex-col gap-3">
+            <div className="flex flex-row items-center justify-between">
+              <div className="flex flex-row items-center gap-2">
+                <div
+                  className="cursor-pointer w-8 h-8 bg-white rounded-full 
+                  flex justify-center items-center transition hover:bg-neutral-300"
+                  onClick={() => {}}
+                >
+                  <BsFillPlayFill size={22} color="black" />
+                </div>
+                <div
+                  className="cursor-pointer w-8 h-8 bg-white rounded-full 
+                  flex justify-center items-center transition hover:bg-neutral-300"
+                  onClick={() => {}}
+                >
+                  <IoMdAdd size={22} color="black" />
+                </div>
+                <div
+                  className="cursor-pointer w-8 h-8 bg-white rounded-full 
+                  flex justify-center items-center transition hover:bg-neutral-300"
+                  onClick={() => {}}
+                >
+                  <SlLike size={18} color="black" />
+                </div>
               </div>
               <div
-                className="cursor-pointer w-8 h-8 lg:w-10 lg:h-10 bg-white/90 rounded-full 
-          flex justify-center items-center transition hover:bg-neutral-300"
-                onClick={() => {}}
+                className="cursor-pointer w-8 h-8 bg-white rounded-full 
+                flex justify-center items-center transition hover:bg-neutral-300"
+                onClick={() => route.push("/title/70205012")}
               >
-                <IoMdAdd
-                  size={26}
-                  color="black"
-                  className="text-white group-hover/item:text-neutral-300
-          w-4 lg:w-6"
-                />
-              </div>
-              <div
-                className="cursor-pointer w-8 h-8 lg:w-10 lg:h-10 bg-white/90 rounded-full 
-          flex justify-center items-center transition hover:bg-neutral-300"
-                onClick={() => {}}
-              >
-                <SlLike
-                  size={18}
-                  color="black"
-                  className="text-white group-hover/item:text-neutral-300
-          w-4 lg:w-6"
-                />
+                <IoIosArrowDown size={22} color="black" />
               </div>
             </div>
-            <div
-              className="cursor-pointer w-8 h-8 lg:w-10 lg:h-10 bg-white/90 rounded-full 
-          flex justify-center items-center transition hover:bg-neutral-300"
-              onClick={() => route.push("/title/70205012")} //Route to movie details page
-            >
-              <IoIosArrowDown
-                size={24}
-                color="black"
-                className="group-hover/item:text-neutral-300
-          w-4 lg:w-6"
-              />
+            <div className="flex flex-col gap-2">
+              <p
+                className="text-green-400 font-semibold text-base cursor-pointer flex items-center"
+                onClick={() => route.push("/title/70205012")}
+              >
+                {(data?.title || data?.name || data?.original_name)?.length > 25
+                  ? (data?.title || data?.name || data?.original_name)?.slice(
+                      0,
+                      25
+                    ) + "..."
+                  : data?.title || data?.name || data?.original_name}
+                <span className="text-white text-sm ml-2">
+                  {data?.release_date?.split("-")[0] ||
+                    data?.first_air_date?.split("-")[0]}
+                </span>
+              </p>
+              <div className="flex flex-row gap-2 items-center">
+                <span className="text-white text-xs border border-white/40 px-1.5 py-0.5 rounded">
+                  U/A 16+
+                </span>
+                <span className="text-white text-xs">
+                  {data?.media_type === "tv" ? "TV Show" : "Movie"}
+                </span>
+                <span className="text-white text-xs bg-white/20 px-1.5 py-0.5 rounded">
+                  HD
+                </span>
+              </div>
+              <div className="flex flex-row gap-2 items-center text-white/80 text-xs">
+                <span>1hr 23m</span>
+                <span>&#8729;</span>
+                <span>Comedy</span>
+              </div>
             </div>
-          </div>
-          <p
-            className="text-green-400 font-semibold mt-2 cursor-pointer"
-            onClick={() => route.push("/title/70205012")}
-          >
-            {(data?.title || data?.name || data?.original_name)?.length > 32
-              ? (data?.title || data?.name || data?.original_name)?.slice(
-                  0,
-                  32
-                ) + "..."
-              : data?.title || data?.name || data?.original_name}
-            <span className="text-white px-2">
-              {data?.release_date?.split("-")[0] ||
-                data?.first_air_date?.split("-")[0]}
-            </span>
-          </p>
-          <div className="flex flex-row mt-3 md:mt-2 gap-2 items-center">
-            <p
-              className="border border-neutral-500/90 rounded-lg p-1 text-white 
-        md:text-xs lg:font-medium"
-            >
-              U/A 16+
-            </p>
-            <p className="text-white md:text-xs">
-              {data?.media_type === "tv" ? "TV Show" : "Movie"}
-            </p>
-            <p className="bg-neutral-600 px-1 rounded-md text-white md:text-xs">
-              HD
-            </p>
-          </div>
-          <div className="flex flex-row mt-2 gap-2 items-center">
-            <p className="text-white md:text-xs">1hr 23m</p>
-            <p className="text-white md:text-xs">&#8729;</p>
-            <p className="text-white md:text-xs">Comedy</p>
           </div>
         </div>
       </div>

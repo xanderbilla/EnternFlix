@@ -3,32 +3,35 @@
 @tailwind utilities;
 
 @layer utilities {
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-    overflow-y: auto;
-  }
-
+  /* Hide scrollbar for Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
     display: none;
   }
 
-  .backdrop-image {
-    @apply absolute top-0 left-0 w-full h-full bg-cover bg-center transition-opacity duration-300;
-    background-size: cover;
+  /* Hide scrollbar for IE, Edge and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }
 
-/* Base styles */
-html,
 body {
-  @apply h-full;
-}
-
-body {
-  @apply bg-zinc-900 overflow-x-hidden font-sans no-scrollbar;
+  @apply bg-zinc-900 h-full overflow-x-hidden font-sans;
 }
 
 #__next {
   @apply h-full;
+}
+
+html {
+  @apply h-full;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

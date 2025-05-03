@@ -53,7 +53,7 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
         >
           <Image
             className="object-cover transition duration-300 shadow-xl rounded-md 
-            group-hover/item:opacity-0 delay-300 w-full h-full"
+            md:group-hover/item:opacity-0 delay-300 w-full h-full"
             layout="fill"
             src={`https://image.tmdb.org/t/p/original${data?.poster_path}`}
             alt={data?.title || data?.name || data?.original_name}
@@ -62,9 +62,10 @@ const MovieCard: React.FC<MovieCardProps> = ({ data, isFirst, isLast }) => {
       </div>
 
       <div
-        className={`hidden md:block opacity-0 absolute top-0 transition duration-300 z-10
-        invisible sm:visible delay-300 scale-0 group-hover/item:scale-110 
-        group-hover/item:translate-y-[5vh] group-hover/item:opacity-100
+        className={`hidden md:block opacity-0 md:opacity-0 absolute top-0 transition duration-300 z-10
+        md:invisible md:group-hover/item:visible md:group-hover/item:opacity-100
+        md:scale-0 md:group-hover/item:scale-110 
+        md:translate-y-0 md:group-hover/item:translate-y-[5vh]
         w-[280px] md:w-[320px] lg:w-[360px] h-[180px] md:h-[200px] lg:h-[220px]
         ${getPositionClass()}`}
       >

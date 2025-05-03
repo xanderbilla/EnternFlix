@@ -9,7 +9,7 @@ import { BsSearch } from "react-icons/bs";
 import { debounce } from "lodash";
 
 const Navbar = dynamic(() => import("@/components/Navbar/Navbar"));
-const SearchList = dynamic(() => import("./component/SearchList"));
+const SearchList = dynamic(() => import("@/components/search/SearchList"));
 
 interface Movie {
   id: number;

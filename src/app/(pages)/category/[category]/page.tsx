@@ -88,6 +88,9 @@ export default function Page() {
     ],
   };
 
+  console.log(category);
+  
+
   return (
     <>
       <CategoryBanner

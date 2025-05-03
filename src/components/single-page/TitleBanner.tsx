@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { BsPlay } from "react-icons/bs";
+import { BsPlay, BsPlayFill } from "react-icons/bs";
 import { PiVideoCamera } from "react-icons/pi";
 
 interface Movie {
@@ -54,7 +54,7 @@ const TitleBanner: React.FC<TitleBannerProps> = ({ data, mediaType }) => {
                 className="text-white text-2xl md:text-4xl lg:text-5xl h-full w-[70%] md:w-[50%] lg:w-[40%] 
             font-bold drop-shadow-xl"
               >
-                {data.title || data.name || data.original_name}
+                {data.title ?? data.name ?? data.original_name}
               </p>
               <div className="flex gap-2 md:gap-4 font-light text-zinc-400 text-sm md:text-base mt-2 md:mt-4 lg:text-lg drop-shadow-xl">
                 <p>{releaeYear}</p>
@@ -69,22 +69,17 @@ const TitleBanner: React.FC<TitleBannerProps> = ({ data, mediaType }) => {
                 {truncate(data.overview, 200)}
               </p>
 
-                <div className="flex gap-2">
-                {mediaType !== "tv" && (
-                  <button className="flex items-center gap-1 font-medium text-black bg-zinc-200 px-2 py-1 md:px-3 md:py-2 lg:px-4 lg:py-3 mt-2 md:mt-4 lg:mt-8 rounded-full transition duration-300 ease-in-out hover:bg-white hover:shadow-lg">
-                  <BsPlay className="inline-block h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6" fill="#000" />
-                  <span className="text-sm md:text-sm lg:text-base">
-                    Play Now
-                  </span>
-                  </button>
-                )}
-                <button className="flex items-center gap-2 text-white bg-zinc-600 px-2 py-1 md:px-3 md:py-2 lg:px-4 lg:py-3 mt-2 md:mt-4 lg:mt-8 rounded-full transition duration-300 ease-in-out hover:bg-zinc-500 hover:shadow-lg">
-                  <PiVideoCamera className="inline-block h-4 w-4 md:h-5 md:w-5 lg:h-6 lg:w-6" />
-                  <span className="text-sm md:text-sm lg:text-base">
-                  Watch Trailer
-                  </span>
+              <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
+                <button className="bg-white text-black rounded-[4px] py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-neutral-300 transition">
+                  <BsPlayFill className="mr-1" /> Play
                 </button>
-                </div>
+                <button
+                  className="bg-white text-white bg-opacity-30 rounded-[4px] py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
+                  onClick={() => {}}
+                >
+                  <PiVideoCamera className="mr-1" /> More Info
+                </button>
+              </div>
             </div>
             <div
               className="absolute bottom-0 inset-x-0 w-full h-16 bg-gradient-to-t 

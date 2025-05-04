@@ -160,7 +160,7 @@ const Page: React.FC = () => {
                   placeholder="Search for movies, TV shows, anime..."
                   className="
                     w-full
-                    p-3 sm:p-4 md:p-5
+                    p-3 sm:p-4 md:px-12
                     pl-10 sm:pl-12
                     rounded-lg
                     bg-zinc-800/90

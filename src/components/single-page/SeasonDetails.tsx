@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { BsPlayFill } from "react-icons/bs";
 import { IoMdAdd } from "react-icons/io";
+import { useState } from "react";
 
 type SeasonDetailsProps = {
   seasonData: {
@@ -19,6 +20,8 @@ export const SeasonDetails = ({
   seasonData,
   onPlaySeason,
 }: SeasonDetailsProps) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <div className="mb-8 sm:mb-10 md:mb-12 rounded-xl overflow-visible flex flex-col lg:flex-row items-stretch gap-4 md:gap-6">
       {/* Season Poster */}
@@ -41,22 +44,26 @@ export const SeasonDetails = ({
       </div>
 
       {/* Season Info */}
-      <div className="flex-1 flex flex-col justify-center bg-zinc-800/60 rounded-xl p-4 sm:p-6 md:p-8 space-y-4 min-w-0">
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-2 min-h-[64px]">
+      <div className="flex-1 flex flex-col justify-center bg-zinc-800/60 rounded-xl p-4 sm:p-6 md:p-8 min-w-0 lg:h-[420px]">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-2 h-full">
           {/* Left Side */}
-          <div className="w-full lg:w-1/2">
-            <h2 className="text-xl sm:text-2xl font-bold text-white">
-              {seasonData.name ?? `Season ${seasonData.season_number}`}
-            </h2>
-            <div className="flex items-center gap-2 text-zinc-400 flex-wrap">
-              <span className="text-sm">Season {seasonData.season_number}</span>
-              <span className="w-1 h-1 bg-zinc-600 rounded-full"></span>
-              <span className="text-sm">
-                {seasonData.episode_count} Episodes
-              </span>
+          <div className="w-full lg:w-1/2 flex flex-col">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
+                {seasonData.name ?? `Season ${seasonData.season_number}`}
+              </h2>
+              <div className="flex items-center gap-2 text-zinc-400 flex-wrap">
+                <span className="text-sm">
+                  Season {seasonData.season_number}
+                </span>
+                <span className="w-1 h-1 bg-zinc-600 rounded-full"></span>
+                <span className="text-sm">
+                  {seasonData.episode_count} Episodes
+                </span>
+              </div>
             </div>
 
-            <div className="mt-6 space-y-4">
+            <div className="mt-6 space-y-4 flex-grow">
               <div className="space-y-2">
                 <h4 className="text-sm text-zinc-400 uppercase tracking-wider">
                   Genres
@@ -98,12 +105,18 @@ export const SeasonDetails = ({
           </div>
 
           {/* Right Side */}
-          <div className="w-full lg:w-1/2">
-            <div className="space-y-2">
+          <div className="w-full lg:w-1/2 flex flex-col">
+            <div className="space-y-2 flex-grow">
               <h3 className="text-base sm:text-lg font-semibold text-white">
                 Overview
               </h3>
-              <div className="space-y-4">
+              <div
+                className={`space-y-4 ${
+                  !isExpanded
+                    ? "max-h-[calc(420px-12rem)] overflow-hidden"
+                    : "max-h-[calc(420px-12rem)] overflow-y-auto"
+                } pr-2 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]`}
+              >
                 <p className="text-sm sm:text-base text-zinc-300 leading-relaxed">
                   {seasonData.overview ??
                     `In Season ${seasonData.season_number}, prepare to be swept away into a world where every moment is a revelation. As the story unfolds across ${seasonData.episode_count} meticulously crafted episodes, you'll witness the perfect storm of drama, action, and emotion that has captivated audiences worldwide.`}
@@ -115,6 +128,12 @@ export const SeasonDetails = ({
                   {`What secrets will be revealed? Which alliances will be tested? And how will the choices made in these ${seasonData.episode_count} episodes change everything? The answers await in this unforgettable season that redefines what's possible in storytelling.`}
                 </p>
               </div>
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="text-sm text-zinc-400 hover:text-white transition-colors"
+              >
+                {isExpanded ? "Show Less" : "Read More"}
+              </button>
             </div>
           </div>
         </div>

@@ -77,7 +77,7 @@ const TitleBanner: React.FC<TitleBannerProps> = ({ data, mediaType }) => {
                   className="bg-white text-white bg-opacity-30 rounded-[4px] py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
                   onClick={() => {}}
                 >
-                  <PiVideoCamera className="mr-1" /> More Info
+                  <PiVideoCamera className="mr-1" /> Watch Trailer
                 </button>
               </div>
             </div>

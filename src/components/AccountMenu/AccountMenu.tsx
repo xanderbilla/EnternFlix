@@ -1,8 +1,11 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { GoPerson } from "react-icons/go";
 import { LiaUserEditSolid } from "react-icons/lia";
+import { FiLogOut } from "react-icons/fi";
+
 interface AccountMenuProps {
   visible: boolean;
 }
@@ -25,13 +28,18 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
             alt="avatar"
             className="w-8 rounded-md"
           />
-          <p className="group-hover/item:underline">Username</p>
+          <span
+            className="group-hover/item:underline cursor-pointer"
+            onClick={() => router.push("/profile")}
+          >
+            Username
+          </span>
         </div>
         <div className="flex flex-col gap-2 my-1">
           <div className="px-3 group/item flex flex-row gap-3 items-center w-full">
             <LiaUserEditSolid size={26} className="w-8" />
             <p
-              className="group-hover/item:underline"
+              className="group-hover/item:underline cursor-pointer"
               onClick={() => router.push("browse")}
             >
               Manage Profile
@@ -39,12 +47,23 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
           </div>
           <div className="px-3 group/item flex flex-row gap-3 items-center w-full">
             <GoPerson size={24} className="w-8" />
-            <p className="group-hover/item:underline">Account</p>
+            <span
+              className="group-hover/item:underline cursor-pointer"
+              onClick={() => router.push("/account")}
+            >
+              Account
+            </span>
           </div>
         </div>
         <hr className="bg-gray-600 border-0 h-px my-2" />
-        <div className="px-3 text-center hover:underline">
-          Sign Out from Netflix
+        <div className="px-3 group/item flex flex-row gap-3 items-center w-full">
+          <FiLogOut size={24} className="w-8" />
+          <span
+            className="group-hover/item:underline cursor-pointer"
+            onClick={() => router.push("/account")}
+          >
+            Sign Out
+          </span>
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { PiPencilSimpleLineLight } from "react-icons/pi";
 import React, { useState } from "react";
+import Link from "next/link";
 
 const Page = () => {
   const [showProfile, setShowProfile] = useState(false);
@@ -22,10 +23,19 @@ const Page = () => {
   };
 
   return (
-    <div className="h-screen flex flex-col items-center justify-center">
+    <div className="relative min-h-screen flex flex-col items-center justify-center bg-zinc-900">
+    <Link href="/" className="absolute h-16 md:h-24 top-6 lg:left-6 lg:top-6">
+      <Image
+        className="rounded-sm"
+        src="/logo.png"
+        alt="Logo"
+        height={70}
+        width={80}
+      />
+    </Link>
       {!showProfile && (
         <div className="flex flex-col items-center justify-center gap-14 md:gap-10 h-4/5 md:mt-16">
-          <h1 className="text-white text-4xl md:text-5xl lg:text-5xl">
+          <h1 className="text-white text-4xl md:text-5xl lg:text-5xl tracking-wide mb-2">
             Manage Profiles:
           </h1>
           <div
@@ -76,7 +86,7 @@ const Page = () => {
             >
               <Image
                 className="rounded-md bg-zinc-900"
-                src="/img/add1.png"
+                src="/img/add.png"
                 alt="Default Profile"
                 height={100}
                 width={100}
@@ -88,8 +98,7 @@ const Page = () => {
           </div>
           <button
             onClick={handleSave}
-            className="bg-white font-medium py-1 px-4 text-black border-4 text-sm border-opacity-25 border-gray-400
-            mt-6 md:mt-2"
+            className="bg-white text-black font-medium px-6 py-2 rounded border-2 border-opacity-25 border-gray-400 tracking-widest mt-6 md:mt-2 hover:bg-neutral-200 transition-colors duration-200"
           >
             Done
           </button>
@@ -153,19 +162,19 @@ const Page = () => {
           <div className="flex my-6 gap-6 text-white w-full">
             <button
               onClick={handleSave}
-              className="px-4 py-1 rounded-sm border border-gray-600 bg-white text-black font-medium"
+              className="bg-white text-black font-medium px-6 py-2 rounded border-2 border-opacity-25 border-gray-400 tracking-widest hover:bg-neutral-200 transition-colors duration-200"
             >
               Save
             </button>
             <button
               onClick={onCancel}
-              className="px-4 py-1 rounded-sm border border-gray-600 text-gray-500 font-medium"
+              className="text-gray-400 border-2 font-light text-base border-opacity-25 border-gray-400 tracking-widest px-6 py-2 rounded hover:border-white hover:text-white transition-colors duration-200"
             >
               Cancel
             </button>
             <button
               onClick={onReset}
-              className="px-4 py-1 rounded-sm border border-gray-600 text-gray-500 font-medium"
+              className="bg-gray-600 text-white font-light px-6 py-2 rounded border-2 border-opacity-25 border-gray-400 tracking-widest hover:bg-gray-500 transition-colors duration-200"
             >
               Reset
             </button>

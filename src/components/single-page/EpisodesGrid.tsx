@@ -16,13 +16,6 @@ export const EpisodesGrid = ({
   return (
     <>
       {/* Episodes Section Header */}
-      <div className="mb-4 sm:mb-6">
-        <h3 className="text-xl sm:text-2xl font-bold text-white">Episodes</h3>
-        <p className="text-sm sm:text-base text-zinc-400 mt-1">
-          All episodes from {seasonName}
-        </p>
-      </div>
-
       {/* Episodes Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
         {videosData[seasonNumber]?.map((video) => (

@@ -12,7 +12,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ items, visible }) => {
     return null;
   }
   return (
-    <div className="w-full h-screen flex-col flex items-center justify-center">
+    <div className="relative h-[33vh] md:h-[50vh] w-full flex-col flex items-center justify-center">
       <div className="flex flex-col gap-4 h-full py-14">
         <Image
           src="/logo.png"
@@ -23,7 +23,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ items, visible }) => {
         />
         {items.map((item, index) => (
           <Link
-            href={item.path}
+            href={`category/${item.path}`}
             key={index}
             className="px-3 text-xl text-center text-white hover:underline"
           >

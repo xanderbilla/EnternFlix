@@ -67,18 +67,14 @@ const CategoryBanner: React.FC<CategoryBannerProps> = ({
     fetchRandomBackdrop();
   }, [category]); // Re-fetch when category changes
 
-  console.log("Current movie state:", movie);
-
   if (!movie?.backdrop_path) {
-    console.log("No backdrop path available, returning null");
     return null;
   }
 
   const backdropUrl = `https://image.tmdb.org/t/p/original${movie.backdrop_path}`;
-  console.log("Using backdrop URL:", backdropUrl);
 
   return (
-    <div className="relative h-[56.25vw] md:h-[44vw] lg:h-[36vw]">
+    <div className="relative h-[48vh] md:h-[44vw] lg:h-[36vw]">
       <div
         className="backdrop-image opacity-100"
         style={{

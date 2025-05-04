@@ -151,20 +151,32 @@ const Page: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/50 to-transparent" />
             </div>
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 w-full max-w-4xl px-4">
-              <h1 className="text-4xl md:text-5xl font-bold text-white text-center mb-8">
+              <h1 className="text-2xl sm:text-3xl md:text-5xl font-bold text-white text-center mb-6 md:mb-8">
                 Find Your Next Entertainment
               </h1>
               <div className="relative">
                 <input
                   type="text"
                   placeholder="Search for movies, TV shows, anime..."
-                  className="w-full p-4 pl-12 rounded-lg bg-zinc-800/90 text-white text-lg border-2 border-transparent focus:border-red-500 focus:outline-none transition-all duration-300 backdrop-blur-sm"
+                  className="
+                    w-full
+                    p-3 sm:p-4 md:p-5
+                    pl-10 sm:pl-12
+                    rounded-lg
+                    bg-zinc-800/90
+                    text-white
+                    text-base sm:text-lg md:text-xl
+                    border-2 border-transparent
+                    focus:border-red-500 focus:outline-none
+                    transition-all duration-300
+                    backdrop-blur-sm
+                  "
                   onChange={handleSearch}
                   value={searchQuery}
                 />
                 <BsSearch
-                  className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
-                  size={20}
+                  className="absolute left-3 sm:left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  size={18}
                 />
               </div>
             </div>

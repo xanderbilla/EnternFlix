@@ -22,8 +22,8 @@ export const SeasonDetails = ({
   return (
     <div className="mb-8 sm:mb-10 md:mb-12 rounded-xl overflow-visible flex flex-col lg:flex-row items-stretch gap-4 md:gap-6">
       {/* Season Poster */}
-      <div className="flex justify-center items-center p-2 md:p-4 w-full lg:w-[280px] flex-shrink-0 self-center">
-        <div className="bg-zinc-900/10 rounded-xl shadow-lg border border-zinc-800 p-2 md:p-3 flex items-center justify-center w-full h-full">
+      <div className="flex justify-center items-center w-full lg:w-[280px] flex-shrink-0 self-center">
+        <div className="flex items-center justify-center w-full h-full">
           <Image
             src={`https://image.tmdb.org/t/p/original${seasonData.poster_path}`}
             alt={`Season ${seasonData.season_number} poster`}

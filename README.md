@@ -1,4 +1,4 @@
-# Enternflix (Archived)  
+# Enternflix
 
 ![image](https://enternflix.xanderbilla.com/_next/image?url=%2Flogo.png&w=256&q=75)
 
@@ -12,7 +12,7 @@
 
 ## 📌 Project Status  
 
-This repository has been **archived** as development has moved to **Enternflix 3.0**, a new and improved version.  
+This repository has been **under development** more than a clone  
 
 ## 🚀 Next Steps  
 

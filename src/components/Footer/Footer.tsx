@@ -1,121 +1,42 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
-import { BsFacebook, BsGithub, BsInstagram, BsTwitter } from "react-icons/bs";
+import FooterBrand from "./FooterBrand";
+import FooterLinkGroup from "./FooterLinkGroup";
+
+const navigationLinks = [
+  { href: "/", label: "Home" },
+  { href: "/movies", label: "Movies" },
+  { href: "/tv-shows", label: "TV Shows" },
+  { href: "/my-list", label: "My List" },
+];
+
+const legalLinks = [
+  { href: "/privacy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Service" },
+  { href: "/cookie", label: "Cookie Preferences" },
+  { href: "/corporate", label: "Corporate Information" },
+];
+
+const contactLinks = [
+  { href: "/help", label: "Help Center" },
+  { href: "/support", label: "Support" },
+  { href: "/faq", label: "FAQ" },
+  {
+    href: "mailto:support@enternflix.com",
+    label: "support@enternflix.com",
+    isEmail: true,
+  },
+];
 
 export default function Footer() {
   return (
     <footer className="bg-zinc-900 text-zinc-400 mt-8 py-12 px-4 md:px-12">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Logo and Social Links */}
-          <div className="flex flex-col space-y-6">
-            <Image
-              src="/logo.png"
-              height={90}
-              width={150}
-              alt="EnternFlix Logo"
-              className="h-12 object-contain"
-            />
-            <div className="flex space-x-4">
-              <Link href="#" className="hover:text-white transition">
-                <BsFacebook size={20} />
-              </Link>
-              <Link href="#" className="hover:text-white transition">
-                <BsTwitter size={20} />
-              </Link>
-              <Link href="#" className="hover:text-white transition">
-                <BsInstagram size={20} />
-              </Link>
-              <Link href="#" className="hover:text-white transition">
-                <BsGithub size={20} />
-              </Link>
-            </div>
-          </div>
-
-          {/* Navigation Links */}
-          <div>
-            <h3 className="text-white font-medium mb-4">Navigation</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="hover:text-white transition">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/movies" className="hover:text-white transition">
-                  Movies
-                </Link>
-              </li>
-              <li>
-                <Link href="/tv-shows" className="hover:text-white transition">
-                  TV Shows
-                </Link>
-              </li>
-              <li>
-                <Link href="/my-list" className="hover:text-white transition">
-                  My List
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Legal Links */}
-          <div>
-            <h3 className="text-white font-medium mb-4">Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/privacy" className="hover:text-white transition">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="hover:text-white transition">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/cookie" className="hover:text-white transition">
-                  Cookie Preferences
-                </Link>
-              </li>
-              <li>
-                <Link href="/corporate" className="hover:text-white transition">
-                  Corporate Information
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h3 className="text-white font-medium mb-4">Contact Us</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/help" className="hover:text-white transition">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link href="/support" className="hover:text-white transition">
-                  Support
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="hover:text-white transition">
-                  FAQ
-                </Link>
-              </li>
-              <li>
-                <a
-                  href="mailto:support@enternflix.com"
-                  className="hover:text-white transition"
-                >
-                  support@enternflix.com
-                </a>
-              </li>
-            </ul>
-          </div>
+          <FooterBrand />
+          <FooterLinkGroup title="Navigation" links={navigationLinks} />
+          <FooterLinkGroup title="Legal" links={legalLinks} />
+          <FooterLinkGroup title="Contact Us" links={contactLinks} />
         </div>
 
         {/* Bottom Section */}

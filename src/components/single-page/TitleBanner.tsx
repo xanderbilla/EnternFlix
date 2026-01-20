@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import { BsPlay, BsPlayFill } from "react-icons/bs";
-import { PiVideoCamera } from "react-icons/pi";
+import Icon from "@/components/Icon/Icon";
 
 interface Movie {
   backdrop_path: string;
@@ -26,11 +25,11 @@ const TitleBanner: React.FC<TitleBannerProps> = ({ data, mediaType }) => {
   const releaeYear = data?.first_air_date
     ? data.first_air_date.substring(0, 4)
     : data?.release_date
-    ? data.release_date.substring(0, 4)
-    : "Unknown";
+      ? data.release_date.substring(0, 4)
+      : "Unknown";
 
   const truncate = (string: string, n: number) => {
-    return string?.length > n ? string.substr(0, n - 1) + "..." : string;
+    return string?.length > n ? string.slice(0, n - 1) + "..." : string;
   };
 
   return (
@@ -40,7 +39,7 @@ const TitleBanner: React.FC<TitleBannerProps> = ({ data, mediaType }) => {
           <Image
             className="w-full h-full object-cover brightness-[60%]"
             src={`https://image.tmdb.org/t/p/original/${data.backdrop_path}`}
-            alt=""
+            alt={`${data.title ?? data.name ?? data.original_name} backdrop`}
             width={1920}
             height={1080}
           />
@@ -71,13 +70,13 @@ const TitleBanner: React.FC<TitleBannerProps> = ({ data, mediaType }) => {
 
               <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
                 <button className="bg-white text-black rounded-[4px] py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-neutral-300 transition">
-                  <BsPlayFill className="mr-1" /> Play
+                  <Icon name="playFill" className="mr-1" /> Play
                 </button>
                 <button
                   className="bg-white text-white bg-opacity-30 rounded-[4px] py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
                   onClick={() => {}}
                 >
-                  <PiVideoCamera className="mr-1" /> Watch Trailer
+                  <Icon name="video" className="mr-1" /> Watch Trailer
                 </button>
               </div>
             </div>

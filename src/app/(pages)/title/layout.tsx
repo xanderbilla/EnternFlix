@@ -3,22 +3,24 @@ import Navbar from "@/components/Navbar/Navbar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "EnternFlix",
-  description: "Next Gen Entertainment",
+  title: {
+    template: "%s - EnternFlix",
+    default: "Watch Now",
+  },
+  description:
+    "Watch movies, TV shows, and anime with detailed information, cast, ratings, and reviews on EnternFlix.",
 };
 
-export default function RootLayout({
+export default function TitleLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <Navbar />
-        {children}
-        <Footer/>
-      </body>
-    </html>
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
   );
 }

@@ -2,77 +2,127 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
-import Sidebar from "./components/Sidebar";
-import AccountForm from "./components/AccountForm";
-import Notifications from "./components/Notifications";
-import Subscriptions from "./components/Subscriptions";
-import Devices from "./components/Devices";
+import { Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import dynamic from "next/dynamic";
+import { TabId } from "@/hooks/account/useAccountNavigation";
 
-const Page = () => {
-  const [isKid, setIsKid] = useState(false);
-  const [language, setLanguage] = useState("English");
-  const [name, setName] = useState("John Doe");
-  const [email, setEmail] = useState("user@email.com");
-  const [activeSidebar, setActiveSidebar] = useState("account");
+const Sidebar = dynamic(() => import("@/components/account/Sidebar"), {
+  ssr: false,
+});
 
-  const onReset = () => {
-    setEmail("user@email.com");
-    setLanguage("English");
-    setIsKid(false);
+const Subscriptions = dynamic(
+  () => import("@/components/account/Subscriptions"),
+  {
+    ssr: false,
+  },
+);
+
+const OverviewTab = dynamic(
+  () => import("@/components/account/tabs/OverviewTab"),
+  {
+    ssr: false,
+  },
+);
+
+const SecurityTab = dynamic(
+  () => import("@/components/account/tabs/SecurityTab"),
+  {
+    ssr: false,
+  },
+);
+
+const DevicesTab = dynamic(
+  () => import("@/components/account/tabs/DevicesTab"),
+  {
+    ssr: false,
+  },
+);
+
+const ProfilesTab = dynamic(
+  () => import("@/components/account/tabs/ProfilesTab"),
+  {
+    ssr: false,
+  },
+);
+
+function AccountContent() {
+  const name = "John Doe";
+  const email = "user@email.com";
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const tab = (searchParams.get("tab") as TabId) || "overview";
+
+  const setActiveTab = (newTab: TabId) => {
+    router.push(`/account?tab=${newTab}`);
+  };
+
+  const renderContent = () => {
+    switch (tab) {
+      case "membership":
+        return <Subscriptions />;
+      case "security":
+        return <SecurityTab />;
+      case "devices":
+        return <DevicesTab />;
+      case "profiles":
+        return <ProfilesTab />;
+      case "overview":
+      default:
+        return <OverviewTab name={name} email={email} />;
+    }
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center bg-zinc-900">
-      {/* Logo */}
-      <Link href="/" className="absolute h-16 md:h-24 top-6 lg:left-6 lg:top-6">
-        <Image
-          className="rounded-sm"
-          src="/logo.png"
-          alt="Logo"
-          height={70}
-          width={80}
-        />
-      </Link>
-      {/* Main Content */}
-      <div className="w-[350px] lg:w-[900px] md:w-[700px] sm:w-[600px] h-[70vh]">
-        <h1 className="text-white text-4xl md:text-5xl lg:text-5xl tracking-wide mb-2">
-          Account Settings
-        </h1>
-        <div className="flex py-6 flex-col md:flex-row lg:flex-row gap-x-12 text-white min-h-full w-full border-b-2 border-neutral-800">
-          <Sidebar
-            activeSidebar={activeSidebar}
-            setActiveSidebar={setActiveSidebar}
+    <div className="h-screen bg-zinc-900 flex flex-col">
+      {/* Fixed Header with Logo */}
+      <div className="w-full flex items-center px-6 py-4 bg-zinc-900 flex-shrink-0">
+        <Link href="/" className="flex items-center">
+          <Image
+            className="rounded-sm"
+            src="/logo.png"
+            alt="Logo"
+            height={70}
+            width={85}
           />
-          <div className="flex flex-col flex-[4] w-full gap-6">
-            {/* Back button for non-account tabs */}
-            {activeSidebar !== "account" && (
-              <button
-                className="flex items-center gap-2 bg-white text-black font-medium px-3 py-1 text-sm rounded border border-opacity-25 border-gray-400 tracking-widest hover:bg-neutral-200 transition-colors duration-200 w-fit mb-2"
-                onClick={() => setActiveSidebar("account")}
-              >
-                <span className="text-lg">&#8592;</span> Back
-              </button>
-            )}
-            {/* Main content based on activeSidebar */}
-            {activeSidebar === "notifications" && <Notifications />}
-            {activeSidebar === "subscriptions" && <Subscriptions />}
-            {activeSidebar === "devices" && <Devices />}
-            {activeSidebar === "account" && (
-              <AccountForm
-                name={name}
-                email={email}
-                language={language}
-                isKid={isKid}
-                setLanguage={setLanguage}
-                setIsKid={setIsKid}
-              />
-            )}
+        </Link>
+      </div>
+
+      {/* Main Content Area */}
+      <div className="flex flex-1 h-full overflow-hidden">
+        {/* Fixed Sidebar */}
+        <div className="w-80 h-full bg-zinc-900 flex-shrink-0">
+          <div className="h-full overflow-y-auto">
+            <Sidebar activeTab={tab} setActiveTab={setActiveTab} />
+          </div>
+        </div>
+
+        {/* Scrollable Tab Content Area */}
+        <div className="flex-1 h-full overflow-y-auto bg-zinc-900 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-zinc-600">
+          <div className="max-w-4xl mx-auto p-8">
+            <div className="mb-8 pb-4 border-b border-zinc-700">
+              <div className="text-white text-2xl font-bold">
+                Account Settings
+              </div>
+            </div>
+            {renderContent()}
           </div>
         </div>
       </div>
     </div>
   );
-};
+}
 
-export default Page;
+export default function Page() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
+          <div className="text-white text-xl">Loading...</div>
+        </div>
+      }
+    >
+      <AccountContent />
+    </Suspense>
+  );
+}

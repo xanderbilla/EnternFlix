@@ -1,60 +1,49 @@
 "use client";
 
-import NavbarItems from "@/components/NavbarItems/NavbarItems";
-import MobileMenu from "@/components/MobileMenu/MobileMenu";
-import AccountMenu from "@/components/AccountMenu/AccountMenu";
-import { BsBell, BsChevronDown, BsSearch, BsList } from "react-icons/bs";
-import { useState, useCallback, useEffect } from "react";
+import Icon from "@/components/Icon/Icon";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
+import NavbarProfile from "./NavbarProfile";
+import NavbarActions from "./NavbarActions";
+import { useNavbar } from "@/hooks/ui/useNavbar";
+import dynamic from "next/dynamic";
 
-const TOP_OFFSET = 66;
+const NavbarItems = dynamic(
+  () => import("@/components/NavbarItems/NavbarItems"),
+);
+
+const MobileMenu = dynamic(() => import("@/components/MobileMenu/MobileMenu"));
+
+const AccountMenu = dynamic(
+  () => import("@/components/AccountMenu/AccountMenu"),
+);
 
 type NavbarProps = {
   classname?: string;
 };
 
 const navbarItems = [
-  { label: "TV Shows", path: "/tv-show" },
-  { label: "Anime", path: "/anime" },
-  { label: "Movies", path: "/movies" },
   { label: "Trending", path: "/trending" },
-  { label: "My List", path: "/my-list" },
+  { label: "Anime", path: "/anime" },
+  { label: "TV Shows", path: "/tv-shows" },
+  { label: "Movies", path: "/movies" },
+  { label: "Favorites", path: "/favorites" },
 ];
 
 const Navbar = ({ classname = "" }: NavbarProps) => {
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const [showAccountMenu, setShowAccountMenu] = useState(false);
-  const [showBackground, setShowBackground] = useState(false);
   const router = useRouter();
-
-  const toggleAccountMenu = useCallback(() => {
-    setShowAccountMenu((current) => !current);
-  }, []);
-
-  const toggleMobileMenu = useCallback(() => {
-    setShowMobileMenu((current) => !current);
-  }, []);
-
-  useEffect(() => {
-    const handleScroll: () => void = () => {
-      if (window.scrollY >= TOP_OFFSET) {
-        setShowBackground(true);
-      } else {
-        setShowBackground(false);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+  const {
+    showMobileMenu,
+    showAccountMenu,
+    showBackground,
+    toggleMobileMenu,
+    handleAccountMenuEnter,
+    handleAccountMenuLeave,
+  } = useNavbar();
 
   return (
-    <nav className={twMerge("w-full fixed z-40", classname)}>
+    <nav className={twMerge("w-full fixed top-0 left-0 z-40", classname)}>
       <div
         className={`px-4 md:px-16 py-4 flex flex-row items-center transition duration-500
         ${
@@ -69,7 +58,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
           className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition lg:hidden"
           aria-label="Toggle mobile menu"
         >
-          <BsList className="text-white" size={24} />
+          <Icon name="menu" size={24} className="text-white" />
         </button>
 
         {/* Logo */}
@@ -90,43 +79,20 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
         </div>
 
         {/* Right Side Icons */}
-        <div className="flex flex-row ml-auto gap-4 md:gap-7 items-center">
-          <button
-            className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-gray-200 hover:text-white"
-            aria-label="Search"
-            onClick={() => router.push("/search")}
-          >
-            <BsSearch size={20} />
-          </button>
-
+        <div className="flex flex-row ml-auto gap-2 md:gap-4 items-center">
+          <NavbarActions onSearchClick={() => router.push("/search")} />
           <button
             className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition text-gray-200 hover:text-white"
             aria-label="Notifications"
           >
-            <BsBell size={20} />
+            <Icon name="bell" size={20} />
           </button>
-
-          {/* Account Menu */}
-          <div
-            onClick={toggleAccountMenu}
-            className="flex items-center gap-2 cursor-pointer relative group"
-          >
-            <div className="w-8 md:w-10 h-8 md:h-10 rounded-lg overflow-hidden">
-              <Image
-                height={40}
-                width={40}
-                src="/img/default-blue.png"
-                alt="avatar"
-                className="object-cover hover:opacity-90 transition"
-              />
-            </div>
-            <BsChevronDown
-              className={`text-white transition-transform duration-300 ${
-                showAccountMenu ? "rotate-180" : "rotate-0"
-              } group-hover:text-white`}
-            />
-            <AccountMenu visible={showAccountMenu} />
-          </div>
+          <NavbarProfile
+            showAccountMenu={showAccountMenu}
+            onMenuEnter={handleAccountMenuEnter}
+            onMenuLeave={handleAccountMenuLeave}
+            AccountMenu={AccountMenu}
+          />
         </div>
 
         {/* Mobile Menu */}

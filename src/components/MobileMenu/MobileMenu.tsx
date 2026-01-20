@@ -23,7 +23,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ items, visible }) => {
         />
         {items.map((item, index) => (
           <Link
-            href={`category/${item.path}`}
+            href={item.path}
             key={index}
             className="px-3 text-xl text-center text-white hover:underline"
           >

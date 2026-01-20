@@ -1,103 +1,118 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-import { BsPlayFill } from "react-icons/bs";
-import Image from "next/image";
-import axios from "@/helper/axios";
-import requests from "@/helper/request";
+import { useCallback, memo } from "react";
+import Icon from "@/components/Icon/Icon";
+import Button from "@/components/Button/Button";
 import { useRouter } from "next/navigation";
+import { getImageUrl } from "@/utils/movieHelpers";
+import { useRandomContent, useCategoryContent } from "@/hooks/api/useMovies";
 
-interface Movie {
-  id: number;
-  backdrop_path: string | null;
+interface BannerProps {
+  // For category banners
   title?: string;
-  name?: string;
-  original_name?: string;
-  overview: string;
-  first_air_date?: string;
-  release_date?: string;
+  description?: string;
+  category?: string;
+  // For home banner
+  variant?: "home" | "category";
 }
 
-const Banner: React.FC = () => {
-  const [movie, setMovie] = useState<Movie | null>(null);
+const Banner: React.FC<BannerProps> = ({
+  title,
+  description,
+  category,
+  variant = "home",
+}) => {
   const router = useRouter();
 
-  const getYear = (date?: string) => {
-    if (!date) return "Unknown";
-    return date.slice(0, 4);
-  };
+  // Use hooks for data fetching
+  const {
+    data: homeMovie,
+    isLoading: homeLoading,
+    error: homeError,
+  } = useRandomContent();
 
-  const releaseYear = getYear(movie?.first_air_date ?? movie?.release_date);
+  const {
+    data: categoryMovie,
+    isLoading: categoryLoading,
+    error: categoryError,
+  } = useCategoryContent(category || "trending");
 
-  const fetchData = async () => {
-    try {
-      const request = await axios.get(requests.fetchNetflixOriginals);
-      const results: Movie[] = request.data.results;
-      if (results.length > 0) {
-        const randomIndex = Math.floor(Math.random() * results.length);
-        setMovie(results[randomIndex]);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  // Determine which data to use
+  const isLoading = variant === "home" ? homeLoading : categoryLoading;
+  const error = variant === "home" ? homeError : categoryError;
+  const movie = variant === "home" ? homeMovie : categoryMovie;
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const truncate = (string: string | undefined, n: number) => {
+  const truncate = useCallback((string: string | undefined, n: number) => {
     if (!string) return "";
     return string.length > n ? string.slice(0, n - 1) + "..." : string;
-  };
+  }, []);
 
-  if (!movie?.backdrop_path) return null;
+  // Don't show anything while loading
+  if (isLoading) {
+    return null;
+  }
 
-  const title = movie.title ?? movie.name ?? movie.original_name ?? "Untitled";
+  // Handle error or no content
+  if (error || !movie?.backdrop_path) {
+    return null;
+  }
+
+  const movieTitle =
+    movie.title ?? movie.name ?? movie.original_name ?? "Untitled";
+  const displayTitle = variant === "category" ? title : movieTitle;
+  const displayDescription =
+    variant === "category" ? description : truncate(movie.overview, 200);
+  const backdropUrl = getImageUrl(movie.backdrop_path, "original");
 
   return (
-    <div className="relative h-[60vh] md:h-[70vh] lg:h-[80vh] w-full">
-      <Image
-        className="w-full h-full object-cover brightness-[90%]"
-        src={`https://image.tmdb.org/t/p/original/${movie.backdrop_path}`}
-        alt={title}
-        width={1920}
-        height={1080}
-        priority
+    <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
+      <div
+        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        style={{ backgroundImage: `url('${backdropUrl}')` }}
       />
-      <div className="absolute bottom-0 left-0 w-full h-[30%] bg-gradient-to-t z-0 from-zinc-900 to-transparent" />
-      <div className="absolute top-0 left-0 w-full md:w-2/3 h-full bg-gradient-to-r from-black to-transparent">
-        <div className="absolute top-[40%] md:top-[30%] ml-4 md:ml-16">
-          <p className="text-white text-2xl md:text-4xl lg:text-5xl h-full w-[70%] md:w-[50%] lg:w-[40%] font-bold drop-shadow-xl">
-            {title}
-          </p>
-          <div className="flex gap-2 md:gap-4 font-light text-zinc-400 text-sm md:text-base mt-2 md:mt-4 lg:text-lg drop-shadow-xl">
-            <p className="text-xs md:text-sm lg:text-lg">{releaseYear}</p>
-            <p className="border border-zinc-400 px-1 md:px-2 text-xs md:text-sm lg:text-lg">
-              U/A 13+
-            </p>
-          </div>
-          <p className="text-white text-sm md:text-base mt-3 md:mt-8 w-[95%] md:w-[90%] lg:w-[50%] lg:text-lg drop-shadow-xl">
-            {truncate(movie.overview, 200)}
-          </p>
+      {/* Enhanced gradient overlay - from image to transparent at bottom */}
+      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
 
-          <div className="flex flex-row items-center mt-3 md:mt-4 gap-3">
-            <button className="bg-white text-black rounded-[4px] py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-neutral-300 transition">
-              <BsPlayFill className="mr-1" /> Play
-            </button>
-            <button
-              className="bg-white text-white bg-opacity-30 rounded-[4px] py-1 md:py-2 px-2 md:px-4 w-auto text-xs lg:text-lg font-semibold flex flex-row items-center hover:bg-opacity-20 gap-1 transition"
+      <div className="absolute bottom-1/3 md:bottom-1/3 lg:bottom-2/5 left-0 right-0 px-4 md:px-16">
+        <h1
+          className={`font-bold text-white mb-6 leading-tight tracking-tight ${
+            variant === "category"
+              ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
+              : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
+          }`}
+        >
+          {displayTitle}
+        </h1>
+        <p
+          className={`text-white/90 max-w-3xl leading-relaxed ${
+            variant === "category"
+              ? "text-lg sm:text-xl md:text-2xl"
+              : "text-base sm:text-lg md:text-xl mb-8"
+          }`}
+        >
+          {displayDescription}
+        </p>
+
+        {variant === "home" && (
+          <div className="flex flex-row items-center gap-3">
+            <Button
+              variant="banner-play"
+              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg font-semibold flex flex-row items-center"
+            >
+              <Icon name="playFill" className="mr-1" /> Play
+            </Button>
+            <Button
+              variant="banner-info"
+              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg font-semibold flex flex-row items-center gap-1"
               onClick={() => router.push(`/title/${movie.id}`)}
             >
-              <AiOutlineInfoCircle className="mr-1" /> More Info
-            </button>
+              <Icon name="info" className="mr-1" /> More Info
+            </Button>
           </div>
-        </div>
-        <div className="absolute bottom-0 inset-x-0 w-full h-16 bg-gradient-to-t from-zinc-900 to-transparent" />
+        )}
       </div>
     </div>
   );
 };
 
-export default Banner;
+export default memo(Banner);

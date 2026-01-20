@@ -1,7 +1,5 @@
 import Image from "next/image";
-import { BsFillPlayFill } from "react-icons/bs";
-import { IoMdAdd } from "react-icons/io";
-import { SlLike } from "react-icons/sl";
+import Icon from "@/components/Icon/Icon";
 import { videosData } from "../../static/video";
 
 type EpisodesGridProps = {
@@ -16,20 +14,25 @@ export const EpisodesGrid = ({
   return (
     <>
       {/* Episodes Section Header */}
+      <div className="mb-4">
+        <h2 className="text-white text-lg md:text-xl lg:text-2xl font-medium">
+          Episodes
+        </h2>
+      </div>
       {/* Episodes Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-2">
         {videosData[seasonNumber]?.map((video) => (
           <div
             key={video.id}
-            className="group/item relative bg-zinc-900 overflow-hidden h-48 sm:h-44 md:h-48 lg:h-52 xl:h-56"
+            className="group/item relative bg-black overflow-hidden aspect-video rounded-md"
           >
             <button
-              className="w-full h-full border-0 p-0 cursor-pointer relative"
+              className="w-full h-full border-0 p-0 cursor-pointer relative rounded-md overflow-hidden"
               onClick={() => {}}
               aria-label={`View details for ${video.title}`}
             >
               <Image
-                className="object-cover transition duration shadow-xl w-full h-full"
+                className="object-contain transition duration shadow-xl w-full h-full"
                 fill
                 src={video.imageUrl}
                 alt={video.title}
@@ -43,21 +46,21 @@ export const EpisodesGrid = ({
                     onClick={() => {}}
                     aria-label="Play"
                   >
-                    <BsFillPlayFill size={16} color="black" />
+                    <Icon name="playFillLarge" size={16} color="black" />
                   </button>
                   <button
                     className="w-6 h-6 bg-white rounded-full flex justify-center items-center transition hover:bg-neutral-300"
                     onClick={() => {}}
                     aria-label="Add to list"
                   >
-                    <IoMdAdd size={16} color="black" />
+                    <Icon name="add" size={16} color="black" />
                   </button>
                   <button
                     className="w-6 h-6 bg-white rounded-full flex justify-center items-center transition hover:bg-neutral-300"
                     onClick={() => {}}
                     aria-label="Like"
                   >
-                    <SlLike size={14} color="black" />
+                    <Icon name="like" size={14} color="black" />
                   </button>
                 </div>
                 <div className="flex flex-col gap-1">

@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import React from "react";
 
 interface NavbarItemProps {
@@ -9,14 +9,22 @@ interface NavbarItemProps {
 }
 
 const NavbarItems: React.FC<NavbarItemProps> = ({ label, path }) => {
-  const router = useRouter();
+  if (!path) {
+    return (
+      <div className="text-white cursor-pointer hover:text-gray-300 transition">
+        {label}
+      </div>
+    );
+  }
+
   return (
-    <div
+    <Link
+      href={path}
+      prefetch={true}
       className="text-white cursor-pointer hover:text-gray-300 transition"
-      onClick={() => path && router.push(`/category/${path}`)}
     >
       {label}
-    </div>
+    </Link>
   );
 };
 

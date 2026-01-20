@@ -1,8 +1,9 @@
 "use client";
 
 import Input from "@/components/Input/Input";
+import Button from "@/components/Button/Button";
 import { useState } from "react";
-import { IoIosArrowForward } from "react-icons/io";
+import Icon from "@/components/Icon/Icon";
 import BasicNav from "../BasicNav/BasicNav";
 
 export default function Home() {
@@ -41,12 +42,13 @@ export default function Home() {
                   />
                 </div>
               </form>
-              <button
-                className="bg-red-600 px-7 py-3 font-bold text-xl text-white 
-                        rounded-md w-auto hover:bg-red-700 transition flex items-center gap-2"
+              <Button
+                variant="auth"
+                size="lg"
+                className="rounded-md w-auto flex items-center gap-2"
               >
-                Get Started <IoIosArrowForward size={32} />
-              </button>
+                Get Started <Icon name="arrowForward" size={32} />
+              </Button>
             </div>
           </div>
         </div>

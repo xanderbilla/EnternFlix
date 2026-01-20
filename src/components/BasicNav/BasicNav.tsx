@@ -19,9 +19,9 @@ const BasicNav = () => {
           <option value="">English</option>
           <option value="">Other</option>
         </select>
-        {user ? (
+        {!user ? (
           <Link
-            href="auth"
+            href="/auth"
             className="bg-red-600 px-4 py-2 text-white 
                         rounded-md w-full hover:bg-red-700 transition"
           >

@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
+import Button from "@/components/Button/Button";
 
 const profiles = [
   {
@@ -34,7 +35,7 @@ const Page = () => {
         <h1 className="text-white text-4xl md:text-5xl lg:text-5xl tracking-wide mb-2">
           Who&#39;s Watching?
         </h1>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-8">
+        <div className="flex flex-wrap justify-center gap-8 max-w-4xl">
           {profiles.map((profile, idx) => (
             <div
               key={profile.name}
@@ -56,12 +57,13 @@ const Page = () => {
             </div>
           ))}
         </div>
-        <button
-          onClick={() => router.push("/ManageProfiles")}
-          className="text-gray-400 border-2 font-light text-base border-opacity-25 border-gray-400 tracking-widest px-6 py-2 mt-10 md:mt-6 rounded hover:border-white hover:text-white transition-colors duration-200"
+        <Button
+          variant="outline"
+          onClick={() => router.push("/account?tab=profiles")}
+          className="mt-10 md:mt-6"
         >
           MANAGE PROFILES
-        </button>
+        </Button>
       </div>
     </div>
   );

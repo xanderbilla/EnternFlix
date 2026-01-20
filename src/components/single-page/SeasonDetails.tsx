@@ -1,6 +1,5 @@
 import Image from "next/image";
-import { BsPlayFill } from "react-icons/bs";
-import { IoMdAdd } from "react-icons/io";
+import Icon from "@/components/Icon/Icon";
 import { useState } from "react";
 
 type SeasonDetailsProps = {
@@ -32,13 +31,7 @@ export const SeasonDetails = ({
             alt={`Season ${seasonData.season_number} poster`}
             width={280}
             height={420}
-            className="rounded-lg shadow-md object-contain w-full h-full"
-            style={{
-              maxHeight: "420px",
-              width: "auto",
-              height: "auto",
-              background: "#23272f",
-            }}
+            className="rounded-lg shadow-md object-contain w-full h-full max-h-[420px] bg-zinc-800"
           />
         </div>
       </div>
@@ -143,10 +136,10 @@ export const SeasonDetails = ({
             onClick={onPlaySeason}
             className="bg-white text-black rounded-md py-1.5 px-4 sm:px-5 font-semibold flex items-center gap-2 hover:bg-neutral-200 transition text-sm"
           >
-            <BsPlayFill className="text-lg" /> Play Season
+            <Icon name="playFill" className="text-lg" /> Play Season
           </button>
           <button className="bg-zinc-700/50 text-white rounded-md py-1.5 px-4 sm:px-5 font-semibold flex items-center gap-2 hover:bg-zinc-700 transition text-sm">
-            <IoMdAdd className="text-lg" /> Add to List
+            <Icon name="add" className="text-lg" /> Add to List
           </button>
         </div>
       </div>

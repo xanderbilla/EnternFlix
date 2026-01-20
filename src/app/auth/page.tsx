@@ -1,6 +1,7 @@
 "use client";
 
 import Input from "@/components/Input/Input";
+import Button from "@/components/Button/Button";
 import Image from "next/image";
 import { useCallback, useState } from "react";
 
@@ -12,12 +13,12 @@ const Auth = () => {
 
   const toggleVariant = useCallback(() => {
     setVariant((currentVariant) =>
-      currentVariant === "login" ? "register" : "login"
+      currentVariant === "login" ? "register" : "login",
     );
   }, []);
 
   const register = useCallback(() => {
-    console.log("Login Successful");
+    // Login/Register logic would go here
   }, []);
 
   return (
@@ -79,13 +80,13 @@ const Auth = () => {
                 value={password}
               />
             </div>
-            <button
-              className="bg-red-600 py-3 text-white 
-                        rounded-md w-full mt-10 hover:bg-red-700 transition"
+            <Button
+              variant="auth"
+              className="w-full mt-10 rounded-md"
               onClick={register}
             >
               {variant === "login" ? "Login" : "Sign Up"}
-            </button>
+            </Button>
             <p className="text-neutral-500 mt-12">
               {variant === "login"
                 ? "New at Netflix?"

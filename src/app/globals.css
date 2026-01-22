@@ -37,6 +37,53 @@
     scrollbar-width: thin;
     scrollbar-color: rgb(82 82 91) transparent;
   }
+
+  /* Scrollbar visible only on hover */
+  .scrollbar-hover::-webkit-scrollbar-thumb {
+    background-color: transparent;
+  }
+
+  .scrollbar-hover:hover::-webkit-scrollbar-thumb,
+  .scrollbar-hover:active::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.4);
+  }
+
+  .scrollbar-hover::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-hover::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-hover::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+  }
+
+  /* Firefox */
+  .scrollbar-hover {
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+  }
+
+  .scrollbar-hover:hover {
+    scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+  }
+
+  /* Fade in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-fadeIn {
+    animation-name: fadeIn;
+    animation-timing-function: ease-out;
+  }
 }
 
 * {

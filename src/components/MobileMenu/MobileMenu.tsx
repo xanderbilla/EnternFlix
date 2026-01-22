@@ -1,13 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useCallback } from "react";
+import { MobileMenuProps } from "@/types/components";
 
-interface MobileMenuProps {
-  visible: boolean;
-  items: { path: string; label: string }[];
-}
+function MobileMenu({ items, visible }: MobileMenuProps) {
+  const renderItem = useCallback(
+    (item: { label: string; path: string }) => (
+      <Link
+        href={item.path}
+        key={item.path}
+        className="px-3 text-xl text-center text-white hover:underline"
+      >
+        {item.label}
+      </Link>
+    ),
+    [],
+  );
 
-const MobileMenu: React.FC<MobileMenuProps> = ({ items, visible }) => {
   if (!visible) {
     return null;
   }
@@ -21,18 +30,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ items, visible }) => {
           height={90}
           className="cursor-pointer"
         />
-        {items.map((item, index) => (
-          <Link
-            href={item.path}
-            key={index}
-            className="px-3 text-xl text-center text-white hover:underline"
-          >
-            {item.label}
-          </Link>
-        ))}
+        {items.map(renderItem)}
       </div>
     </div>
   );
-};
+}
 
 export default MobileMenu;

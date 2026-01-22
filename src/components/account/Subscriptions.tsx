@@ -1,16 +1,13 @@
 import Button from "@/components/Button/Button";
+import Card from "@/components/UI/Card";
 
 const Subscriptions = () => {
   return (
     <div className="text-white">
       <h2 className="text-3xl font-bold mb-6">Subscription Details</h2>
 
-      <div className="bg-zinc-800 rounded-lg p-6 mb-6">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <h3 className="text-xl font-medium mb-1">Premium Plan</h3>
-            <p className="text-gray-400 text-sm">Monthly subscription</p>
-          </div>
+      <Card title="Premium Plan" subtitle="Monthly subscription">
+        <div className="mb-4">
           <Button variant="primary">Active</Button>
         </div>
 
@@ -48,7 +45,7 @@ const Subscriptions = () => {
             </ul>
           </div>
         </div>
-      </div>
+      </Card>
 
       <div className="flex gap-4">
         <Button variant="secondary">Manage Subscription</Button>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Button from "@/components/Button/Button";
 import Toggle from "@/components/Toggle/Toggle";
+import SettingRow from "@/components/UI/SettingRow";
 
 const Notifications = () => {
   const [emailVerified, setEmailVerified] = useState(false);
@@ -35,19 +36,21 @@ const Notifications = () => {
 
       {/* Email Notifications Section */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-medium">Email Notifications</h3>
-          <Toggle
-            checked={emailNotifications}
-            onChange={(checked) => {
-              if (!emailVerified) {
-                setShowEmailVerification(true);
-              } else {
-                setEmailNotifications(checked);
-              }
-            }}
-          />
-        </div>
+        <SettingRow
+          label="Email Notifications"
+          action={
+            <Toggle
+              checked={emailNotifications}
+              onChange={(checked: boolean) => {
+                if (!emailVerified) {
+                  setShowEmailVerification(true);
+                } else {
+                  setEmailNotifications(checked);
+                }
+              }}
+            />
+          }
+        />
 
         {showEmailVerification && (
           <div className="bg-zinc-800 p-4 rounded-lg mb-4">
@@ -76,19 +79,21 @@ const Notifications = () => {
 
       {/* Mobile Notifications Section */}
       <div className="mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-xl font-medium">Mobile Notifications</h3>
-          <Toggle
-            checked={mobileNotifications}
-            onChange={(checked) => {
-              if (!mobileVerified) {
-                setShowMobileVerification(true);
-              } else {
-                setMobileNotifications(checked);
-              }
-            }}
-          />
-        </div>
+        <SettingRow
+          label="Mobile Notifications"
+          action={
+            <Toggle
+              checked={mobileNotifications}
+              onChange={(checked: boolean) => {
+                if (!mobileVerified) {
+                  setShowMobileVerification(true);
+                } else {
+                  setMobileNotifications(checked);
+                }
+              }}
+            />
+          }
+        />
 
         {showMobileVerification && (
           <div className="bg-zinc-800 p-4 rounded-lg mb-4">

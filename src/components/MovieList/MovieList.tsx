@@ -1,95 +1,68 @@
 "use client";
 
 import { useEffect, useState, useMemo, useCallback, useRef, memo } from "react";
-import { Movie, MovieListProps } from "@/types/movie";
-import {
-  useTrending,
-  useTrendingMovies,
-  useTrendingTV,
-  usePopularMovies,
-  useTopRatedMovies,
-  useUpcomingMovies,
-  useActionMovies,
-  useComedyMovies,
-  useHorrorMovies,
-  useRomanceMovies,
-  useThrillerMovies,
-  usePopularTV,
-  useTopRatedTV,
-  useActionTV,
-  useComedyTV,
-  useDramaTV,
-  useCrimeTV,
-  useNetflixOriginals,
-  useTrendingAnime,
-  usePopularAnime,
-  useTopRatedAnime,
-  useActionAnime,
-  useAnimeTV,
-  useAnimeMovies,
-} from "@/hooks/api/useMovies";
+import { MovieListProps } from "@/types/components";
+import { HOOK_MAP } from "@/constants/hookMap";
 import ScrollButton from "./ScrollButton";
 import MovieGrid from "./MovieGrid";
+import MovieListHeader from "./MovieListHeader";
+import { useDialogManager } from "@/hooks/ui/useDialogManager";
+import DialogRenderer from "@/components/Dialogs/DialogRenderer";
 import { useMovieScroll } from "@/hooks/ui/useMovieScroll";
-
-// Hook mapping - moved outside component for performance
-const HOOK_MAP: Record<string, () => ReturnType<typeof useTrending>> = {
-  trending: useTrending,
-  trendingMovies: useTrendingMovies,
-  trendingTV: useTrendingTV,
-  popularMovies: usePopularMovies,
-  topRatedMovies: useTopRatedMovies,
-  upcomingMovies: useUpcomingMovies,
-  actionMovies: useActionMovies,
-  comedyMovies: useComedyMovies,
-  horrorMovies: useHorrorMovies,
-  romanceMovies: useRomanceMovies,
-  thrillerMovies: useThrillerMovies,
-  popularTV: usePopularTV,
-  topRatedTV: useTopRatedTV,
-  actionTV: useActionTV,
-  comedyTV: useComedyTV,
-  dramaTV: useDramaTV,
-  crimeTV: useCrimeTV,
-  netflixOriginals: useNetflixOriginals,
-  trendingAnime: useTrendingAnime,
-  popularAnime: usePopularAnime,
-  topRatedAnime: useTopRatedAnime,
-  actionAnime: useActionAnime,
-  animeTV: useAnimeTV,
-  animeMovies: useAnimeMovies,
-};
+import { useDialogBodyScroll } from "@/hooks/ui/useDialogBodyScroll";
 
 const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showButtons, setShowButtons] = useState(false);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
+  const [showExploreButton, setShowExploreButton] = useState(false);
 
-  // Get the appropriate hook based on hookName
   const useHook = HOOK_MAP[hookName];
-
-  // Use the hook to fetch data
-  const { data: response, isLoading, error } = useHook?.() || {};
+  const { data: response, error } = useHook?.() || {};
+  const {
+    dialogState,
+    hasBackNavigation,
+    openExploreDialog,
+    openInfoDialog,
+    goBack,
+    closeDialog,
+  } = useDialogManager();
 
   const movies = useMemo(() => response?.results || [], [response?.results]);
 
-  // Function to check if we can scroll more
   const checkScrollButtons = useCallback(() => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-
-      // Show left button if we've scrolled right
       setShowLeftButton(scrollLeft > 0);
-
-      // Show right button if there's more content to scroll
-      setShowRightButton(scrollLeft + clientWidth < scrollWidth - 10); // Adding small buffer
+      setShowRightButton(scrollLeft + clientWidth < scrollWidth - 10);
     }
   }, []);
 
   const { scroll } = useMovieScroll(scrollRef, checkScrollButtons);
 
-  // Add scroll event listener to update button visibility
+  useDialogBodyScroll(dialogState.isOpen);
+
+  // Handle explore button visibility with smooth transitions
+  const handleTitleHoverEnter = useCallback(() => {
+    setShowExploreButton(true);
+  }, []);
+
+  const handleTitleHoverLeave = useCallback(() => {
+    setShowExploreButton(false);
+  }, []);
+
+  const handleExploreClick = useCallback(() => {
+    openExploreDialog(title, movies);
+  }, [openExploreDialog, title, movies]);
+
+  const handleMovieClick = useCallback(
+    (movieId: number) => {
+      openInfoDialog(movieId.toString(), 10000);
+    },
+    [openInfoDialog],
+  );
+
   useEffect(() => {
     const handleScroll = () => {
       checkScrollButtons();
@@ -98,7 +71,6 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
     const currentRef = scrollRef.current;
     if (currentRef) {
       currentRef.addEventListener("scroll", handleScroll);
-      // Initial check
       checkScrollButtons();
     }
 
@@ -107,45 +79,62 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
         currentRef.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [movies, checkScrollButtons]); // Re-run when movies change
+  }, [movies, checkScrollButtons]);
 
-  // Don't show anything while loading or invalid hook
-  if (!useHook || isLoading) {
+  if (!useHook) {
     return null;
   }
 
-  // Handle error or no movies
   if (error || !movies || movies.length === 0) {
     return null;
   }
 
   return (
-    <div className="px-4 md:px-12 mt-4 space-y-4 relative">
-      <div className="flex flex-col gap-3">
-        <p className="text-white text-lg md:text-xl lg:text-2xl font-medium">
-          {title}
-        </p>
-        <div
-          className="relative"
-          onMouseEnter={() => setShowButtons(true)}
-          onMouseLeave={() => setShowButtons(false)}
-        >
-          <ScrollButton
-            direction="left"
-            onClick={() => scroll("left")}
-            show={(showButtons || window.innerWidth <= 768) && showLeftButton}
+    <>
+      <div className="px-4 md:px-12 mt-4 space-y-4 relative">
+        <div className="flex flex-col gap-3">
+          <MovieListHeader
+            title={title}
+            showExploreButton={showExploreButton}
+            onExploreClick={handleExploreClick}
+            onTitleHover={{
+              onEnter: handleTitleHoverEnter,
+              onLeave: handleTitleHoverLeave,
+            }}
           />
+          <div
+            className="relative overflow-visible"
+            onMouseEnter={() => setShowButtons(true)}
+            onMouseLeave={() => setShowButtons(false)}
+          >
+            <ScrollButton
+              direction="left"
+              onClick={() => scroll("left")}
+              show={(showButtons || window.innerWidth <= 768) && showLeftButton}
+            />
 
-          <MovieGrid movies={movies} scrollRef={scrollRef} />
+            <MovieGrid movies={movies} scrollRef={scrollRef} />
 
-          <ScrollButton
-            direction="right"
-            onClick={() => scroll("right")}
-            show={(showButtons || window.innerWidth <= 768) && showRightButton}
-          />
+            <ScrollButton
+              direction="right"
+              onClick={() => scroll("right")}
+              show={
+                (showButtons || window.innerWidth <= 768) && showRightButton
+              }
+            />
+          </div>
         </div>
       </div>
-    </div>
+
+      <DialogRenderer
+        dialogState={dialogState}
+        hasBackNavigation={hasBackNavigation}
+        onClose={closeDialog}
+        onBack={goBack}
+        onMovieClick={handleMovieClick}
+        onInfoDialogOpen={handleMovieClick} // For MovieList, both actions are the same
+      />
+    </>
   );
 };
 

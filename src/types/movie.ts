@@ -26,15 +26,10 @@ export interface Movie {
 
   // Movie specific
   runtime?: number;
-}
 
-export interface MovieCardProps {
-  data: Movie;
-  isFirst?: boolean;
-  isLast?: boolean;
-}
-
-export interface MovieListProps {
-  hookName: string; // Hook identifier name
-  title: string;
+  // Extended details (for title pages)
+  status?: string;
+  tagline?: string;
+  created_by?: Array<{ id: number; name: string; profile_path: string }>;
+  production_companies?: Array<{ id: number; name: string; logo_path: string }>;
 }

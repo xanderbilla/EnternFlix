@@ -1,14 +1,6 @@
 import React from "react";
-
-interface ToggleProps {
-  checked?: boolean;
-  defaultChecked?: boolean;
-  onChange?: (checked: boolean) => void;
-  disabled?: boolean;
-  id?: string;
-  name?: string;
-  ariaLabel?: string;
-}
+import { ToggleProps } from "@/types/components";
+import { memo } from "react";
 
 const Toggle: React.FC<ToggleProps> = ({
   checked,
@@ -43,4 +35,4 @@ const Toggle: React.FC<ToggleProps> = ({
   );
 };
 
-export default Toggle;
+export default memo(Toggle);

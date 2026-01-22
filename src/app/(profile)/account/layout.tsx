@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Account Settings - EnternFlix",
+  title: "Account",
   description:
     "Manage your EnternFlix account settings, subscription, security, devices, and profiles. Update your preferences and account information.",
   keywords: [

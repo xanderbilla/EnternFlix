@@ -1,22 +1,19 @@
+import { memo } from "react";
 import { Movie } from "@/types/movie";
 import { DynamicMovieCard as MovieCard } from "@/utils/dynamicImports";
+import { MovieListScrollGridProps } from "@/types/components";
 
-interface MovieGridProps {
-  movies: Movie[];
-  scrollRef: React.RefObject<HTMLDivElement | null>;
-}
-
-export default function MovieGrid({ movies, scrollRef }: MovieGridProps) {
+function MovieGrid({ movies, scrollRef }: MovieListScrollGridProps) {
   return (
     <div
       id="movie-list"
       ref={scrollRef}
-      className="flex gap-2 overflow-x-hidden w-full h-full scrollbar-hide"
+      className="flex gap-2 overflow-x-hidden overflow-y-visible w-full h-full scrollbar-hide"
     >
       {movies.map((movie: Movie, index: number) => (
         <div
           key={movie.id}
-          className="flex-none w-[160px] md:w-[200px] lg:w-[240px]"
+          className="group/item flex-none w-[160px] md:w-[200px] lg:w-[240px] relative z-0 hover:z-50"
         >
           <MovieCard
             data={movie}
@@ -28,3 +25,5 @@ export default function MovieGrid({ movies, scrollRef }: MovieGridProps) {
     </div>
   );
 }
+
+export default memo(MovieGrid);

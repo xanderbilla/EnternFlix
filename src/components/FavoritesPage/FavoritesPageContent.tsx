@@ -1,16 +1,19 @@
 "use client";
 
 import FavoritesContent from "./FavoritesContent";
+import CategoryGrid from "@/components/CategoryGrid/CategoryGrid";
 import PageLayout from "@/components/Layout/PageLayout";
 
 export default function FavoritesPageContent() {
+  // Grid content for grid view
+  const gridContent = <CategoryGrid category="favorites" />;
+
   return (
     <PageLayout
       showBanner={true}
       bannerVariant="category"
-      bannerTitle="Your Favorites"
-      bannerDescription="All your favorite movies and TV shows in one place. Never lose track of what you love to watch."
       bannerCategory="favorites"
+      gridContent={gridContent}
     >
       <FavoritesContent />
     </PageLayout>

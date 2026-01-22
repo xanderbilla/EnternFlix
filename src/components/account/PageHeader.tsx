@@ -1,12 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-
-interface PageHeaderProps {
-  logoSrc: string;
-  logoAlt: string;
-  logoWidth: number;
-  logoHeight: number;
-}
+import { PageHeaderProps } from "@/types/components";
 
 const PageHeader: React.FC<PageHeaderProps> = ({
   logoSrc,

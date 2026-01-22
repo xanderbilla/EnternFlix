@@ -1,13 +1,5 @@
 import Link from "next/link";
-
-interface FooterLinkGroupProps {
-  title: string;
-  links: Array<{
-    href: string;
-    label: string;
-    isEmail?: boolean;
-  }>;
-}
+import { FooterLinkGroupProps } from "@/types/components";
 
 export default function FooterLinkGroup({
   title,

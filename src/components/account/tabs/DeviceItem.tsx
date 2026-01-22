@@ -1,14 +1,6 @@
 import Button from "@/components/Button/Button";
 import DeviceIcon from "./DeviceIcon";
-
-interface DeviceItemProps {
-  type: "desktop" | "mobile" | "tablet";
-  name: string;
-  browser: string;
-  lastActive: string;
-  location: string;
-  isCurrent?: boolean;
-}
+import { DeviceItemProps } from "@/types/account";
 
 export default function DeviceItem({
   type,

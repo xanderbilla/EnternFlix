@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import QueryProvider from "@/providers/QueryProvider";
+import { VideoProvider } from "@/contexts/VideoContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,7 +64,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} text-white`}>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <VideoProvider>{children}</VideoProvider>
+        </QueryProvider>
       </body>
     </html>
   );

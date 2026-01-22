@@ -1,12 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { memo } from "react";
 import Icon from "@/components/Icon/Icon";
-
-interface AccountMenuProps {
-  visible: boolean;
-}
+import { AccountMenuProps } from "@/types/navbar";
 
 const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
   const router = useRouter();
@@ -16,7 +13,7 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
   }
 
   return (
-    <div className="bg-black/90 backdrop-blur-sm w-56 absolute top-12 right-0 py-3 flex-col border-2 border-gray-800">
+    <div className="bg-black/90 backdrop-blur-sm w-56 absolute top-12 right-0 py-3 flex-col border-2 border-gray-800 z-[70]">
       <div className="text-white text-sm flex flex-col gap-2">
         <div className="px-3 group/item flex flex-row gap-3 items-center w-full">
           <Image
@@ -76,4 +73,4 @@ const AccountMenu: React.FC<AccountMenuProps> = ({ visible }) => {
   );
 };
 
-export default AccountMenu;
+export default memo(AccountMenu);

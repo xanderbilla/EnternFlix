@@ -1,17 +1,9 @@
 "use client";
 
 import PageLayout from "@/components/Layout/PageLayout";
+import CategoryGrid from "@/components/CategoryGrid/CategoryGrid";
 import { DynamicMovieList } from "@/utils/dynamicImports";
-
-interface CategoryPageContentProps {
-  title: string;
-  description: string;
-  category: string;
-  movieLists: Array<{
-    title: string;
-    hookName: string;
-  }>;
-}
+import { CategoryPageContentProps } from "@/types/components";
 
 export default function CategoryPageContent({
   title,
@@ -19,17 +11,20 @@ export default function CategoryPageContent({
   category,
   movieLists,
 }: CategoryPageContentProps) {
+  // Grid content for grid view
+  const gridContent = <CategoryGrid category={category} />;
+
   return (
     <PageLayout
       showBanner={true}
       bannerVariant="category"
-      bannerTitle={title}
-      bannerDescription={description}
       bannerCategory={category}
+      gridContent={gridContent}
     >
-      {movieLists.map((list, index) => (
+      {/* List view content */}
+      {movieLists.map((list) => (
         <DynamicMovieList
-          key={index}
+          key={list.hookName}
           title={list.title}
           hookName={list.hookName}
         />

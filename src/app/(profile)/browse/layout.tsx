@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Select Profile - EnternFlix",
+  title: "Select Profile",
   description:
     "Choose your profile to continue watching. Manage profiles and personalize your EnternFlix experience for each family member.",
   keywords: [

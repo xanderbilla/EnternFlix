@@ -21,19 +21,6 @@ export const DynamicMovieCard = dynamic(
   () => import("@/components/MovieCard/MovieCard"),
 );
 
-// Single page components
-export const DynamicTitleBanner = dynamic(
-  () => import("@/components/single-page/TitleBanner"),
-);
-
-export const DynamicTabs = dynamic(
-  () => import("@/components/single-page/Tabs"),
-);
-
-export const DynamicTitleInfo = dynamic(
-  () => import("@/components/single-page/TitleInfo"),
-);
-
 // Page components
 export const DynamicHome = dynamic(() => import("@/components/Home/Home"));
 

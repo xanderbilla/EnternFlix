@@ -1,116 +1,210 @@
 "use client";
 
-import { useCallback, memo } from "react";
-import Icon from "@/components/Icon/Icon";
-import Button from "@/components/Button/Button";
-import { useRouter } from "next/navigation";
+import {
+  useCallback,
+  memo,
+  useState,
+  useEffect,
+  useRef,
+  lazy,
+  Suspense,
+} from "react";
+import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
+import { getContentRating, truncateText } from "@/utils/contentHelpers";
 import { useRandomContent, useCategoryContent } from "@/hooks/api/useMovies";
+import { useVideo } from "@/contexts/VideoContext";
+import { BannerProps } from "@/types/components";
+import { SAMPLE_VIDEO_URL } from "@/constants/video";
+import BannerVideo from "./BannerVideo";
+import BannerControls from "./BannerControls";
+import BannerContent from "./BannerContent";
 
-interface BannerProps {
-  // For category banners
-  title?: string;
-  description?: string;
-  category?: string;
-  // For home banner
-  variant?: "home" | "category";
-}
+const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
 
-const Banner: React.FC<BannerProps> = ({
-  title,
-  description,
-  category,
-  variant = "home",
-}) => {
-  const router = useRouter();
+const Banner = ({ category, variant = "home" }: BannerProps) => {
+  const pathname = usePathname();
+  const [showVideo, setShowVideo] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [videoEnded, setVideoEnded] = useState(false);
+  const [dialogState, setDialogState] = useState({
+    isOpen: false,
+    movieId: "",
+  });
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const { shouldPauseBanner } = useVideo();
 
-  // Use hooks for data fetching
-  const {
-    data: homeMovie,
-    isLoading: homeLoading,
-    error: homeError,
-  } = useRandomContent();
+  const isFavoritesPage = pathname.includes("/favorites");
+  const isSearchPage = pathname.includes("/search");
 
-  const {
-    data: categoryMovie,
-    isLoading: categoryLoading,
-    error: categoryError,
-  } = useCategoryContent(category || "trending");
+  const { data: homeMovie, error: homeError } = useRandomContent();
+  const { data: categoryMovie, error: categoryError } = useCategoryContent(
+    category || "trending",
+  );
 
-  // Determine which data to use
-  const isLoading = variant === "home" ? homeLoading : categoryLoading;
   const error = variant === "home" ? homeError : categoryError;
   const movie = variant === "home" ? homeMovie : categoryMovie;
 
-  const truncate = useCallback((string: string | undefined, n: number) => {
-    if (!string) return "";
-    return string.length > n ? string.slice(0, n - 1) + "..." : string;
+  useEffect(() => {
+    if (!isFavoritesPage && movie?.backdrop_path) {
+      // Reset video loaded state when movie changes
+      setVideoLoaded(false);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        setShowVideo(true);
+        setVideoEnded(false);
+      }, 3000);
+
+      return () => {
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
+    }
+  }, [movie, isFavoritesPage]);
+
+  const handleVideoEnded = useCallback(() => {
+    setVideoEnded(true);
   }, []);
 
-  // Don't show anything while loading
-  if (isLoading) {
-    return null;
+  const toggleMute = useCallback(() => {
+    setIsMuted((prev) => !prev);
+  }, []);
+
+  const reloadVideo = useCallback(() => {
+    setVideoEnded(false);
+    setVideoLoaded(false);
+    setShowVideo(true);
+  }, []);
+
+  const handleVideoLoaded = useCallback(() => {
+    setVideoLoaded(true);
+  }, []);
+
+  const handleMoreInfo = useCallback(() => {
+    if (movie?.id) {
+      setDialogState({ isOpen: true, movieId: movie.id.toString() });
+    }
+  }, [movie?.id]);
+
+  const handleMovieChange = useCallback((newMovieId: string) => {
+    setDialogState((prev) => ({ ...prev, movieId: newMovieId }));
+  }, []);
+
+  if (isFavoritesPage) {
+    const favoritesBackdropUrl = movie?.backdrop_path
+      ? getImageUrl(movie.backdrop_path, "original")
+      : null;
+
+    return (
+      <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
+        {favoritesBackdropUrl ? (
+          <>
+            <div
+              className="absolute inset-0 w-full h-full bg-cover bg-center"
+              style={{ backgroundImage: `url('${favoritesBackdropUrl}')` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />
+          </>
+        ) : (
+          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-zinc-800 via-zinc-900 to-black" />
+        )}
+        <div className="absolute bottom-1/3 md:bottom-1/3 lg:bottom-2/5 left-0 right-0 px-4 md:px-16">
+          <h1 className="font-bold text-white mb-6 leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
+            Watch Your Favorites
+          </h1>
+          <p className="text-white/90 max-w-3xl leading-relaxed text-base sm:text-lg md:text-xl mb-8">
+            Discover and enjoy all your favorite movies and TV shows in one
+            place. Your personal collection of handpicked entertainment awaits.
+          </p>
+        </div>
+      </div>
+    );
   }
 
-  // Handle error or no content
+  if (isSearchPage) {
+    const searchBackdropUrl = movie?.backdrop_path
+      ? getImageUrl(movie.backdrop_path, "original")
+      : null;
+
+    return (
+      <div className="relative h-[40vh] md:h-[45vh] lg:h-[50vh] bg-zinc-900 overflow-hidden">
+        {searchBackdropUrl && (
+          <>
+            <div
+              className="absolute inset-0 w-full h-full bg-cover bg-center opacity-0 animate-fadeIn [animation-delay:100ms] [animation-duration:1000ms] [animation-fill-mode:forwards]"
+              style={{ backgroundImage: `url('${searchBackdropUrl}')` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent opacity-0 animate-fadeIn [animation-delay:100ms] [animation-duration:1000ms] [animation-fill-mode:forwards]" />
+          </>
+        )}
+      </div>
+    );
+  }
+
   if (error || !movie?.backdrop_path) {
     return null;
   }
 
   const movieTitle =
     movie.title ?? movie.name ?? movie.original_name ?? "Untitled";
-  const displayTitle = variant === "category" ? title : movieTitle;
-  const displayDescription =
-    variant === "category" ? description : truncate(movie.overview, 200);
+  const movieDescription = truncateText(movie.overview, 200);
   const backdropUrl = getImageUrl(movie.backdrop_path, "original");
 
   return (
     <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
+      <BannerVideo
+        sampleVideoUrl={SAMPLE_VIDEO_URL}
+        isMuted={isMuted}
+        showVideo={showVideo}
+        videoEnded={videoEnded}
+        shouldPauseBanner={shouldPauseBanner}
+        onVideoEnded={handleVideoEnded}
+        onVideoLoaded={handleVideoLoaded}
+      />
+
+      {/* Show backdrop until video is loaded, then fade out */}
       <div
-        className="absolute inset-0 w-full h-full bg-cover bg-center"
+        className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${
+          showVideo && videoLoaded ? "opacity-0" : "opacity-100"
+        }`}
         style={{ backgroundImage: `url('${backdropUrl}')` }}
       />
-      {/* Enhanced gradient overlay - from image to transparent at bottom */}
+
       <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
 
-      <div className="absolute bottom-1/3 md:bottom-1/3 lg:bottom-2/5 left-0 right-0 px-4 md:px-16">
-        <h1
-          className={`font-bold text-white mb-6 leading-tight tracking-tight ${
-            variant === "category"
-              ? "text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
-              : "text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl"
-          }`}
-        >
-          {displayTitle}
-        </h1>
-        <p
-          className={`text-white/90 max-w-3xl leading-relaxed ${
-            variant === "category"
-              ? "text-lg sm:text-xl md:text-2xl"
-              : "text-base sm:text-lg md:text-xl mb-8"
-          }`}
-        >
-          {displayDescription}
-        </p>
+      <BannerControls
+        showVideo={showVideo}
+        videoEnded={videoEnded}
+        isMuted={isMuted}
+        contentRating={getContentRating(movie)}
+        onToggleMute={toggleMute}
+        onReloadVideo={reloadVideo}
+      />
 
-        {variant === "home" && (
-          <div className="flex flex-row items-center gap-3">
-            <Button
-              variant="banner-play"
-              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg font-semibold flex flex-row items-center"
-            >
-              <Icon name="playFill" className="mr-1" /> Play
-            </Button>
-            <Button
-              variant="banner-info"
-              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg font-semibold flex flex-row items-center gap-1"
-              onClick={() => router.push(`/title/${movie.id}`)}
-            >
-              <Icon name="info" className="mr-1" /> More Info
-            </Button>
-          </div>
-        )}
-      </div>
+      <BannerContent
+        title={movieTitle}
+        description={movieDescription}
+        movieId={movie.id}
+        onMoreInfoClick={handleMoreInfo}
+      />
+
+      {/* Title Dialog */}
+      {dialogState.isOpen && (
+        <Suspense fallback={null}>
+          <TitleDialog
+            isOpen={dialogState.isOpen}
+            titleId={dialogState.movieId}
+            onClose={() => setDialogState({ isOpen: false, movieId: "" })}
+            onMovieChange={handleMovieChange}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

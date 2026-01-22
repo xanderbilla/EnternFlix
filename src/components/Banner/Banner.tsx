@@ -101,6 +101,11 @@ const Banner = ({ category, variant = "home" }: BannerProps) => {
       ? getImageUrl(movie.backdrop_path, "original")
       : null;
 
+    // Don't render until movie data is loaded
+    if (!movie) {
+      return null;
+    }
+
     return (
       <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
         {favoritesBackdropUrl ? (

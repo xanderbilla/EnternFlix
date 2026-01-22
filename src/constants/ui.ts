@@ -4,6 +4,7 @@ export const NAVBAR_ITEMS = [
   { label: "Anime", path: "/anime" },
   { label: "TV Shows", path: "/tv-shows" },
   { label: "Movies", path: "/movies" },
+  { label: "Favorites", path: "/favorites" },
 ] as const;
 
 // Image sizes

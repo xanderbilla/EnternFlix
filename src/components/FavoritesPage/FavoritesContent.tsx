@@ -5,10 +5,8 @@ import { Movie } from "@/types/movie";
 import { DynamicMovieCard as MovieCard } from "@/utils/dynamicImports";
 
 export default function FavoritesContent() {
-  const { data: moviesData, isLoading: moviesLoading } = useTopRatedMovies();
-  const { data: tvData, isLoading: tvLoading } = useTopRatedTV();
-
-  const isLoading = moviesLoading || tvLoading;
+  const { data: moviesData } = useTopRatedMovies();
+  const { data: tvData } = useTopRatedTV();
 
   // Combine and shuffle the results to simulate user favorites
   const favorites: Movie[] = [];
@@ -17,10 +15,6 @@ export default function FavoritesContent() {
   }
   if (tvData?.results) {
     favorites.push(...tvData.results.slice(0, 10));
-  }
-
-  if (isLoading) {
-    return null;
   }
 
   return (

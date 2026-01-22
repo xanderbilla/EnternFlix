@@ -1,53 +1,61 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   DynamicNavbar,
   DynamicFooter,
   DynamicBanner,
 } from "@/utils/dynamicImports";
+import { PageLayoutProps } from "@/types/components";
 
-interface PageLayoutProps {
-  children: ReactNode;
-  showBanner?: boolean;
-  bannerVariant?: "home" | "category";
-  bannerTitle?: string;
-  bannerDescription?: string;
-  bannerCategory?: string;
-}
-
-export default function PageLayout({
+function PageLayoutContent({
   children,
   showBanner = false,
   bannerVariant = "home",
   bannerTitle,
   bannerDescription,
   bannerCategory,
+  gridContent,
 }: PageLayoutProps) {
+  const searchParams = useSearchParams();
+  const viewMode = (searchParams.get("view") as "list" | "grid") || "list";
+
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
       <DynamicNavbar />
-      <div className="relative">
-        {showBanner && (
-          <DynamicBanner
-            variant={bannerVariant}
-            title={bannerTitle}
-            description={bannerDescription}
-            category={bannerCategory}
-          />
+      <div className="relative flex-1">
+        {/* Only show banner in list view */}
+        {showBanner && viewMode === "list" && (
+          <DynamicBanner variant={bannerVariant} category={bannerCategory} />
         )}
-        {/* Content with overlapping effect when banner is shown */}
-        <div
-          className={
-            showBanner
-              ? "relative -mt-32 md:-mt-40 lg:-mt-48 z-10 pb-4 space-y-6"
-              : ""
-          }
-        >
-          {children}
-        </div>
+
+        {/* Content based on view mode */}
+        {viewMode === "list" ? (
+          /* List view: banner + movie lists */
+          <div
+            className={
+              showBanner
+                ? "relative -mt-32 md:-mt-40 lg:-mt-48 z-10 pb-4 space-y-6"
+                : "pt-24 pb-4 space-y-6" // Add top padding for secondary navbar when no banner
+            }
+          >
+            {children}
+          </div>
+        ) : (
+          /* Grid view: only cards, no banner */
+          <div className="pt-24 pb-4">{gridContent || children}</div>
+        )}
       </div>
       <DynamicFooter />
-    </>
+    </div>
+  );
+}
+
+export default function PageLayout(props: PageLayoutProps) {
+  return (
+    <Suspense fallback={null}>
+      <PageLayoutContent {...props} />
+    </Suspense>
   );
 }

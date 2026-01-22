@@ -1,8 +1,4 @@
-interface PageTitleProps {
-  title: string;
-  subtitle?: string;
-  className?: string;
-}
+import { PageTitleProps } from "@/types/components";
 
 const PageTitle: React.FC<PageTitleProps> = ({
   title,

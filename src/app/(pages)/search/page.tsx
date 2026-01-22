@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import SearchPageContent from "@/components/SearchPage/SearchPageContent";
 
 export const metadata: Metadata = {
-  title: "Search - EnternFlix",
+  title: "Search",
   description:
     "Search for movies, TV shows, anime, and cast members. Discover new content and find your favorite entertainment on EnternFlix.",
   keywords: [

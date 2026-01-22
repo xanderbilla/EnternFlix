@@ -2,6 +2,8 @@
 
 import Image from "next/image";
 import Toggle from "@/components/Toggle/Toggle";
+import SettingRow from "@/components/UI/SettingRow";
+import Card from "@/components/UI/Card";
 
 export default function ProfilesTab() {
   return (
@@ -69,38 +71,26 @@ export default function ProfilesTab() {
       </div>
 
       {/* Profile Settings */}
-      <div className="bg-zinc-800/50 rounded-lg p-6">
-        <h3 className="text-lg font-medium mb-6">Profile Settings</h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between py-3 border-b border-zinc-700 last:border-b-0">
-            <div>
-              <div className="font-medium">Maximum profiles allowed</div>
-              <div className="text-zinc-400 text-sm">
-                Current limit for your account
-              </div>
-            </div>
-            <span className="text-zinc-300 font-medium">5</span>
-          </div>
-          <div className="flex items-center justify-between py-3 border-b border-zinc-700 last:border-b-0">
-            <div>
-              <div className="font-medium">Kids profiles</div>
-              <div className="text-zinc-400 text-sm">
-                Profiles with parental controls
-              </div>
-            </div>
-            <span className="text-zinc-300 font-medium">1</span>
-          </div>
-          <div className="flex items-center justify-between py-3">
-            <div>
-              <div className="font-medium">Auto-play next episode</div>
-              <div className="text-zinc-400 text-sm">
-                Automatically play the next episode
-              </div>
-            </div>
-            <Toggle defaultChecked />
-          </div>
-        </div>
-      </div>
+      <Card title="Profile Settings" contentClassName="space-y-4">
+        <SettingRow
+          label="Maximum profiles allowed"
+          description="Current limit for your account"
+          action={<span className="text-zinc-300 font-medium">5</span>}
+          hasBorder
+        />
+        <SettingRow
+          label="Kids profiles"
+          description="Profiles with parental controls"
+          action={<span className="text-zinc-300 font-medium">1</span>}
+          hasBorder
+        />
+        <SettingRow
+          label="Auto-play next episode"
+          description="Automatically play the next episode"
+          action={<Toggle defaultChecked />}
+          hasBorder={false}
+        />
+      </Card>
     </div>
   );
 }

@@ -1,12 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
-
-interface NavbarItemProps {
-  label: string;
-  path?: string;
-}
+import React, { memo } from "react";
+import { NavbarItemProps } from "@/types/navbar";
 
 const NavbarItems: React.FC<NavbarItemProps> = ({ label, path }) => {
   if (!path) {
@@ -28,4 +24,4 @@ const NavbarItems: React.FC<NavbarItemProps> = ({ label, path }) => {
   );
 };
 
-export default NavbarItems;
+export default memo(NavbarItems);

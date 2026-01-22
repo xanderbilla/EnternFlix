@@ -1,13 +1,5 @@
 import EditableField from "./EditableField";
-
-interface AccountFormProps {
-  name: string;
-  email: string;
-  language: string;
-  isKid: boolean;
-  setLanguage: (value: string) => void;
-  setIsKid: (value: boolean) => void;
-}
+import { AccountFormProps } from "@/types/account";
 
 const AccountForm = ({
   name,

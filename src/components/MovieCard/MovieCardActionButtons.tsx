@@ -1,12 +1,6 @@
+import { memo } from "react";
 import Icon from "@/components/Icon/Icon";
-
-interface MovieCardActionButtonsProps {
-  onPlayClick: () => void;
-  onAddClick: () => void;
-  onLikeClick: () => void;
-  onInfoClick: () => void;
-  handleKeyPress: (event: React.KeyboardEvent, action: () => void) => void;
-}
+import { MovieCardActionButtonsProps } from "@/types/components";
 
 export default function MovieCardActionButtons({
   onPlayClick,
@@ -53,7 +47,7 @@ export default function MovieCardActionButtons({
         onKeyDown={(e) => handleKeyPress(e, onInfoClick)}
         aria-label="More information"
       >
-        <Icon name="arrowDown" size={22} color="black" />
+        <Icon name="chevronDownMedium" size={22} color="black" />
       </button>
     </div>
   );

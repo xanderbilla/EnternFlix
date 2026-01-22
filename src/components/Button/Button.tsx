@@ -1,19 +1,7 @@
 import React from "react";
 import { twMerge } from "tailwind-merge";
-
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:
-    | "primary"
-    | "danger"
-    | "secondary"
-    | "outline"
-    | "banner-play"
-    | "banner-info"
-    | "auth";
-  size?: "sm" | "md" | "lg";
-  children: React.ReactNode;
-  className?: string;
-}
+import { ButtonProps } from "@/types/components";
+import { memo } from "react";
 
 const Button: React.FC<ButtonProps> = ({
   variant = "primary",
@@ -37,7 +25,7 @@ const Button: React.FC<ButtonProps> = ({
     "banner-play":
       "bg-white text-black rounded-[4px] hover:bg-neutral-300 focus:ring-gray-500",
     "banner-info":
-      "bg-white bg-opacity-30 text-white hover:bg-opacity-20 focus:ring-white/50",
+      "bg-white bg-opacity-30 text-white hover:bg-opacity-20 focus:ring-0 focus:ring-offset-0",
     auth: "bg-red-600 text-white font-bold hover:bg-red-700 focus:ring-red-500",
   };
 
@@ -61,4 +49,4 @@ const Button: React.FC<ButtonProps> = ({
   );
 };
 
-export default Button;
+export default memo(Button);

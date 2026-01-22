@@ -1,10 +1,7 @@
+import { memo } from "react";
 import Icon from "@/components/Icon/Icon";
-
-interface ScrollButtonProps {
-  direction: "left" | "right";
-  onClick: () => void;
-  show: boolean;
-}
+import CircularButton from "@/components/UI/CircularButton";
+import { ScrollButtonProps } from "@/types/components";
 
 export default function ScrollButton({
   direction,
@@ -16,24 +13,25 @@ export default function ScrollButton({
   const isLeft = direction === "left";
 
   return (
-    <button
-      type="button"
-      title={`Scroll ${direction}`}
-      onClick={onClick}
-      className={`absolute ${isLeft ? "left-0 justify-start pl-4" : "right-0 justify-end pr-4"} top-0 bottom-0 z-[30] w-36 
+    <div
+      className={`absolute ${isLeft ? "left-0 justify-start pl-4" : "right-0 justify-end pr-4"} top-0 bottom-0 z-[60] w-36 
       bg-gradient-to-${isLeft ? "r" : "l"} from-zinc-900 via-zinc-900/90 to-transparent
-      items-center flex cursor-pointer group/scroll`}
+      items-center flex group/scroll`}
     >
-      <div
-        className="w-10 h-10 rounded-full flex items-center justify-center 
-        bg-zinc-900 group-hover/scroll:bg-white/10 transition duration-300"
-      >
-        <Icon
-          name={isLeft ? "chevronLeft" : "chevronRight"}
-          size={24}
-          className="text-white"
-        />
-      </div>
-    </button>
+      <CircularButton
+        onClick={onClick}
+        variant="muted"
+        size="md"
+        aria-label={`Scroll ${direction}`}
+        className="group-hover/scroll:bg-white/10 !border-0"
+        icon={
+          <Icon
+            name={isLeft ? "chevronLeft" : "chevronRight"}
+            size={24}
+            className="text-white"
+          />
+        }
+      />
+    </div>
   );
 }

@@ -2,6 +2,8 @@ import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "@/helper/axios";
 import requests from "@/helper/request";
 import { Movie } from "@/types/movie";
+import { queryKeys } from "@/constants/queryKeys";
+import { CACHE_TIMES } from "@/constants/common";
 
 interface ApiResponse {
   results: Movie[];
@@ -9,24 +11,6 @@ interface ApiResponse {
   total_pages: number;
   total_results: number;
 }
-
-// Generic hook for fetching movies/TV shows by endpoint
-export const useMoviesByEndpoint = (
-  queryKey: string[],
-  endpoint: string,
-  enabled: boolean = true,
-) => {
-  return useQuery<ApiResponse, Error>({
-    queryKey,
-    queryFn: async () => {
-      const response = await axios.get(endpoint);
-      return response.data;
-    },
-    enabled,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-  });
-};
 
 // Generic hook for fetching movies/TV shows
 const useMovieData = (
@@ -41,86 +25,87 @@ const useMovieData = (
       return response.data;
     },
     enabled,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
 
+// Export for backward compatibility
+export const useMoviesByEndpoint = useMovieData;
+
 // Trending content hooks
 export const useTrending = () =>
-  useMovieData(["trending"], requests.fetchTrending);
+  useMovieData([...queryKeys.trending], requests.fetchTrending);
 
 export const useTrendingMovies = () =>
-  useMovieData(["trending", "movies"], requests.fetchMoviesTrending);
+  useMovieData([...queryKeys.trendingMovies], requests.fetchMoviesTrending);
 
 export const useTrendingTV = () =>
-  useMovieData(["trending", "tv"], requests.fetchTVTrending);
+  useMovieData([...queryKeys.trendingTV], requests.fetchTVTrending);
 
 // Movie hooks
 export const usePopularMovies = () =>
-  useMovieData(["movies", "popular"], requests.fetchMoviesPopular);
+  useMovieData([...queryKeys.movies.popular], requests.fetchMoviesPopular);
 
 export const useTopRatedMovies = () =>
-  useMovieData(["movies", "topRated"], requests.fetchMoviesTopRated);
+  useMovieData([...queryKeys.movies.topRated], requests.fetchMoviesTopRated);
 
 export const useUpcomingMovies = () =>
-  useMovieData(["movies", "upcoming"], requests.fetchMoviesUpcoming);
+  useMovieData([...queryKeys.movies.upcoming], requests.fetchMoviesUpcoming);
 
 export const useActionMovies = () =>
-  useMovieData(["movies", "action"], requests.fetchMoviesAction);
+  useMovieData([...queryKeys.movies.action], requests.fetchMoviesAction);
 
 export const useComedyMovies = () =>
-  useMovieData(["movies", "comedy"], requests.fetchMoviesComedy);
+  useMovieData([...queryKeys.movies.comedy], requests.fetchMoviesComedy);
 
 export const useHorrorMovies = () =>
-  useMovieData(["movies", "horror"], requests.fetchMoviesHorror);
+  useMovieData([...queryKeys.movies.horror], requests.fetchMoviesHorror);
 
 export const useRomanceMovies = () =>
-  useMovieData(["movies", "romance"], requests.fetchMoviesRomance);
+  useMovieData([...queryKeys.movies.romance], requests.fetchMoviesRomance);
 
 export const useThrillerMovies = () =>
-  useMovieData(["movies", "thriller"], requests.fetchMoviesThriller);
+  useMovieData([...queryKeys.movies.thriller], requests.fetchMoviesThriller);
 
 // TV Show hooks
 export const usePopularTV = () =>
-  useMovieData(["tv", "popular"], requests.fetchTVPopular);
+  useMovieData([...queryKeys.tv.popular], requests.fetchTVPopular);
 
 export const useTopRatedTV = () =>
-  useMovieData(["tv", "topRated"], requests.fetchTVTopRated);
+  useMovieData([...queryKeys.tv.topRated], requests.fetchTVTopRated);
 
 export const useActionTV = () =>
-  useMovieData(["tv", "action"], requests.fetchTVAction);
+  useMovieData([...queryKeys.tv.action], requests.fetchTVAction);
 
 export const useComedyTV = () =>
-  useMovieData(["tv", "comedy"], requests.fetchTVComedy);
+  useMovieData([...queryKeys.tv.comedy], requests.fetchTVComedy);
 
 export const useDramaTV = () =>
-  useMovieData(["tv", "drama"], requests.fetchTVDrama);
+  useMovieData([...queryKeys.tv.drama], requests.fetchTVDrama);
 
 export const useCrimeTV = () =>
-  useMovieData(["tv", "crime"], requests.fetchTVCrime);
+  useMovieData([...queryKeys.tv.crime], requests.fetchTVCrime);
 
 export const useNetflixOriginals = () =>
-  useMovieData(["tv", "netflix"], requests.fetchNetflixOriginals);
+  useMovieData([...queryKeys.netflixOriginals], requests.fetchNetflixOriginals);
 
 // Anime hooks
 export const useTrendingAnime = () =>
-  useMovieData(["anime", "trending"], requests.fetchAnimeTrending);
+  useMovieData([...queryKeys.anime.trending], requests.fetchAnimeTrending);
 
 export const usePopularAnime = () =>
-  useMovieData(["anime", "popular"], requests.fetchAnimePopular);
+  useMovieData([...queryKeys.anime.popular], requests.fetchAnimePopular);
 
 export const useTopRatedAnime = () =>
-  useMovieData(["anime", "topRated"], requests.fetchAnimeTopRated);
+  useMovieData([...queryKeys.anime.topRated], requests.fetchAnimeTopRated);
 
 export const useActionAnime = () =>
-  useMovieData(["anime", "action"], requests.fetchAnimeAction);
+  useMovieData([...queryKeys.anime.action], requests.fetchAnimeAction);
 
 export const useAnimeTV = () =>
-  useMovieData(["anime", "tv"], requests.fetchAnimeTV);
+  useMovieData([...queryKeys.anime.tv], requests.fetchAnimeTV);
 
 export const useAnimeMovies = () =>
-  useMovieData(["anime", "movies"], requests.fetchAnimeMovies);
+  useMovieData([...queryKeys.anime.movies], requests.fetchAnimeMovies);
 
 // Search hook with infinite scroll support
 export const useSearch = (query: string) => {
@@ -140,8 +125,6 @@ export const useSearch = (query: string) => {
       return undefined;
     },
     enabled: !!query && query.length > 2, // Only search if query is longer than 2 characters
-    staleTime: 2 * 60 * 1000, // 2 minutes for search results
-    gcTime: 5 * 60 * 1000, // 5 minutes
   });
 };
 
@@ -174,8 +157,6 @@ export const useRandomContent = () => {
       }
       throw new Error("No content available");
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes for random content
-    gcTime: 15 * 60 * 1000, // 15 minutes
     retry: 2,
   });
 };
@@ -214,8 +195,6 @@ export const useCategoryContent = (category: string) => {
       }
       throw new Error("No content available");
     },
-    staleTime: 10 * 60 * 1000, // 10 minutes
-    gcTime: 15 * 60 * 1000, // 15 minutes
     retry: 2,
   });
 };

@@ -2,6 +2,8 @@
 
 import Button from "@/components/Button/Button";
 import Toggle from "@/components/Toggle/Toggle";
+import SettingRow from "@/components/UI/SettingRow";
+import Card from "@/components/UI/Card";
 
 export default function SecurityTab() {
   return (
@@ -9,52 +11,35 @@ export default function SecurityTab() {
       <h2 className="text-2xl font-bold mb-6">Security Settings</h2>
 
       {/* Password Section */}
-      <div className="bg-zinc-800/50 rounded-lg p-6">
-        <h3 className="text-lg font-medium mb-6">Password & Authentication</h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between py-3 border-b border-zinc-700">
-            <div>
-              <div className="font-medium">Current Password</div>
-              <div className="text-zinc-400 text-sm">
-                Last changed 3 months ago
-              </div>
-            </div>
-            <Button variant="primary">Change Password</Button>
-          </div>
+      <Card title="Password & Authentication" contentClassName="space-y-4">
+        <SettingRow
+          label="Current Password"
+          description="Last changed 3 months ago"
+          action={<Button variant="primary">Change Password</Button>}
+          hasBorder
+        />
 
-          <div className="flex items-center justify-between py-3 border-b border-zinc-700">
-            <div>
-              <div className="font-medium">Two-Factor Authentication</div>
-              <div className="text-zinc-400 text-sm">
-                Add an extra layer of security
-              </div>
-            </div>
-            <Toggle />
-          </div>
+        <SettingRow
+          label="Two-Factor Authentication"
+          description="Add an extra layer of security"
+          action={<Toggle />}
+          hasBorder
+        />
 
-          <div className="flex items-center justify-between py-3">
-            <div>
-              <div className="font-medium">Login Notifications</div>
-              <div className="text-zinc-400 text-sm">
-                Get notified of new sign-ins
-              </div>
-            </div>
-            <Toggle defaultChecked />
-          </div>
-        </div>
-      </div>
+        <SettingRow
+          label="Login Notifications"
+          description="Get notified of new sign-ins"
+          action={<Toggle defaultChecked />}
+          hasBorder={false}
+        />
+      </Card>
 
       {/* Privacy Section */}
-      <div className="bg-zinc-800/50 rounded-lg p-6">
-        <h3 className="text-lg font-medium mb-6">Privacy Settings</h3>
-        <div className="space-y-4">
-          <div className="flex items-center justify-between py-3 border-b border-zinc-700">
-            <div>
-              <div className="font-medium">Profile Visibility</div>
-              <div className="text-zinc-400 text-sm">
-                Control who can see your profile
-              </div>
-            </div>
+      <Card title="Privacy Settings" contentClassName="space-y-4">
+        <SettingRow
+          label="Profile Visibility"
+          description="Control who can see your profile"
+          action={
             <select
               className="bg-zinc-700 text-white px-3 py-1 rounded border border-zinc-600 focus:outline-none focus:border-red-500"
               aria-label="Profile Visibility"
@@ -63,53 +48,43 @@ export default function SecurityTab() {
               <option value="friends">Friends Only</option>
               <option value="public">Public</option>
             </select>
-          </div>
+          }
+          hasBorder
+        />
 
-          <div className="flex items-center justify-between py-3 border-b border-zinc-700">
-            <div>
-              <div className="font-medium">Activity Tracking</div>
-              <div className="text-zinc-400 text-sm">
-                Allow tracking for personalized recommendations
-              </div>
-            </div>
-            <Toggle defaultChecked ariaLabel="Activity Tracking" />
-          </div>
+        <SettingRow
+          label="Activity Tracking"
+          description="Allow tracking for personalized recommendations"
+          action={<Toggle defaultChecked ariaLabel="Activity Tracking" />}
+          hasBorder
+        />
 
-          <div className="flex items-center justify-between py-3">
-            <div>
-              <div className="font-medium">Data Collection</div>
-              <div className="text-zinc-400 text-sm">
-                Share usage data to improve service
-              </div>
-            </div>
-            <Toggle ariaLabel="Data Collection" />
-          </div>
-        </div>
-      </div>
+        <SettingRow
+          label="Data Collection"
+          description="Share usage data to improve service"
+          action={<Toggle ariaLabel="Data Collection" />}
+          hasBorder={false}
+        />
+      </Card>
 
       {/* Danger Zone */}
       <div className="bg-red-900/20 border border-red-800 rounded-lg p-6">
         <h3 className="text-lg font-medium mb-6 text-red-400">Danger Zone</h3>
         <div className="space-y-4">
-          <div className="flex items-center justify-between py-3 border-b border-red-800/50">
-            <div>
-              <div className="font-medium text-red-300">Delete Account</div>
-              <div className="text-red-400/70 text-sm">
-                Permanently delete your account and all data
-              </div>
-            </div>
-            <Button variant="danger">Delete Account</Button>
-          </div>
+          <SettingRow
+            label="Delete Account"
+            description="Permanently delete your account and all data"
+            action={<Button variant="danger">Delete Account</Button>}
+            hasBorder
+            className="border-red-800/50"
+          />
 
-          <div className="flex items-center justify-between py-3">
-            <div>
-              <div className="font-medium text-red-300">Export Data</div>
-              <div className="text-red-400/70 text-sm">
-                Download a copy of your account data
-              </div>
-            </div>
-            <Button variant="secondary">Export Data</Button>
-          </div>
+          <SettingRow
+            label="Export Data"
+            description="Download a copy of your account data"
+            action={<Button variant="secondary">Export Data</Button>}
+            hasBorder={false}
+          />
         </div>
       </div>
     </div>

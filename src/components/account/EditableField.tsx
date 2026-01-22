@@ -1,11 +1,5 @@
 import { useState } from "react";
-
-interface EditableFieldProps {
-  label: string;
-  currentValue: string;
-  fieldType: "email" | "password";
-  placeholder: string;
-}
+import { EditableFieldProps } from "@/types/account";
 
 export default function EditableField({
   label,

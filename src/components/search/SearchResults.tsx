@@ -1,15 +1,8 @@
-import { useRef } from "react";
+import { useRef, memo } from "react";
 import { DynamicMovieCard } from "@/utils/dynamicImports";
+import { SearchResultsProps } from "@/types/components";
 
-interface SearchResultsProps {
-  searchQuery: string;
-  debouncedQuery: string;
-  searchRes: any[];
-  hasNextPage: boolean;
-  loadMoreRef: React.RefObject<HTMLDivElement | null>;
-}
-
-export default function SearchResults({
+function SearchResults({
   searchQuery,
   debouncedQuery,
   searchRes,
@@ -50,3 +43,5 @@ export default function SearchResults({
 
   return null;
 }
+
+export default memo(SearchResults);

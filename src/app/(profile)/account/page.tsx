@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { TabId } from "@/hooks/account/useAccountNavigation";
@@ -56,6 +56,19 @@ function AccountContent() {
   const setActiveTab = (newTab: TabId) => {
     router.push(`/account?tab=${newTab}`);
   };
+
+  // Update document title based on active tab
+  useEffect(() => {
+    const tabTitles: Record<TabId, string> = {
+      overview: "Account - EnternFlix",
+      membership: "Membership | Account - EnternFlix",
+      security: "Security | Account - EnternFlix",
+      devices: "Devices | Account - EnternFlix",
+      profiles: "Profiles | Account - EnternFlix",
+    };
+
+    document.title = tabTitles[tab] || "Account - EnternFlix";
+  }, [tab]);
 
   const renderContent = () => {
     switch (tab) {
@@ -115,13 +128,7 @@ function AccountContent() {
 
 export default function Page() {
   return (
-    <Suspense
-      fallback={
-        <div className="min-h-screen bg-zinc-900 flex items-center justify-center">
-          <div className="text-white text-xl">Loading...</div>
-        </div>
-      }
-    >
+    <Suspense fallback={null}>
       <AccountContent />
     </Suspense>
   );

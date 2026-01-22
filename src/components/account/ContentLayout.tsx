@@ -1,10 +1,5 @@
 import { ReactNode } from "react";
-
-interface ContentLayoutProps {
-  sidebar: ReactNode;
-  children: ReactNode;
-  className?: string;
-}
+import { ContentLayoutProps } from "@/types/account";
 
 const ContentLayout: React.FC<ContentLayoutProps> = ({
   sidebar,

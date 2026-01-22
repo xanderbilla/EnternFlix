@@ -1,8 +1,4 @@
-interface BackButtonProps {
-  onClick: () => void;
-  label?: string;
-  className?: string;
-}
+import { BackButtonProps } from "@/types/components";
 
 const BackButton: React.FC<BackButtonProps> = ({
   onClick,

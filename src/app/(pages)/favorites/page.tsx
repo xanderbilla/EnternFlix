@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import FavoritesPageContent from "@/components/FavoritesPage/FavoritesPageContent";
 
 export const metadata: Metadata = {
-  title: "Favorites - EnternFlix",
+  title: "Favorites",
   description:
     "Your personal collection of favorite movies and TV shows. Keep track of content you love and want to watch again on EnternFlix.",
   keywords: [

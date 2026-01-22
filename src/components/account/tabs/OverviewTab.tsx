@@ -4,11 +4,8 @@ import { useState } from "react";
 import Image from "next/image";
 import Button from "@/components/Button/Button";
 import Toggle from "@/components/Toggle/Toggle";
-
-interface OverviewTabProps {
-  name: string;
-  email: string;
-}
+import { OverviewTabProps } from "@/types/account";
+import Card from "@/components/UI/Card";
 
 export default function OverviewTab({ name, email }: OverviewTabProps) {
   const [language, setLanguage] = useState("English");
@@ -21,7 +18,7 @@ export default function OverviewTab({ name, email }: OverviewTabProps) {
         <h2 className="text-2xl font-bold mb-6">Account Overview</h2>
 
         {/* Profile Card */}
-        <div className="bg-zinc-800/50 rounded-lg p-6 mb-6">
+        <Card className="mb-6">
           <div className="flex items-center gap-6">
             <Image
               className="rounded-lg w-20 h-20 object-cover"
@@ -35,13 +32,13 @@ export default function OverviewTab({ name, email }: OverviewTabProps) {
               <p className="text-zinc-400">{email}</p>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* Account Information */}
       <div>
         <h3 className="text-lg font-medium mb-4">Account Information</h3>
-        <div className="bg-zinc-800/50 rounded-lg p-6 space-y-4">
+        <Card contentClassName="space-y-4">
           <div className="flex items-center justify-between py-3 border-b border-zinc-700 last:border-b-0">
             <div>
               <div className="font-medium">Email Address</div>
@@ -84,9 +81,12 @@ export default function OverviewTab({ name, email }: OverviewTabProps) {
                 Manage content restrictions
               </div>
             </div>
-            <Toggle checked={isKid} onChange={(checked) => setIsKid(checked)} />
+            <Toggle
+              checked={isKid}
+              onChange={(checked: boolean) => setIsKid(checked)}
+            />
           </div>
-        </div>
+        </Card>
       </div>
     </div>
   );

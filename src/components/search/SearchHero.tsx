@@ -2,12 +2,7 @@ import Image from "next/image";
 import { useMemo } from "react";
 import { getImageUrl } from "@/utils/movieHelpers";
 import Icon from "@/components/Icon/Icon";
-
-interface SearchHeroProps {
-  movie: any | null;
-  searchQuery: string;
-  onSearchChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-}
+import { SearchHeroProps } from "@/types/components";
 
 export default function SearchHero({
   movie,

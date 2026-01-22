@@ -35,7 +35,9 @@ export default function Home() {
                   <Input
                     className="border opacity-60"
                     label="Email address"
-                    onChange={(e: any) => setEmail(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setEmail(e.target.value)
+                    }
                     id="email"
                     type="email"
                     value={email}

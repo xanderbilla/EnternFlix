@@ -3,13 +3,7 @@
 import { useRef, useCallback } from "react";
 import Image from "next/image";
 import Icon from "@/components/Icon/Icon";
-
-interface NavbarProfileProps {
-  showAccountMenu: boolean;
-  onMenuEnter: () => void;
-  onMenuLeave: () => void;
-  AccountMenu: React.ComponentType<{ visible: boolean }>;
-}
+import { NavbarProfileProps } from "@/types/navbar";
 
 export default function NavbarProfile({
   showAccountMenu,

@@ -1,17 +1,8 @@
-interface MovieData {
-  id?: number;
-  title?: string;
-  name?: string;
-  original_name?: string;
-  first_air_date?: string;
-  release_date?: string;
-  number_of_seasons?: number;
-  number_of_episodes?: number;
-  runtime?: number;
-  media_type?: string;
-  genres?: Array<{ id: number; name: string }>;
-  overview?: string;
-}
+import { Movie } from "@/types/movie";
+import { TEXT_LIMITS } from "@/constants/common";
+
+// Type alias for internal use
+type MovieData = Movie;
 
 export const getContentType = (data: MovieData): string => {
   // Check if it has TV-specific properties
@@ -42,7 +33,7 @@ export const getContentType = (data: MovieData): string => {
 
 export const getTruncatedTitle = (
   data: MovieData,
-  maxLength: number = 25,
+  maxLength: number = TEXT_LIMITS.TITLE_MAX,
 ): string => {
   const title = data?.title || data?.name || data?.original_name;
   if (!title) return "";

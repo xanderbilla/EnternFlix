@@ -16,14 +16,14 @@ export default function DialogAboutSection({
 
       <div className="space-y-2">
         <div className="text-sm">
-          <span className="text-gray-400">Director: </span>
+          <span className="text-gray-400">Studio: </span>
           <button
             onClick={() =>
-              onExploreClick?.("Subhash Kapoor", "Subhash Kapoor", false)
+              onExploreClick?.("Netflix Studios", "Netflix Studios", false)
             }
             className="text-white/80 hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
           >
-            Subhash Kapoor
+            Netflix Studios
           </button>
         </div>
 
@@ -42,18 +42,6 @@ export default function DialogAboutSection({
               </span>
             ))}
           </span>
-        </div>
-
-        <div className="text-sm">
-          <span className="text-gray-400">Writer: </span>
-          <button
-            onClick={() =>
-              onExploreClick?.("Subhash Kapoor", "Subhash Kapoor", false)
-            }
-            className="text-white/80 hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
-          >
-            Subhash Kapoor
-          </button>
         </div>
 
         <div className="text-sm">

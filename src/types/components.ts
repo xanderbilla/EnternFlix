@@ -6,6 +6,7 @@ export interface MovieCardProps {
   data: Movie;
   isFirst?: boolean;
   isLast?: boolean;
+  onMovieClick?: (movieId: number) => void;
 }
 
 export interface MovieListProps {
@@ -58,6 +59,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export interface MovieCardHoverOverlayProps {
   backdropUrl: string | null;
   positionClass: string;
+  viewportPosition?: "left" | "right" | "center";
   data: Movie;
   navigateToTitle: () => void;
   handleKeyPress: (event: React.KeyboardEvent, action: () => void) => void;
@@ -151,6 +153,7 @@ export interface ScrollButtonProps {
 export interface MovieListScrollGridProps {
   movies: Movie[];
   scrollRef: React.RefObject<HTMLDivElement | null>;
+  onMovieClick?: (movieId: number) => void;
 }
 
 export interface ToggleProps {

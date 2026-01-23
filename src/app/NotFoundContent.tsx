@@ -8,7 +8,7 @@ import { useTrending } from "@/hooks/api/useMovies";
 import { getImageUrl } from "@/utils/movieHelpers";
 
 export default function NotFoundContent() {
-  const { data: trendingData, isLoading } = useTrending();
+  const { data: trendingData } = useTrending();
 
   // Get random backdrop from trending data
   const backdrop = trendingData?.results?.length
@@ -20,7 +20,7 @@ export default function NotFoundContent() {
   return (
     <div className="relative h-screen w-full">
       {/* Backdrop Image */}
-      {backdrop && !isLoading && (
+      {backdrop ? (
         <Image
           className="w-full h-full object-cover brightness-[60%]"
           src={getImageUrl(backdrop, "original")}
@@ -29,10 +29,7 @@ export default function NotFoundContent() {
           height={1080}
           priority
         />
-      )}
-
-      {/* Loading state or fallback background */}
-      {(isLoading || !backdrop) && (
+      ) : (
         <div className="w-full h-full bg-zinc-900" />
       )}
 

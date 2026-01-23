@@ -43,6 +43,15 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
 
   useDialogBodyScroll(dialogState.isOpen);
 
+  // Reset hover state when dialog opens
+  useEffect(() => {
+    if (dialogState.isOpen) {
+      setShowButtons(false);
+      // Also restore body overflow when dialog opens
+      document.body.style.overflowX = "hidden";
+    }
+  }, [dialogState.isOpen]);
+
   // Handle explore button visibility with smooth transitions
   const handleTitleHoverEnter = useCallback(() => {
     setShowExploreButton(true);
@@ -91,8 +100,8 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
 
   return (
     <>
-      <div className="px-4 md:px-12 mt-4 space-y-4 relative">
-        <div className="flex flex-col gap-3">
+      <div className="mt-4 space-y-4 relative overflow-visible">
+        <div className="px-4 md:px-12">
           <MovieListHeader
             title={title}
             showExploreButton={showExploreButton}
@@ -102,27 +111,65 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
               onLeave: handleTitleHoverLeave,
             }}
           />
-          <div
-            className="relative overflow-visible"
-            onMouseEnter={() => setShowButtons(true)}
-            onMouseLeave={() => setShowButtons(false)}
-          >
-            <ScrollButton
-              direction="left"
-              onClick={() => scroll("left")}
-              show={(showButtons || window.innerWidth <= 768) && showLeftButton}
-            />
+        </div>
+        <div
+          className="relative overflow-visible group/movielist"
+          onMouseEnter={() => {
+            setShowButtons(true);
+            // Temporarily allow horizontal overflow for hover overlays
+            document.body.style.overflowX = "visible";
+          }}
+          onMouseLeave={() => {
+            setShowButtons(false);
+            // Restore horizontal overflow hidden
+            document.body.style.overflowX = "hidden";
+          }}
+        >
+          {/* Left gradient overlay */}
+          {!dialogState.isOpen &&
+            (showButtons || window.innerWidth <= 768) &&
+            showLeftButton && (
+              <div
+                className="absolute left-0 top-0 bottom-0 w-32 z-[58] bg-gradient-to-r from-black/60 via-black/30 to-transparent cursor-pointer"
+                onClick={() => scroll("left")}
+              />
+            )}
 
-            <MovieGrid movies={movies} scrollRef={scrollRef} />
+          <ScrollButton
+            direction="left"
+            onClick={() => scroll("left")}
+            show={
+              !dialogState.isOpen &&
+              (showButtons || window.innerWidth <= 768) &&
+              showLeftButton
+            }
+          />
 
-            <ScrollButton
-              direction="right"
-              onClick={() => scroll("right")}
-              show={
-                (showButtons || window.innerWidth <= 768) && showRightButton
-              }
-            />
-          </div>
+          <MovieGrid
+            movies={movies}
+            scrollRef={scrollRef}
+            onMovieClick={handleMovieClick}
+          />
+
+          <ScrollButton
+            direction="right"
+            onClick={() => scroll("right")}
+            show={
+              !dialogState.isOpen &&
+              (showButtons || window.innerWidth <= 768) &&
+              showRightButton
+            }
+          />
+
+          {/* Right gradient overlay */}
+          {!dialogState.isOpen &&
+            (showButtons || window.innerWidth <= 768) &&
+            showRightButton && (
+              <div
+                className="absolute right-0 top-0 bottom-0 w-32 z-[58] bg-gradient-to-l from-black/60 via-black/30 to-transparent cursor-pointer"
+                onClick={() => scroll("right")}
+              />
+            )}
         </div>
       </div>
 

@@ -1,52 +1,52 @@
 "use client";
 
-import DialogHeaderCast from "./DialogHeaderCast";
-import SimpleDialogHeader from "./DialogHeaderSimple";
+import Image from "next/image";
 
-export interface DialogHeaderProps {
+interface CastDialogHeaderProps {
   title: string;
   onClose: () => void;
   onBack?: () => void;
   showBackButton?: boolean;
-  backdropUrl?: string;
-  variant?: "default" | "cast" | "info";
-  subtitle?: string;
+  backdropUrl: string;
 }
 
-export default function DialogHeader({
+export default function CastDialogHeader({
   title,
   onClose,
   onBack,
   showBackButton = false,
   backdropUrl,
-  variant = "default",
-}: DialogHeaderProps) {
-  // Cast variant with backdrop banner
-  if (variant === "cast" && backdropUrl) {
-    return (
-      <DialogHeaderCast
-        title={title}
-        onClose={onClose}
-        onBack={onBack}
-        showBackButton={showBackButton}
-        backdropUrl={backdropUrl}
-      />
-    );
-  }
-
-  // Info variant (no back button, different styling)
-  if (variant === "info") {
-    return <SimpleDialogHeader title={title} onClose={onClose} />;
-  }
-
-  // Default variant for explore/detail dialogs
+}: CastDialogHeaderProps) {
   return (
-    <div className="flex items-center justify-center py-32 px-6 sticky top-0 bg-zinc-900 z-10">
+    <div className="relative h-[36rem] overflow-hidden">
+      {/* Backdrop Image */}
+      <div className="absolute inset-0">
+        <Image
+          src={backdropUrl}
+          alt={title}
+          fill
+          className="object-cover"
+          priority
+        />
+      </div>
+
+      {/* Gradient Overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
+
+      {/* Content */}
+      <div className="relative h-full flex items-end justify-start pb-16 pl-16">
+        <div>
+          <h2 className="text-white text-7xl text-white0 font-bold leading-none tracking-tight">
+            {title}
+          </h2>
+        </div>
+      </div>
+
       {/* Back Button */}
       {showBackButton && onBack && (
         <button
           onClick={onBack}
-          className="absolute left-6 top-6 text-gray-400 hover:text-white transition-colors p-2"
+          className="absolute left-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm"
           aria-label="Go back"
         >
           <svg
@@ -65,13 +65,11 @@ export default function DialogHeader({
         </button>
       )}
 
-      <h2 className="text-white text-5xl font-bold text-center">{title}</h2>
-
       {/* Close Button - only show if no back button */}
       {!showBackButton && (
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-white transition-colors p-2 absolute right-6 top-6"
+          className="absolute right-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm"
           aria-label="Close"
         >
           <svg

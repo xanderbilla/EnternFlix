@@ -11,6 +11,7 @@ import VolumeControl from "./VolumeControl";
 export default function MovieCardHoverOverlay({
   backdropUrl,
   positionClass,
+  viewportPosition = "center",
   data,
   navigateToTitle,
   handleKeyPress,
@@ -26,6 +27,32 @@ export default function MovieCardHoverOverlay({
   const handleArrowClick = () => {
     navigateToTitle();
   };
+
+  // Get directional transform classes based on viewport position
+  const getDirectionalTransforms = () => {
+    switch (viewportPosition) {
+      case "left":
+        return {
+          initial: "md:scale-0 md:translate-x-[-20px] md:translate-y-0",
+          hover:
+            "md:group-hover/item:scale-110 md:group-hover/item:translate-x-0 md:group-hover/item:translate-y-[5vh]",
+        };
+      case "right":
+        return {
+          initial: "md:scale-0 md:translate-x-[20px] md:translate-y-0",
+          hover:
+            "md:group-hover/item:scale-110 md:group-hover/item:translate-x-0 md:group-hover/item:translate-y-[5vh]",
+        };
+      default:
+        return {
+          initial: "md:scale-0 md:translate-y-0",
+          hover:
+            "md:group-hover/item:scale-110 md:group-hover/item:translate-y-[5vh]",
+        };
+    }
+  };
+
+  const transforms = getDirectionalTransforms();
 
   useEffect(() => {
     if (timeoutRef.current) {
@@ -74,10 +101,9 @@ export default function MovieCardHoverOverlay({
 
   return (
     <div
-      className={`hidden md:block opacity-0 md:opacity-0 absolute top-0 transition duration-300 z-50
+      className={`hidden md:block opacity-0 md:opacity-0 absolute top-0 transition-all duration-300 z-50
         md:invisible md:group-hover/item:visible md:group-hover/item:opacity-100
-        md:scale-0 md:group-hover/item:scale-110 
-        md:translate-y-0 md:group-hover/item:translate-y-[5vh]
+        ${transforms.initial} ${transforms.hover}
         w-[320px] md:w-[380px] lg:w-[420px] aspect-video
         ${positionClass}`}
       onMouseEnter={() => setIsVisible(true)}

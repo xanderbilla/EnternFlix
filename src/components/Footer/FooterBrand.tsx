@@ -14,26 +14,38 @@ export default function FooterBrand() {
       />
       <div className="flex space-x-4">
         <Link
-          href="https://facebook.com/enternflix"
+          href="https://linkedin.com/in/xanderbilla"
           className="hover:text-white transition"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="LinkedIn"
         >
-          <Icon name="facebook" size={20} />
+          <Icon name="linkedin" size={20} />
         </Link>
         <Link
-          href="https://x.com/enternflix"
+          href="https://x.com/xanderbilla"
           className="hover:text-white transition"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="X (Twitter)"
         >
           <Image src="/x.svg" width={20} height={20} alt="X (Twitter)" />
         </Link>
         <Link
-          href="https://instagram.com/enternflix"
+          href="https://instagram.com/xander_billa"
           className="hover:text-white transition"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Instagram"
         >
           <Icon name="instagram" size={20} />
         </Link>
         <Link
-          href="https://github.com/enternflix"
+          href="https://github.com/xanderbilla/EnternFlix"
           className="hover:text-white transition"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="GitHub"
         >
           <Icon name="github" size={20} />
         </Link>

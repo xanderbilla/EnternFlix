@@ -1,6 +1,7 @@
 import {
   BsBell,
   BsChevronDown,
+  BsChevronUp,
   BsList,
   BsChevronLeft,
   BsChevronRight,
@@ -30,6 +31,7 @@ export const iconMap = {
   // Navigation & UI
   bell: BsBell,
   chevronDown: BsChevronDown,
+  chevronUp: BsChevronUp,
   menu: BsList,
   chevronLeft: BsChevronLeft,
   chevronRight: BsChevronRight,

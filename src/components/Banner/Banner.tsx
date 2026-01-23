@@ -19,6 +19,8 @@ import { SAMPLE_VIDEO_URL } from "@/constants/video";
 import BannerVideo from "./BannerVideo";
 import BannerControls from "./BannerControls";
 import BannerContent from "./BannerContent";
+import FavoritesBanner from "./FavoritesBanner";
+import SearchBanner from "./SearchBanner";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
 
@@ -97,59 +99,11 @@ const Banner = ({ category, variant = "home" }: BannerProps) => {
   }, []);
 
   if (isFavoritesPage) {
-    const favoritesBackdropUrl = movie?.backdrop_path
-      ? getImageUrl(movie.backdrop_path, "original")
-      : null;
-
-    // Don't render until movie data is loaded
-    if (!movie) {
-      return null;
-    }
-
-    return (
-      <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
-        {favoritesBackdropUrl ? (
-          <>
-            <div
-              className="absolute inset-0 w-full h-full bg-cover bg-center"
-              style={{ backgroundImage: `url('${favoritesBackdropUrl}')` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />
-          </>
-        ) : (
-          <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-zinc-800 via-zinc-900 to-black" />
-        )}
-        <div className="absolute bottom-1/3 md:bottom-1/3 lg:bottom-2/5 left-0 right-0 px-4 md:px-16">
-          <h1 className="font-bold text-white mb-6 leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
-            Watch Your Favorites
-          </h1>
-          <p className="text-white/90 max-w-3xl leading-relaxed text-base sm:text-lg md:text-xl mb-8">
-            Discover and enjoy all your favorite movies and TV shows in one
-            place. Your personal collection of handpicked entertainment awaits.
-          </p>
-        </div>
-      </div>
-    );
+    return <FavoritesBanner movie={movie ?? null} />;
   }
 
   if (isSearchPage) {
-    const searchBackdropUrl = movie?.backdrop_path
-      ? getImageUrl(movie.backdrop_path, "original")
-      : null;
-
-    return (
-      <div className="relative h-[40vh] md:h-[45vh] lg:h-[50vh] bg-zinc-900 overflow-hidden">
-        {searchBackdropUrl && (
-          <>
-            <div
-              className="absolute inset-0 w-full h-full bg-cover bg-center opacity-0 animate-fadeIn [animation-delay:100ms] [animation-duration:1000ms] [animation-fill-mode:forwards]"
-              style={{ backgroundImage: `url('${searchBackdropUrl}')` }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent opacity-0 animate-fadeIn [animation-delay:100ms] [animation-duration:1000ms] [animation-fill-mode:forwards]" />
-          </>
-        )}
-      </div>
-    );
+    return <SearchBanner movie={movie ?? null} />;
   }
 
   if (error || !movie?.backdrop_path) {
@@ -173,10 +127,10 @@ const Banner = ({ category, variant = "home" }: BannerProps) => {
         onVideoLoaded={handleVideoLoaded}
       />
 
-      {/* Show backdrop until video is loaded, then fade out */}
+      {/* Show backdrop until video is loaded, fade out during playback, fade back in when ended */}
       <div
         className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 ${
-          showVideo && videoLoaded ? "opacity-0" : "opacity-100"
+          showVideo && videoLoaded && !videoEnded ? "opacity-0" : "opacity-100"
         }`}
         style={{ backgroundImage: `url('${backdropUrl}')` }}
       />

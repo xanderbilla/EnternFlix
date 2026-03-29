@@ -4,7 +4,7 @@ import { useCallback, memo, useState, lazy, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText } from "@/utils/contentHelpers";
-import { useRandomContent, useCategoryContent } from "@/hooks/api/useMovies";
+import { useRandomContent } from "@/hooks/api/useMovies";
 import { BannerProps } from "@/types/components";
 import BannerContent from "./BannerContent";
 import FavoritesBanner from "./FavoritesBanner";
@@ -12,7 +12,7 @@ import SearchBanner from "./SearchBanner";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
 
-const Banner = ({ category, variant = "home" }: BannerProps) => {
+const Banner = ({ variant = "home" }: BannerProps) => {
   const pathname = usePathname();
   const [dialogState, setDialogState] = useState({
     isOpen: false,
@@ -22,13 +22,8 @@ const Banner = ({ category, variant = "home" }: BannerProps) => {
   const isFavoritesPage = pathname.includes("/favorites");
   const isSearchPage = pathname.includes("/search");
 
-  const { data: homeMovie, error: homeError } = useRandomContent();
-  const { data: categoryMovie, error: categoryError } = useCategoryContent(
-    category || "trending",
-  );
-
-  const error = variant === "home" ? homeError : categoryError;
-  const movie = variant === "home" ? homeMovie : categoryMovie;
+  // Only use random content for home variant
+  const { data: movie, error } = useRandomContent();
 
   const handleMoreInfo = useCallback(() => {
     if (movie?.id) {

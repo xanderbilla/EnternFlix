@@ -126,10 +126,6 @@ export default function BaseDialog({
                 ? "scale-100 opacity-100"
                 : "scale-75 opacity-0"
           } ${className}`}
-          style={{
-            transition:
-              "opacity 500ms ease-in-out, transform 500ms ease-in-out, height 300ms ease-in-out",
-          }}
           onClick={(e) => e.stopPropagation()}
         >
           {typeof children === "function"

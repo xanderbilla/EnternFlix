@@ -2,20 +2,13 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useTitle, type TitleData } from "@/hooks/api/useTitle";
-import { useVideo } from "@/contexts/VideoContext";
 import { Movie } from "@/types/movie";
 import DialogBanner from "./DialogBanner";
 import InfoDialog from "@/components/Dialogs/InfoDialog";
+import { DynamicDialogRenderer as DialogRenderer } from "@/utils/dynamicImports";
 import { useDialogManager, type DialogType } from "@/hooks/ui/useDialogManager";
-import DialogRenderer from "@/components/Dialogs/DialogRenderer";
 import { TitleDialogProps } from "@/types/components";
-import {
-  useNetflixOriginals,
-  usePopularMovies,
-  usePopularTV,
-  useTrendingMovies,
-  useTrendingTV,
-} from "@/hooks/api/useMovies";
+import { useTrending } from "@/hooks/api/useMovies";
 
 export default function TitleDialog({
   isOpen,
@@ -23,18 +16,11 @@ export default function TitleDialog({
   onClose,
   onMovieChange,
 }: TitleDialogProps) {
-  const [isClosing, setIsClosing] = useState(false);
-  const [isEntering, setIsEntering] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [internalIsOpen, setInternalIsOpen] = useState(true);
   const [shouldFetchData, setShouldFetchData] = useState(false);
   const { data, error } = useTitle(titleId, shouldFetchData);
-  const { data: netflixData } = useNetflixOriginals();
-  const { data: popularMovies } = usePopularMovies();
-  const { data: popularTV } = usePopularTV();
-  const { data: trendingMovies } = useTrendingMovies();
-  const { data: trendingTV } = useTrendingTV();
-  const { pauseBanner, resumeBanner } = useVideo();
+  const { data: trendingData } = useTrending();
   const {
     dialogState,
     hasBackNavigation,
@@ -46,14 +32,8 @@ export default function TitleDialog({
   } = useDialogManager();
 
   const handleClose = useCallback(() => {
-    setIsEntering(false);
-    setIsClosing(true);
-    document.body.style.overflow = "unset";
-    resumeBanner();
-    setTimeout(() => {
-      onClose();
-    }, 400);
-  }, [resumeBanner, onClose]);
+    onClose();
+  }, [onClose]);
 
   // Handle movie click from cast/detail dialogs to open info dialog
   const handleMovieClickFromDialog = useCallback(
@@ -92,20 +72,11 @@ export default function TitleDialog({
       let moviesToShow: Movie[] = [];
 
       if (isCast) {
-        // For cast dialogs, use Netflix Originals primarily
-        moviesToShow = netflixData?.results?.slice(0, 20) || [];
+        // For cast dialogs, use trending content
+        moviesToShow = trendingData?.results?.slice(0, 20) || [];
       } else {
-        // For genre/detail dialogs, use a mix of popular and trending content
-        const allContent = [
-          ...(popularMovies?.results || []),
-          ...(popularTV?.results || []),
-          ...(trendingMovies?.results || []),
-          ...(trendingTV?.results || []),
-        ];
-
-        // Shuffle and take first 20
-        const shuffled = allContent.sort(() => 0.5 - Math.random());
-        moviesToShow = shuffled.slice(0, 20);
+        // For genre/detail dialogs, use trending content
+        moviesToShow = trendingData?.results?.slice(0, 20) || [];
       }
 
       // Fallback if no data is available
@@ -135,30 +106,11 @@ export default function TitleDialog({
         openDetailDialog(title, moviesToShow, 10000, "info");
       }
     },
-    [
-      data,
-      netflixData,
-      popularMovies,
-      popularTV,
-      trendingMovies,
-      trendingTV,
-      openCastDialog,
-      openDetailDialog,
-    ],
+    [data, trendingData, openCastDialog, openDetailDialog],
   );
 
   useEffect(() => {
     if (isOpen) {
-      setIsClosing(false);
-      document.body.style.overflow = "hidden";
-      pauseBanner();
-      // Trigger enter animation after mount
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setIsEntering(true);
-        });
-      });
-
       // Start fetching data after dialog animation completes (500ms)
       const fetchTimer = setTimeout(() => {
         setShouldFetchData(true);
@@ -166,24 +118,15 @@ export default function TitleDialog({
 
       return () => clearTimeout(fetchTimer);
     } else {
-      document.body.style.overflow = "unset";
       setShouldFetchData(false);
     }
-
-    // Cleanup function only runs when component unmounts or isOpen changes
-    return () => {
-      if (isOpen) {
-        document.body.style.overflow = "unset";
-        resumeBanner();
-      }
-    };
-  }, [isOpen, pauseBanner, resumeBanner]);
+  }, [isOpen]);
 
   // Handle escape key press
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isOpen) {
-        handleClose();
+        onClose();
       }
     };
 
@@ -194,7 +137,7 @@ export default function TitleDialog({
     return () => {
       document.removeEventListener("keydown", handleEscapeKey);
     };
-  }, [isOpen, handleClose]);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 

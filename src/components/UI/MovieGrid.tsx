@@ -13,9 +13,11 @@ import {
 } from "@/utils/movieHelpers";
 import { useKeyboardHandler } from "@/hooks/ui/useKeyboardHandler";
 import { getCardPositionClass } from "@/utils/layoutHelpers";
-import MovieCardHoverOverlay from "@/components/MovieCard/MovieCardHoverOverlay";
-import MovieCardActionButtons from "@/components/MovieCard/MovieCardActionButtons";
-import MovieCardMetadata from "@/components/MovieCard/MovieCardMetadata";
+import {
+  DynamicMovieCardHoverOverlay as MovieCardHoverOverlay,
+  DynamicMovieCardActionButtons as MovieCardActionButtons,
+  DynamicMovieCardMetadata as MovieCardMetadata,
+} from "@/utils/dynamicImports";
 
 export default function MovieGrid({
   movies,

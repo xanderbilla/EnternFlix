@@ -2,7 +2,7 @@
 
 import { Movie } from "@/types/movie";
 import BaseDialog from "@/components/UI/BaseDialog";
-import DialogHeader from "@/components/UI/DialogHeader";
+import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import MovieGrid from "@/components/UI/MovieGrid";
 
 export interface DetailDialogProps {

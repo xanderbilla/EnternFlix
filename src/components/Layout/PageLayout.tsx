@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, Suspense } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import {
   DynamicNavbar,
@@ -12,10 +12,6 @@ import { PageLayoutProps } from "@/types/components";
 function PageLayoutContent({
   children,
   showBanner = false,
-  bannerVariant = "home",
-  bannerTitle,
-  bannerDescription,
-  bannerCategory,
   gridContent,
 }: PageLayoutProps) {
   const searchParams = useSearchParams();
@@ -24,11 +20,9 @@ function PageLayoutContent({
   return (
     <div className="flex flex-col min-h-screen">
       <DynamicNavbar />
-      <div className="relative flex-1">
+      <div className="relative">
         {/* Only show banner in list view */}
-        {showBanner && viewMode === "list" && (
-          <DynamicBanner variant={bannerVariant} category={bannerCategory} />
-        )}
+        {showBanner && viewMode === "list" && <DynamicBanner />}
 
         {/* Content based on view mode */}
         {viewMode === "list" ? (

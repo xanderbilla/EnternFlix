@@ -1,8 +1,8 @@
 "use client";
 
 import { Movie } from "@/types/movie";
-import MovieGrid from "@/components/UI/MovieGrid";
 import { useState, lazy, Suspense } from "react";
+import MovieCard from "@/components/MovieCard/MovieCard";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
 
@@ -60,7 +60,19 @@ export default function SearchResults({
         <p className="text-gray-400 mt-1">{searchRes.length} results found</p>
       </div>
 
-      <MovieGrid movies={searchRes} onMovieClick={handleMovieClick} />
+      {/* Grid of 5 columns with MovieCard */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 pb-10">
+        {searchRes.map((movie, index) => (
+          <div key={`${movie.id}-${index}`} className="group/item">
+            <MovieCard
+              data={movie}
+              isFirst={index === 0}
+              isLast={index === searchRes.length - 1}
+              onMovieClick={handleMovieClick}
+            />
+          </div>
+        ))}
+      </div>
 
       {/* Load More Trigger */}
       {hasNextPage && (

@@ -3,11 +3,13 @@
 import { useEffect, useState, useMemo, useCallback, useRef, memo } from "react";
 import { MovieListProps } from "@/types/components";
 import { HOOK_MAP } from "@/constants/hookMap";
-import ScrollButton from "./ScrollButton";
-import MovieGrid from "./MovieGrid";
-import MovieListHeader from "./MovieListHeader";
+import {
+  DynamicScrollButton as ScrollButton,
+  DynamicMovieGrid as MovieGrid,
+  DynamicMovieListHeader as MovieListHeader,
+  DynamicDialogRenderer as DialogRenderer,
+} from "@/utils/dynamicImports";
 import { useDialogManager } from "@/hooks/ui/useDialogManager";
-import DialogRenderer from "@/components/Dialogs/DialogRenderer";
 import { useMovieScroll } from "@/hooks/ui/useMovieScroll";
 import { useDialogBodyScroll } from "@/hooks/ui/useDialogBodyScroll";
 

@@ -5,14 +5,12 @@ import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText } from "@/utils/contentHelpers";
 import { useRandomContent } from "@/hooks/api/useMovies";
-import { BannerProps } from "@/types/components";
-import BannerContent from "./BannerContent";
+import { DynamicBannerContent as BannerContent } from "@/utils/dynamicImports";
 import FavoritesBanner from "./FavoritesBanner";
-import SearchBanner from "./SearchBanner";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
 
-const Banner = ({ variant = "home" }: BannerProps) => {
+const Banner = () => {
   const pathname = usePathname();
   const [dialogState, setDialogState] = useState({
     isOpen: false,
@@ -20,7 +18,6 @@ const Banner = ({ variant = "home" }: BannerProps) => {
   });
 
   const isFavoritesPage = pathname.includes("/favorites");
-  const isSearchPage = pathname.includes("/search");
 
   // Only use random content for home variant
   const { data: movie, error } = useRandomContent();
@@ -37,10 +34,6 @@ const Banner = ({ variant = "home" }: BannerProps) => {
 
   if (isFavoritesPage) {
     return <FavoritesBanner movie={movie ?? null} />;
-  }
-
-  if (isSearchPage) {
-    return <SearchBanner movie={movie ?? null} />;
   }
 
   if (error || !movie?.backdrop_path) {

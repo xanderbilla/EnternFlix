@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, cloneElement, isValidElement, memo } from "react";
+import { ReactNode, memo } from "react";
 import BaseDialog from "@/components/UI/BaseDialog";
 
 export interface InfoDialogProps {
@@ -23,15 +23,7 @@ function InfoDialog({
       zIndex={zIndex}
       className="w-full max-w-4xl relative"
     >
-      {({ handleClose }) => {
-        // Pass handleClose to children if it's a valid React element
-        if (isValidElement(children) && typeof children.type !== "string") {
-          return cloneElement(children as React.ReactElement<any>, {
-            onClose: handleClose,
-          });
-        }
-        return children;
-      }}
+      {children}
     </BaseDialog>
   );
 }

@@ -1,8 +1,10 @@
 "use client";
 
 import { memo } from "react";
-import Icon from "@/components/Icon/Icon";
-import Button from "@/components/Button/Button";
+import {
+  DynamicIcon as Icon,
+  DynamicButton as Button,
+} from "@/utils/dynamicImports";
 import { BannerContentProps } from "@/types/components";
 
 export default function BannerContent({

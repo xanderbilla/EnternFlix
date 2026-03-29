@@ -1,6 +1,6 @@
 "use client";
 
-import Icon from "@/components/Icon/Icon";
+import { DynamicIcon as Icon } from "@/utils/dynamicImports";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";

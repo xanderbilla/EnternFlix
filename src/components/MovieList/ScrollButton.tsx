@@ -1,6 +1,8 @@
 import { memo } from "react";
-import Icon from "@/components/Icon/Icon";
-import CircularButton from "@/components/UI/CircularButton";
+import {
+  DynamicIcon as Icon,
+  DynamicCircularButton as CircularButton,
+} from "@/utils/dynamicImports";
 import { ScrollButtonProps } from "@/types/components";
 
 export default function ScrollButton({

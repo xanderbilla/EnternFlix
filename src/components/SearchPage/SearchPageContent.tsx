@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useSearch, useTrending } from "@/hooks/api/useMovies";
 import PageLayout from "@/components/Layout/PageLayout";
-import SearchResults from "@/components/search/SearchResults";
+import SearchResults from "./SearchResults";
 import Icon from "@/components/Icon/Icon";
 
 // Native debounce implementation

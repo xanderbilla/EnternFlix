@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import { DynamicHome, DynamicFrontPage } from "@/utils/dynamicImports";
+import { DynamicHome } from "@/utils/dynamicImports";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -31,6 +31,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomePage() {
-  const user = true;
-  return <>{!user ? <DynamicFrontPage /> : <DynamicHome />}</>;
+  return <DynamicHome />;
 }

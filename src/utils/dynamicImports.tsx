@@ -23,7 +23,3 @@ export const DynamicMovieCard = dynamic(
 
 // Page components
 export const DynamicHome = dynamic(() => import("@/components/Home/Home"));
-
-export const DynamicFrontPage = dynamic(
-  () => import("@/components/FrontPage/FrontPage"),
-);

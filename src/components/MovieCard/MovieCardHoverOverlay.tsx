@@ -1,12 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useRef } from "react";
-import { useVideo } from "@/contexts/VideoContext";
 import { MovieCardHoverOverlayProps } from "@/types/components";
-import { SAMPLE_VIDEO_URL } from "@/constants/video";
-import VideoPlayer from "./VideoPlayer";
-import VolumeControl from "./VolumeControl";
 
 export default function MovieCardHoverOverlay({
   backdropUrl,
@@ -17,13 +12,6 @@ export default function MovieCardHoverOverlay({
   handleKeyPress,
   children,
 }: MovieCardHoverOverlayProps) {
-  const [isVisible, setIsVisible] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const { pauseBanner, resumeBanner } = useVideo();
-
   const handleArrowClick = () => {
     navigateToTitle();
   };
@@ -54,51 +42,6 @@ export default function MovieCardHoverOverlay({
 
   const transforms = getDirectionalTransforms();
 
-  useEffect(() => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    if (isVisible) {
-      setVideoLoaded(false);
-      timeoutRef.current = setTimeout(() => {
-        setShowVideo(true);
-      }, 1000);
-    } else {
-      setShowVideo(false);
-    }
-
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [isVisible]);
-
-  useEffect(() => {
-    if (showVideo) {
-      pauseBanner();
-    } else {
-      resumeBanner();
-    }
-    return () => {
-      resumeBanner();
-    };
-  }, [showVideo, pauseBanner, resumeBanner]);
-
-  const handleVideoEnded = () => {
-    setShowVideo(false);
-  };
-
-  const handleVideoLoaded = () => {
-    setVideoLoaded(true);
-  };
-
-  const toggleMute = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsMuted(!isMuted);
-  };
-
   return (
     <div
       className={`hidden md:block opacity-0 md:opacity-0 absolute top-0 transition-all duration-300 z-50
@@ -106,8 +49,6 @@ export default function MovieCardHoverOverlay({
         ${transforms.initial} ${transforms.hover}
         w-[320px] md:w-[380px] lg:w-[420px] aspect-video
         ${positionClass}`}
-      onMouseEnter={() => setIsVisible(true)}
-      onMouseLeave={() => setIsVisible(false)}
     >
       <div className="relative w-full h-full rounded-md overflow-hidden">
         <button
@@ -118,22 +59,12 @@ export default function MovieCardHoverOverlay({
             data?.title || data?.name || "this title"
           }`}
         >
-          {showVideo && (
-            <VideoPlayer
-              sampleVideoUrl={SAMPLE_VIDEO_URL}
-              isMuted={isMuted}
-              onEnded={handleVideoEnded}
-              onVideoLoaded={handleVideoLoaded}
-            />
-          )}
-
-          {/* Show backdrop until video is loaded, then fade out */}
+          {/* Show backdrop image only - No Video */}
           {backdropUrl ? (
             <Image
-              className={`object-contain transition-opacity duration-1000 w-full h-full ${
-                showVideo && videoLoaded ? "opacity-0" : "opacity-100"
-              }`}
+              className="object-contain w-full h-full"
               fill
+              sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
               src={backdropUrl}
               alt={
                 data?.title ||
@@ -148,10 +79,6 @@ export default function MovieCardHoverOverlay({
             </div>
           )}
         </button>
-
-        {showVideo && (
-          <VolumeControl isMuted={isMuted} onToggleMute={toggleMute} />
-        )}
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent">
           <div className="absolute bottom-0 w-full p-4 flex flex-col">

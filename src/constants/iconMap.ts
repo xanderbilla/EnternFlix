@@ -12,6 +12,7 @@ import {
   BsGithub,
   BsInstagram,
   BsGrid3X3Gap,
+  BsSearch,
 } from "react-icons/bs";
 import { AiOutlineInfoCircle, AiOutlineHome } from "react-icons/ai";
 import {
@@ -41,6 +42,7 @@ export const iconMap = {
   home: AiOutlineHome,
   list: HiOutlineViewList,
   grid: BsGrid3X3Gap,
+  search: BsSearch,
 
   // Media Controls
   play: BsPlay,

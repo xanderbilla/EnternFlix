@@ -2,47 +2,15 @@
 
 import Icon from "@/components/Icon/Icon";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
-import NavbarProfile from "./NavbarProfile";
-import NavbarActions from "./NavbarActions";
-import SecondaryNavbar from "./SecondaryNavbar";
 import { useNavbar } from "@/hooks/ui/useNavbar";
-import dynamic from "next/dynamic";
 import { NavbarProps } from "@/types/navbar";
-import { NAVBAR_ITEMS } from "@/constants/ui";
-import CircularButton from "@/components/UI/CircularButton";
-
-const NavbarItems = dynamic(
-  () => import("@/components/NavbarItems/NavbarItems"),
-);
-
-const MobileMenu = dynamic(() => import("@/components/MobileMenu/MobileMenu"));
-
-const AccountMenu = dynamic(
-  () => import("@/components/AccountMenu/AccountMenu"),
-);
+import Link from "next/link";
 
 const Navbar = ({ classname = "" }: NavbarProps) => {
   const router = useRouter();
-  const pathname = usePathname();
-  const {
-    showMobileMenu,
-    showAccountMenu,
-    showBackground,
-    toggleMobileMenu,
-    handleAccountMenuEnter,
-    handleAccountMenuLeave,
-  } = useNavbar();
-
-  // Get page title for secondary navbar
-  const getPageTitle = () => {
-    if (pathname.includes("/movies")) return "Movies";
-    if (pathname.includes("/tv-shows")) return "TV Shows";
-    if (pathname.includes("/anime")) return "Anime";
-    if (pathname.includes("/trending")) return "Trending";
-    return "";
-  };
+  const { showBackground } = useNavbar();
 
   return (
     <nav className={twMerge("w-full fixed top-0 left-0 z-40", classname)}>
@@ -54,72 +22,39 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
             : "bg-gradient-to-b from-black/70 to-transparent"
         }`}
       >
-        {/* Mobile Menu Toggle */}
-        <button
-          onClick={toggleMobileMenu}
-          className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition lg:hidden"
-          aria-label="Toggle mobile menu"
-        >
-          <Icon name="menu" size={24} className="text-white" />
-        </button>
-
         {/* Logo */}
         <Image
           height={90}
           width={150}
           src="/logo.png"
           alt="logo"
+          loading="eager"
+          priority
           onClick={() => router.push("/")}
-          className="cursor-pointer ml-2 md:ml-0 h-8 md:h-10 w-auto object-contain hover:opacity-90 transition"
+          className="cursor-pointer h-8 md:h-10 w-auto object-contain hover:opacity-90 transition"
         />
 
         {/* Desktop Navigation */}
-        <div className="flex-row ml-8 gap-8 hidden lg:flex">
-          {NAVBAR_ITEMS.map((item) => (
-            <NavbarItems key={item.label} label={item.label} path={item.path} />
-          ))}
+        <div className="flex-row ml-8 gap-8 hidden md:flex">
+          <Link
+            href="/"
+            className="text-white hover:text-gray-300 transition cursor-pointer"
+          >
+            Home
+          </Link>
         </div>
 
-        {/* Right Side Icons */}
+        {/* Right Side - Search Icon */}
         <div className="flex flex-row ml-auto gap-2 md:gap-4 items-center">
-          <NavbarActions onSearchClick={() => router.push("/search")} />
-          <CircularButton
-            icon={<Icon name="bell" size={20} />}
-            aria-label="Notifications"
-          />
-          <NavbarProfile
-            showAccountMenu={showAccountMenu}
-            onMenuEnter={handleAccountMenuEnter}
-            onMenuLeave={handleAccountMenuLeave}
-            AccountMenu={AccountMenu}
-          />
-        </div>
-
-        {/* Mobile Menu */}
-        <div
-          className={`fixed top-0 left-0 h-full w-full bg-black transition-transform duration-500 transform ${
-            showMobileMenu ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <div className="absolute top-4 right-4">
-            <button
-              onClick={toggleMobileMenu}
-              className="w-10 h-10 rounded-full flex items-center justify-center hover:bg-white/10 transition"
-            >
-              <span className="text-white text-2xl font-light">×</span>
-            </button>
-          </div>
-          <div className="flex flex-col pt-20 px-8 bg-gradient-to-b from-zinc-900 to-black h-full">
-            <MobileMenu visible={showMobileMenu} items={NAVBAR_ITEMS} />
-          </div>
+          <button
+            onClick={() => router.push("/search")}
+            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition"
+            aria-label="Search"
+          >
+            <Icon name="search" size={20} className="text-white" />
+          </button>
         </div>
       </div>
-
-      {/* Secondary Navbar */}
-      <SecondaryNavbar
-        pageTitle={getPageTitle()}
-        showBackground={showBackground}
-      />
     </nav>
   );
 };

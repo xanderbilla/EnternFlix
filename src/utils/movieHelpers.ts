@@ -86,5 +86,15 @@ export const getImageUrl = (
   size: string = "w500",
 ): string => {
   if (!path) return "";
+
+  // Check if it's a custom API image (doesn't start with /)
+  if (!path.startsWith("/")) {
+    const customImageBaseUrl =
+      process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL ||
+      "https://bi8s.s3.us-east-1.amazonaws.com/";
+    return `${customImageBaseUrl}${path}`;
+  }
+
+  // TMDB image
   return `https://image.tmdb.org/t/p/${size}${path}`;
 };

@@ -33,6 +33,12 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
 
   const movies = useMemo(() => response?.results || [], [response?.results]);
 
+  // Only show scroll buttons if there are more than 7 movies
+  const shouldShowScrollButtons = useMemo(
+    () => movies.length > 7,
+    [movies.length],
+  );
+
   const checkScrollButtons = useCallback(() => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -68,7 +74,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   }, [openExploreDialog, title, movies]);
 
   const handleMovieClick = useCallback(
-    (movieId: number) => {
+    (movieId: number | string) => {
       openInfoDialog(movieId.toString(), 10000);
     },
     [openInfoDialog],
@@ -129,6 +135,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
         >
           {/* Left gradient overlay */}
           {!dialogState.isOpen &&
+            shouldShowScrollButtons &&
             (showButtons || window.innerWidth <= 768) &&
             showLeftButton && (
               <div
@@ -142,6 +149,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
             onClick={() => scroll("left")}
             show={
               !dialogState.isOpen &&
+              shouldShowScrollButtons &&
               (showButtons || window.innerWidth <= 768) &&
               showLeftButton
             }
@@ -158,6 +166,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
             onClick={() => scroll("right")}
             show={
               !dialogState.isOpen &&
+              shouldShowScrollButtons &&
               (showButtons || window.innerWidth <= 768) &&
               showRightButton
             }
@@ -165,6 +174,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
 
           {/* Right gradient overlay */}
           {!dialogState.isOpen &&
+            shouldShowScrollButtons &&
             (showButtons || window.innerWidth <= 768) &&
             showRightButton && (
               <div

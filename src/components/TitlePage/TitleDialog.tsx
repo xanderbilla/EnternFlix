@@ -37,7 +37,7 @@ export default function TitleDialog({
 
   // Handle movie click from cast/detail dialogs to open info dialog
   const handleMovieClickFromDialog = useCallback(
-    (movieId: number) => {
+    (movieId: number | string) => {
       if (onMovieChange) {
         // Set transitioning state to prevent main InfoDialog from showing
         setIsTransitioning(true);

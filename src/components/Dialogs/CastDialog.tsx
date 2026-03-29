@@ -11,7 +11,7 @@ export interface CastDialogProps {
   movies: Movie[];
   onClose: () => void;
   onBack?: () => void;
-  onMovieClick: (movieId: number) => void;
+  onMovieClick: (movieId: number | string) => void;
   backdropUrl?: string;
   zIndex?: number;
 }

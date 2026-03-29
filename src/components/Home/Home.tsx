@@ -6,7 +6,7 @@ import { DynamicMovieList } from "@/utils/dynamicImports";
 const Home = () => {
   return (
     <PageLayout showBanner={true} bannerVariant="home">
-      <DynamicMovieList title="Trending" hookName="trending" />
+      <DynamicMovieList title="Latest" hookName="trending" />
     </PageLayout>
   );
 };

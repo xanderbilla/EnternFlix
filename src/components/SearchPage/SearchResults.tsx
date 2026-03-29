@@ -26,7 +26,7 @@ export default function SearchResults({
     movieId: "",
   });
 
-  const handleMovieClick = (movieId: number) => {
+  const handleMovieClick = (movieId: number | string) => {
     setDialogState({ isOpen: true, movieId: movieId.toString() });
   };
 

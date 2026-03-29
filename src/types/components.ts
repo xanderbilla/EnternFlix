@@ -6,7 +6,7 @@ export interface MovieCardProps {
   data: Movie;
   isFirst?: boolean;
   isLast?: boolean;
-  onMovieClick?: (movieId: number) => void;
+  onMovieClick?: (movieId: number | string) => void;
 }
 
 export interface MovieListProps {
@@ -119,7 +119,7 @@ export interface BannerControlsProps {
 export interface BannerContentProps {
   title: string;
   description: string;
-  movieId: number;
+  movieId: number | string;
   onMoreInfoClick: () => void;
 }
 
@@ -153,7 +153,7 @@ export interface ScrollButtonProps {
 export interface MovieListScrollGridProps {
   movies: Movie[];
   scrollRef: React.RefObject<HTMLDivElement | null>;
-  onMovieClick?: (movieId: number) => void;
+  onMovieClick?: (movieId: number | string) => void;
 }
 
 export interface ToggleProps {
@@ -291,7 +291,7 @@ export interface TitleDialogProps {
 
 export interface ExploreDialogGridProps {
   movies: Movie[];
-  onMovieClick: (movieId: number) => void;
+  onMovieClick: (movieId: number | string) => void;
 }
 
 export interface ExploreDialogHeaderProps {
@@ -312,7 +312,7 @@ export interface SettingRowProps {
 
 export interface MovieGridProps {
   movies: Movie[];
-  onMovieClick: (movieId: number) => void;
+  onMovieClick: (movieId: number | string) => void;
   columns?: number;
 }
 
@@ -321,6 +321,6 @@ export interface DialogRendererProps {
   hasBackNavigation: boolean;
   onClose: () => void;
   onBack: () => void;
-  onMovieClick: (movieId: number) => void;
-  onInfoDialogOpen?: (movieId: number) => void;
+  onMovieClick: (movieId: number | string) => void;
+  onInfoDialogOpen?: (movieId: number | string) => void;
 }

@@ -1,7 +1,12 @@
 const key = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+const customApiUrl = process.env.NEXT_PUBLIC_CUSTOM_API_URL;
 
 const requests = {
-  // Only keep what's actually used
+  // Custom API endpoints
+  fetchAllMovies: `${customApiUrl}/movies`,
+  fetchMovieById: (id: string) => `${customApiUrl}/movies/${id}`,
+
+  // TMDB API endpoints (keep for search and other features)
   fetchTrending: `trending/all/week?api_key=${key}&language=en-US`,
   searchRequest: `search/multi?api_key=${key}&query=`,
 

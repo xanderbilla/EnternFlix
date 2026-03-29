@@ -37,7 +37,7 @@ export default function ExploreDialog({
     }, 400);
   }, [showTitleDialog, resumeBanner, onClose]);
 
-  const handleMovieClick = (movieId: number) => {
+  const handleMovieClick = (movieId: number | string) => {
     setSelectedMovieId(movieId.toString());
     setIsTransitioning(true);
 

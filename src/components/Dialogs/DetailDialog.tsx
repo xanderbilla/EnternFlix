@@ -11,7 +11,7 @@ export interface DetailDialogProps {
   movies: Movie[];
   onClose: () => void;
   onBack?: () => void;
-  onMovieClick: (movieId: number) => void;
+  onMovieClick: (movieId: number | string) => void;
   zIndex?: number;
 }
 

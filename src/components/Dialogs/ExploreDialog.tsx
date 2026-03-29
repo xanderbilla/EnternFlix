@@ -10,7 +10,7 @@ export interface ExploreDialogProps {
   title: string;
   movies: Movie[];
   onClose: () => void;
-  onMovieClick: (movieId: number) => void;
+  onMovieClick: (movieId: number | string) => void;
   zIndex?: number;
 }
 

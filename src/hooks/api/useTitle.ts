@@ -1,6 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "@/helper/axios";
-import { Movie } from "@/types/movie";
+import customAxios from "@/helper/customAxios";
+import requests from "@/helper/request";
+import {
+  Movie,
+  CustomMovieResponse,
+  convertCustomMovieToMovie,
+} from "@/types/movie";
 
 export interface TVShow extends Movie {
   number_of_seasons: number;
@@ -25,6 +31,23 @@ export interface TitleData {
 const key = process.env.NEXT_PUBLIC_TMDB_API_KEY;
 
 const fetchTitleData = async (id: string): Promise<TitleData> => {
+  // Try custom API first (if ID looks like UUID or is long)
+  if (id.includes("-") || id.length > 10) {
+    try {
+      const response = await customAxios.get<CustomMovieResponse>(
+        requests.fetchMovieById(id),
+      );
+      const movie = convertCustomMovieToMovie(response.data.data);
+      return {
+        content: movie,
+        mediaType: "movie",
+      };
+    } catch (error) {
+      console.log("Custom API failed, falling back to TMDB", error);
+    }
+  }
+
+  // Fallback to TMDB API
   try {
     // Try fetching as a TV show first
     const tvResponse = await axios.get(
@@ -62,6 +85,6 @@ export const useTitle = (id: string, enabled: boolean = true) => {
     queryFn: () => fetchTitleData(id),
     enabled: !!id && enabled,
     staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes,
   });
 };

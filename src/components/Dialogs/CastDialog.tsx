@@ -1,20 +1,9 @@
 "use client";
 
-import { Movie } from "@/types/movie";
+import type { CastDialogProps } from "@/types/components";
 import BaseDialog from "@/components/UI/BaseDialog";
 import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import MovieGrid from "@/components/UI/MovieGrid";
-
-export interface CastDialogProps {
-  isOpen: boolean;
-  castName: string;
-  movies: Movie[];
-  onClose: () => void;
-  onBack?: () => void;
-  onMovieClick: (movieId: number | string) => void;
-  backdropUrl?: string;
-  zIndex?: number;
-}
 
 export default function CastDialog({
   isOpen,

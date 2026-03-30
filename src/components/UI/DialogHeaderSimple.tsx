@@ -1,9 +1,6 @@
 "use client";
 
-interface SimpleDialogHeaderProps {
-  title: string;
-  onClose: () => void;
-}
+import type { SimpleDialogHeaderProps } from "@/types/components";
 
 export default function SimpleDialogHeader({
   title,

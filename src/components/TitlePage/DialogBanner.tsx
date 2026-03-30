@@ -7,12 +7,14 @@ import DialogSeasonSelector from "./DialogSeasonSelector";
 import DialogEpisodesList from "./DialogEpisodesList";
 import DialogInfoSection from "./DialogInfoSection";
 import DialogAboutSection from "./DialogAboutSection";
+import DialogMetadataSection from "./DialogMetadataSection";
 import {
   mockCast,
   mockGenres,
   mockTags,
   mockEpisodes,
 } from "@/constants/mockData";
+import { getReleaseYear, getContentType } from "@/utils/movieHelpers";
 
 const DialogBanner: React.FC<DialogBannerProps> = ({
   data,
@@ -29,14 +31,18 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
     }
   };
 
-  const releaseYear = data?.first_air_date
-    ? data.first_air_date.substring(0, 4)
-    : data?.release_date
-      ? data.release_date.substring(0, 4)
-      : "Unknown";
+  // Extract release year from the API - use actual value even if it's 0001
+  const releaseYear = data ? getReleaseYear(data as any) : "Unknown";
 
-  const isTV = data?.first_air_date || data?.number_of_seasons;
+  // Check content_type first, then fall back to other indicators
+  const isTV = data ? getContentType(data as any) === "TV" : false;
   const numberOfSeasons = data?.number_of_seasons || 1;
+
+  // Get data from API
+  const casts = data?.casts || [];
+  const genres = data?.genres || [];
+  const tags = data?.tags || [];
+  const moodTags = data?.mood_tags || [];
 
   return (
     <div className="bg-zinc-900">
@@ -52,96 +58,20 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
             isTV={!!isTV}
             numberOfSeasons={numberOfSeasons}
             overview={data?.overview || ""}
+            runtime={data?.runtime}
+            content_rating={data?.content_rating}
+            movieData={data as any}
           />
 
           {/* Right Column - Inline Info */}
-          <div className="space-y-3">
-            {/* Cast */}
-            <div className="text-sm">
-              <span className="text-gray-400">Cast: </span>
-              <span className="text-white/80">
-                {mockCast.slice(0, 3).map((cast, index) => (
-                  <span key={cast}>
-                    <button
-                      onClick={() => onExploreClick?.(cast, cast, true)}
-                      className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
-                    >
-                      {cast}
-                    </button>
-                    {index < mockCast.slice(0, 3).length - 1 && ", "}
-                  </span>
-                ))}
-                {mockCast.length > 3 && (
-                  <>
-                    ,{" "}
-                    <button
-                      onClick={handleScrollToAbout}
-                      className="text-white/80 hover:underline hover:underline-offset-2 cursor-pointer italic"
-                    >
-                      more
-                    </button>
-                  </>
-                )}
-              </span>
-            </div>
-
-            {/* Genres */}
-            <div className="text-sm">
-              <span className="text-gray-400">Genres: </span>
-              <span className="text-white/80">
-                {mockGenres.slice(0, 3).map((genre, index) => (
-                  <span key={genre}>
-                    <button
-                      onClick={() =>
-                        onExploreClick?.(
-                          genre,
-                          `${genre} Movies & Shows`,
-                          false,
-                        )
-                      }
-                      className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
-                    >
-                      {genre}
-                    </button>
-                    {index < mockGenres.slice(0, 3).length - 1 && ", "}
-                  </span>
-                ))}
-                {mockGenres.length > 3 && (
-                  <>
-                    ,{" "}
-                    <button
-                      onClick={handleScrollToAbout}
-                      className="text-white/80 hover:underline hover:underline-offset-2 cursor-pointer italic"
-                    >
-                      more
-                    </button>
-                  </>
-                )}
-              </span>
-            </div>
-
-            {/* This Movie/Show Is */}
-            <div className="text-sm">
-              <span className="text-gray-400">
-                This {isTV ? "Show" : "Movie"} Is:{" "}
-              </span>
-              <span className="text-white/80">
-                {mockTags.map((tag, index) => (
-                  <span key={tag}>
-                    <button
-                      onClick={() =>
-                        onExploreClick?.(tag, `${tag} Content`, false)
-                      }
-                      className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
-                    >
-                      {tag}
-                    </button>
-                    {index < mockTags.length - 1 && ", "}
-                  </span>
-                ))}
-              </span>
-            </div>
-          </div>
+          <DialogMetadataSection
+            casts={casts}
+            genres={genres}
+            moodTags={moodTags}
+            isTV={!!isTV}
+            onExploreClick={onExploreClick}
+            onScrollToAbout={handleScrollToAbout}
+          />
         </div>
 
         {/* Episodes Section - Only for TV Shows */}
@@ -156,10 +86,18 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
 
         {/* About Section - Full Width at Bottom */}
         <DialogAboutSection
-          title={data?.title ?? data?.name ?? data?.original_name ?? ""}
-          mockCast={mockCast}
-          mockGenres={mockGenres}
+          title={data?.title ?? ""}
+          casts={casts}
+          genres={genres}
+          tags={tags}
+          moodTags={moodTags}
+          productionCompanies={data?.production_companies || []}
+          content_rating={data?.content_rating}
+          releaseDate={data?.release_date || data?.first_air_date}
+          auditDate={data?.audit?.created_at}
+          isTV={!!isTV}
           onExploreClick={onExploreClick}
+          movieData={data as any}
         />
       </div>
     </div>

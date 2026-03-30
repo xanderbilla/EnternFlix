@@ -7,6 +7,7 @@ import {
   DynamicSearchResults as SearchResults,
   DynamicIcon as Icon,
 } from "@/utils/dynamicImports";
+import { getImageUrl } from "@/utils/movieHelpers";
 
 // Native debounce implementation
 function debounce<T extends (...args: any[]) => any>(
@@ -99,7 +100,7 @@ export default function SearchPageContent() {
             <div
               className="absolute inset-0 w-full h-full bg-cover bg-top"
               style={{
-                backgroundImage: `url('https://image.tmdb.org/t/p/original${movie.backdrop_path}')`,
+                backgroundImage: `url('${getImageUrl(movie.backdrop_path, "original")}')`,
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />

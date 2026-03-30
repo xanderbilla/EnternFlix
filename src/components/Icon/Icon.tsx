@@ -1,10 +1,8 @@
+import type { IconProps, IconName } from "@/types/components";
 import React from "react";
-import { IconProps } from "@/types/components";
 import { memo } from "react";
 import { iconMap } from "@/constants/iconMap";
 import { customIcons } from "@/constants/customIcons";
-
-export type IconName = keyof typeof iconMap | keyof typeof customIcons;
 
 const Icon: React.FC<IconProps> = ({
   name,

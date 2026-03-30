@@ -1,18 +1,9 @@
 "use client";
 
-import { Movie } from "@/types/movie";
+import type { ExploreDialogProps } from "@/types/components";
 import BaseDialog from "@/components/UI/BaseDialog";
 import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import MovieGrid from "@/components/UI/MovieGrid";
-
-export interface ExploreDialogProps {
-  isOpen: boolean;
-  title: string;
-  movies: Movie[];
-  onClose: () => void;
-  onMovieClick: (movieId: number | string) => void;
-  zIndex?: number;
-}
 
 export default function ExploreDialog({
   isOpen,

@@ -1,14 +1,7 @@
 "use client";
 
+import type { EpisodeItemProps } from "@/types/components";
 import { memo } from "react";
-import { DialogEpisode } from "@/types/title";
-
-interface EpisodeItemProps {
-  episode: DialogEpisode;
-  index: number;
-  showAllEpisodes: boolean;
-  hasBorder: boolean;
-}
 
 export default function EpisodeItem({
   episode,

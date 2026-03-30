@@ -1,18 +1,10 @@
 "use client";
 
-import { Movie } from "@/types/movie";
+import type { SearchResultsProps } from "@/types/components";
 import { useState, lazy, Suspense } from "react";
 import MovieCard from "@/components/MovieCard/MovieCard";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
-
-interface SearchResultsProps {
-  searchQuery: string;
-  debouncedQuery: string;
-  searchRes: Movie[];
-  hasNextPage: boolean;
-  loadMoreRef: React.RefObject<HTMLDivElement | null>;
-}
 
 export default function SearchResults({
   searchQuery,

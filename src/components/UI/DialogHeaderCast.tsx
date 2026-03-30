@@ -1,14 +1,7 @@
 "use client";
 
+import type { CastDialogHeaderProps } from "@/types/components";
 import Image from "next/image";
-
-interface CastDialogHeaderProps {
-  title: string;
-  onClose: () => void;
-  onBack?: () => void;
-  showBackButton?: boolean;
-  backdropUrl: string;
-}
 
 export default function CastDialogHeader({
   title,

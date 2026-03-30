@@ -1,15 +1,38 @@
 "use client";
 
 import { memo } from "react";
-import { truncateText } from "@/utils/contentHelpers";
+import {
+  truncateText,
+  getContentRating,
+  getQuality,
+} from "@/utils/contentHelpers";
 import { DialogInfoSectionProps } from "@/types/title";
+import { getDuration } from "@/utils/movieHelpers";
 
 function DialogInfoSection({
   releaseYear,
   isTV,
   numberOfSeasons,
   overview,
+  runtime,
+  content_rating,
+  movieData,
 }: DialogInfoSectionProps) {
+  // Use centralized content rating utility
+  const rating = movieData
+    ? getContentRating(movieData)
+    : content_rating === "18_PLUS"
+      ? "A 18+"
+      : content_rating === "21_PLUS"
+        ? "A 21+"
+        : "U/A 16+";
+
+  // Use centralized quality utility
+  const quality = movieData ? getQuality(movieData) : "HD";
+
+  // Use centralized duration utility
+  const duration = movieData ? getDuration(movieData) : "2h 30m";
+
   return (
     <div>
       {/* Year, Duration/Seasons, Rating */}
@@ -20,17 +43,18 @@ function DialogInfoSection({
             {numberOfSeasons} Season{numberOfSeasons > 1 ? "s" : ""}
           </span>
         ) : (
-          <span className="text-base ml-2">2h 30m</span>
+          <span className="text-base ml-2">{duration}</span>
         )}
-        <span className="border border-white/50 p-0.5 text-xs ml-2">HD</span>
+        <span className="border border-white/50 p-0.5 text-xs ml-2">
+          {quality}
+        </span>
       </div>
 
-      {/* Rating and Content Warning */}
+      {/* Rating */}
       <div className="flex items-center text-white/80 mb-6">
         <span className="border border-white/40 px-2 py-0.5 text-xs">
-          U/A 16+
+          {rating}
         </span>
-        <span className="text-xs ml-4">suicide</span>
       </div>
 
       {/* Description */}

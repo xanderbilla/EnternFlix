@@ -1,14 +1,14 @@
 "use client";
 
 import { useRef, useEffect } from "react";
-import { VideoPlayerProps } from "@/types/components";
+import { MovieCardVideoPlayerProps } from "@/types/components";
 
 export default function VideoPlayer({
   sampleVideoUrl,
   isMuted,
   onEnded,
   onVideoLoaded,
-}: VideoPlayerProps) {
+}: MovieCardVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {

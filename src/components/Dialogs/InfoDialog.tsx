@@ -1,14 +1,8 @@
 "use client";
 
-import { ReactNode, memo } from "react";
+import type { InfoDialogProps } from "@/types/components";
+import { memo } from "react";
 import BaseDialog from "@/components/UI/BaseDialog";
-
-export interface InfoDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  children: ReactNode;
-  zIndex?: number;
-}
 
 function InfoDialog({
   isOpen,

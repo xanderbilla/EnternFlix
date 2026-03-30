@@ -4,6 +4,7 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: "standalone",
   images: {
     remotePatterns: [
       {
@@ -14,6 +15,11 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "bi8s.s3.us-east-1.amazonaws.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.xanderbilla.com",
         pathname: "/**",
       },
     ],

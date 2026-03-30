@@ -29,14 +29,12 @@ export default function MovieCardMetadata({
         <span className="text-white text-sm ml-2">{releaseYear}</span>
       </button>
 
-      {/* First row: Rating + Duration + Quality */}
+      {/* First row: Rating + Media Type + Quality */}
       <div className="flex flex-row gap-2 items-center">
         <span className="text-white/60 text-xs font-light border-[0.5px] border-white/60 px-1.5 py-0.5 rounded-sm">
           {rating}
         </span>
-        <span className="text-white/60 text-xs font-light">
-          {duration || "1h 30m"}
-        </span>
+        <span className="text-white/60 text-xs font-light">{contentType}</span>
         <span className="text-white/60 text-[10px] font-light border-[0.5px] px-[2px] border-white/60">
           {quality}
         </span>

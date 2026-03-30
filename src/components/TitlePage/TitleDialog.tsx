@@ -2,13 +2,14 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import { useTitle, type TitleData } from "@/hooks/api/useTitle";
-import { Movie } from "@/types/movie";
 import DialogBanner from "./DialogBanner";
 import InfoDialog from "@/components/Dialogs/InfoDialog";
 import { DynamicDialogRenderer as DialogRenderer } from "@/utils/dynamicImports";
-import { useDialogManager, type DialogType } from "@/hooks/ui/useDialogManager";
+import { useDialogManager } from "@/hooks/ui/useDialogManager";
 import { TitleDialogProps } from "@/types/components";
 import { useTrending } from "@/hooks/api/useMovies";
+import { useMovieTransition } from "@/hooks/ui/useMovieTransition";
+import { useExploreNavigation } from "@/hooks/ui/useExploreNavigation";
 
 export default function TitleDialog({
   isOpen,
@@ -16,8 +17,6 @@ export default function TitleDialog({
   onClose,
   onMovieChange,
 }: TitleDialogProps) {
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const [internalIsOpen, setInternalIsOpen] = useState(true);
   const [shouldFetchData, setShouldFetchData] = useState(false);
   const { data, error } = useTitle(titleId, shouldFetchData);
   const { data: trendingData } = useTrending();
@@ -31,6 +30,18 @@ export default function TitleDialog({
     closeDialog,
   } = useDialogManager();
 
+  // Use movie transition hook for managing movie changes
+  const { isTransitioning, internalIsOpen, transitionToMovie } =
+    useMovieTransition(onMovieChange, closeDialog);
+
+  // Use explore navigation hook for handling explore clicks
+  const { handleExploreClick } = useExploreNavigation({
+    data,
+    trendingData,
+    openCastDialog,
+    openDetailDialog,
+  });
+
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
@@ -38,75 +49,9 @@ export default function TitleDialog({
   // Handle movie click from cast/detail dialogs to open info dialog
   const handleMovieClickFromDialog = useCallback(
     (movieId: number | string) => {
-      if (onMovieChange) {
-        // Set transitioning state to prevent main InfoDialog from showing
-        setIsTransitioning(true);
-
-        // Close the current InfoDialog to trigger exit animation
-        setInternalIsOpen(false);
-
-        // First, close ALL nested dialogs (cast/detail) and start close animation
-        closeDialog();
-
-        // Wait for the dialog close animation to complete (500ms from BaseDialog)
-        // Then update the parent title to open the new Info dialog with fresh animation
-        setTimeout(() => {
-          onMovieChange(movieId.toString());
-          // Brief delay to ensure state updates, then reopen with enter animation
-          setTimeout(() => {
-            setInternalIsOpen(true);
-            setIsTransitioning(false);
-          }, 50);
-        }, 500);
-      } else {
-        // Fallback: just close the nested dialog
-        closeDialog();
-      }
+      transitionToMovie(movieId.toString());
     },
-    [closeDialog, onMovieChange],
-  );
-
-  const handleExploreClick = useCallback(
-    (query: string, title: string, isCast: boolean = false) => {
-      // Use different data sources based on context
-      let moviesToShow: Movie[] = [];
-
-      if (isCast) {
-        // For cast dialogs, use trending content
-        moviesToShow = trendingData?.results?.slice(0, 20) || [];
-      } else {
-        // For genre/detail dialogs, use trending content
-        moviesToShow = trendingData?.results?.slice(0, 20) || [];
-      }
-
-      // Fallback if no data is available
-      if (moviesToShow.length === 0) {
-        moviesToShow = Array.from({ length: 8 }, (_, i) => ({
-          id: i + 1,
-          title: `${query} Content ${i + 1}`,
-          backdrop_path: "/sample-backdrop.jpg",
-          poster_path: "/sample-poster.jpg",
-          overview: `Content related to ${query}`,
-          release_date: "2023-01-01",
-          vote_average: 7.5,
-          vote_count: 1000,
-          popularity: 100.5,
-          original_language: "en",
-          genre_ids: [28, 12],
-        }));
-      }
-
-      const backdropUrl = data
-        ? `https://image.tmdb.org/t/p/original${(data as TitleData).content?.backdrop_path}`
-        : undefined;
-
-      if (isCast) {
-        openCastDialog(title, moviesToShow, backdropUrl, 10000, "info");
-      } else {
-        openDetailDialog(title, moviesToShow, 10000, "info");
-      }
-    },
-    [data, trendingData, openCastDialog, openDetailDialog],
+    [transitionToMovie],
   );
 
   useEffect(() => {

@@ -19,7 +19,7 @@ export const getCardPositionClass = (
 
 /**
  * Get position class based on boolean flags (legacy support)
- * Use getCardPositionClass(index, itemsPerRow) for new code
+ * @deprecated Use getCardPositionClass(index, itemsPerRow) for new code
  *
  * @param isFirst - Whether this is the first item in a row
  * @param isLast - Whether this is the last item in a row

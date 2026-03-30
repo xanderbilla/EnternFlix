@@ -55,9 +55,7 @@ export default function MovieCardHoverOverlay({
           className="w-full h-full p-0 cursor-pointer relative"
           onClick={handleArrowClick}
           onKeyDown={(e) => handleKeyPress(e, handleArrowClick)}
-          aria-label={`View details for ${
-            data?.title || data?.name || "this title"
-          }`}
+          aria-label={`View details for ${data?.title || "this title"}`}
         >
           {/* Show backdrop image only - No Video */}
           {backdropUrl ? (
@@ -66,12 +64,8 @@ export default function MovieCardHoverOverlay({
               fill
               sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
               src={backdropUrl}
-              alt={
-                data?.title ||
-                data?.name ||
-                data?.original_name ||
-                "Movie backdrop"
-              }
+              alt={data?.title || "Movie backdrop"}
+              unoptimized={!backdropUrl.includes("tmdb.org")}
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center text-gray-400">

@@ -1,7 +1,10 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
+import axios from "axios";
+import {
+  configureRequestInterceptor,
+  configureResponseInterceptor,
+} from "./axiosInterceptors";
 
-const customApiUrl =
-  process.env.NEXT_PUBLIC_CUSTOM_API_URL || "http://localhost:8080/v1";
+const customApiUrl = process.env.NEXT_PUBLIC_CUSTOM_API_URL;
 
 const customInstance = axios.create({
   baseURL: customApiUrl,
@@ -11,50 +14,8 @@ const customInstance = axios.create({
   },
 });
 
-// Request interceptor
-customInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    return config;
-  },
-  (error: AxiosError) => {
-    if (process.env.NODE_ENV === "development") {
-      console.error("Custom API Request error:", error);
-    }
-    return Promise.reject(error);
-  },
-);
-
-// Response interceptor
-customInstance.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & {
-      _retry?: boolean;
-    };
-
-    // Retry logic for network errors
-    if (
-      error.code === "ECONNABORTED" ||
-      error.message === "Network Error" ||
-      !error.response
-    ) {
-      if (!originalRequest._retry) {
-        originalRequest._retry = true;
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        return customInstance(originalRequest);
-      }
-    }
-
-    if (error.response && process.env.NODE_ENV === "development") {
-      console.error(
-        "Custom API error:",
-        error.response.status,
-        error.response.data,
-      );
-    }
-
-    return Promise.reject(error);
-  },
-);
+// Configure interceptors using shared utilities
+configureRequestInterceptor(customInstance, false);
+configureResponseInterceptor(customInstance, "Custom API");
 
 export default customInstance;

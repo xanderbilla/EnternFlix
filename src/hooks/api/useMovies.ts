@@ -2,47 +2,19 @@ import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import axios from "@/helper/axios";
 import customAxios from "@/helper/customAxios";
 import requests from "@/helper/request";
-import {
-  Movie,
-  CustomMoviesResponse,
-  CustomMovieResponse,
-  convertCustomMovieToMovie,
-} from "@/types/movie";
+import { Movie, MoviesResponse, MovieResponse } from "@/types/movie";
+import type { PaginatedResponse } from "@/types/api";
 import { queryKeys } from "@/constants/queryKeys";
-
-interface ApiResponse {
-  results: Movie[];
-  page: number;
-  total_pages: number;
-  total_results: number;
-}
-
-// Generic hook for fetching movies/TV shows
-const useMovieData = (
-  queryKey: string[],
-  endpoint: string,
-  enabled: boolean = true,
-) => {
-  return useQuery<ApiResponse, Error>({
-    queryKey,
-    queryFn: async () => {
-      const response = await axios.get(endpoint);
-      return response.data;
-    },
-    enabled,
-  });
-};
 
 // Custom API hooks
 export const useCustomMovies = () => {
   return useQuery<Movie[], Error>({
     queryKey: ["custom", "movies"],
     queryFn: async () => {
-      const response = await customAxios.get<CustomMoviesResponse>(
+      const response = await customAxios.get<MoviesResponse>(
         requests.fetchAllMovies,
       );
-      // Convert custom movies to Movie format
-      return response.data.data.map(convertCustomMovieToMovie);
+      return response.data.data;
     },
     retry: 2,
   });
@@ -52,10 +24,10 @@ export const useCustomMovie = (id: string, enabled: boolean = true) => {
   return useQuery<Movie, Error>({
     queryKey: ["custom", "movie", id],
     queryFn: async () => {
-      const response = await customAxios.get<CustomMovieResponse>(
+      const response = await customAxios.get<MovieResponse>(
         requests.fetchMovieById(id),
       );
-      return convertCustomMovieToMovie(response.data.data);
+      return response.data.data;
     },
     enabled: enabled && !!id,
     retry: 2,
@@ -64,14 +36,14 @@ export const useCustomMovie = (id: string, enabled: boolean = true) => {
 
 // Use custom API for trending (homepage)
 export const useTrending = () => {
-  return useQuery<ApiResponse, Error>({
+  return useQuery<PaginatedResponse<Movie>, Error>({
     queryKey: [...queryKeys.trending],
     queryFn: async () => {
-      const response = await customAxios.get<CustomMoviesResponse>(
+      const response = await customAxios.get<MoviesResponse>(
         requests.fetchAllMovies,
       );
-      const movies = response.data.data.map(convertCustomMovieToMovie);
-      // Format as TMDB-style response
+      const movies = response.data.data;
+      // Format as TMDB-style response for compatibility
       return {
         results: movies,
         page: 1,
@@ -85,7 +57,7 @@ export const useTrending = () => {
 
 // Search hook with infinite scroll support (keep using TMDB)
 export const useSearch = (query: string) => {
-  return useInfiniteQuery<ApiResponse, Error>({
+  return useInfiniteQuery<PaginatedResponse<Movie>, Error>({
     queryKey: ["search", query],
     queryFn: async ({ pageParam = 1 }) => {
       const response = await axios.get(
@@ -109,10 +81,10 @@ export const useRandomContent = () => {
   return useQuery<Movie, Error>({
     queryKey: ["random", "content"],
     queryFn: async () => {
-      const response = await customAxios.get<CustomMoviesResponse>(
+      const response = await customAxios.get<MoviesResponse>(
         requests.fetchAllMovies,
       );
-      const movies = response.data.data.map(convertCustomMovieToMovie);
+      const movies = response.data.data;
 
       if (movies.length > 0) {
         const randomIndex = Math.floor(Math.random() * movies.length);

@@ -1,22 +1,9 @@
 "use client";
 
-import { ReactNode, useEffect, useState, useCallback } from "react";
+import type { BaseDialogProps } from "@/types/components";
+import { useEffect, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import { useVideo } from "@/contexts/VideoContext";
-
-export interface BaseDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onBack?: () => void;
-  children:
-    | ReactNode
-    | ((props: {
-        handleClose: () => void;
-        handleBack: () => void;
-      }) => ReactNode);
-  zIndex?: number;
-  className?: string;
-}
 
 export default function BaseDialog({
   isOpen,

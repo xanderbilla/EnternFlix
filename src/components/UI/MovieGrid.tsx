@@ -50,18 +50,13 @@ export default function MovieGrid({
               <button
                 className="w-full h-full border-0 p-0 cursor-pointer block rounded-sm overflow-hidden"
                 onClick={() => onMovieClick(movie.id)}
-                aria-label={`View details for ${movie?.title || movie?.name || "this title"}`}
+                aria-label={`View details for ${movie?.title || "this title"}`}
               >
                 {backdropUrl ? (
                   <Image
                     className="object-cover transition duration-300 shadow-xl w-full h-full rounded-sm md:group-hover/item:opacity-0 delay-300"
                     src={backdropUrl}
-                    alt={
-                      movie?.title ||
-                      movie?.name ||
-                      movie?.original_name ||
-                      "Movie backdrop"
-                    }
+                    alt={movie?.title || "Movie backdrop"}
                     width={780}
                     height={439}
                     onError={(e) => {

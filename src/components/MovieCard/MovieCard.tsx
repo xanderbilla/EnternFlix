@@ -99,9 +99,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
       <button
         onClick={handleTitleDialog}
         className="w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden"
-        aria-label={`View details for ${
-          data?.title || data?.name || "this title"
-        }`}
+        aria-label={`View details for ${data?.title || "this title"}`}
       >
         {movieData.posterUrl ? (
           <Image
@@ -110,11 +108,10 @@ const MovieCard: React.FC<MovieCardProps> = ({
             fill
             sizes="(max-width: 640px) 150px, (max-width: 1024px) 180px, 200px"
             src={movieData.posterUrl}
-            alt={
-              data?.title || data?.name || data?.original_name || "Movie poster"
-            }
+            alt={data?.title || "Movie poster"}
             loading={isFirst ? "eager" : "lazy"}
             priority={isFirst}
+            unoptimized={!movieData.posterUrl.includes("tmdb.org")}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base">

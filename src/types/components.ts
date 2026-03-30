@@ -85,7 +85,7 @@ export interface MovieCardMetadataProps {
   data?: Movie;
 }
 
-export interface VideoPlayerProps {
+export interface MovieCardVideoPlayerProps {
   sampleVideoUrl: string;
   isMuted: boolean;
   onEnded: () => void;
@@ -128,6 +128,7 @@ export interface ExploreDialogProps {
   title: string;
   movies: Movie[];
   onClose: () => void;
+  onMovieClick: (movieId: number | string) => void;
   zIndex?: number;
   showBackButton?: boolean;
   backdropUrl?: string;
@@ -324,3 +325,104 @@ export interface DialogRendererProps {
   onMovieClick: (movieId: number | string) => void;
   onInfoDialogOpen?: (movieId: number | string) => void;
 }
+
+// Banner component props
+export interface FavoritesBannerProps {
+  movie: Movie | null;
+}
+
+// Title page component props
+export interface ShowMoreButtonProps {
+  showAll: boolean;
+  onClick: () => void;
+}
+
+export interface EpisodeItemProps {
+  episode: import("./title").DialogEpisode;
+  index: number;
+  showAllEpisodes: boolean;
+  hasBorder: boolean;
+}
+
+// Dialog component props
+export interface CastDialogProps {
+  isOpen: boolean;
+  castName: string;
+  movies: Movie[];
+  onClose: () => void;
+  onBack?: () => void;
+  onMovieClick: (movieId: number | string) => void;
+  backdropUrl?: string;
+  zIndex?: number;
+}
+
+export interface InfoDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: ReactNode;
+  zIndex?: number;
+}
+
+export interface DetailDialogProps {
+  isOpen: boolean;
+  title: string;
+  movies: Movie[];
+  onClose: () => void;
+  onBack?: () => void;
+  onMovieClick: (movieId: number | string) => void;
+  zIndex?: number;
+}
+
+// UI component props
+export interface BaseDialogProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onBack?: () => void;
+  children:
+    | ReactNode
+    | ((props: {
+        handleClose: () => void;
+        handleBack: () => void;
+      }) => ReactNode);
+  zIndex?: number;
+  className?: string;
+}
+
+export interface DialogHeaderProps {
+  title: string;
+  onClose: () => void;
+  onBack?: () => void;
+  showBackButton?: boolean;
+  backdropUrl?: string;
+  variant?: "default" | "cast" | "info";
+  subtitle?: string;
+}
+
+export interface CastDialogHeaderProps {
+  title: string;
+  onClose: () => void;
+  onBack?: () => void;
+  showBackButton?: boolean;
+  backdropUrl: string;
+}
+
+export interface SimpleDialogHeaderProps {
+  title: string;
+  onClose: () => void;
+}
+
+export interface ErrorBoundaryProps {
+  children: ReactNode;
+  fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
+}
+
+export interface ErrorBoundaryState {
+  hasError: boolean;
+  error: Error | null;
+}
+
+// Icon type alias
+export type IconName =
+  | keyof typeof import("@/constants/iconMap").iconMap
+  | keyof typeof import("@/constants/customIcons").customIcons;

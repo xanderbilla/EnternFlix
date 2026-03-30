@@ -1,11 +1,7 @@
 "use client";
 
+import type { ShowMoreButtonProps } from "@/types/components";
 import CircularButton from "@/components/UI/CircularButton";
-
-interface ShowMoreButtonProps {
-  showAll: boolean;
-  onClick: () => void;
-}
 
 export default function ShowMoreButton({
   showAll,

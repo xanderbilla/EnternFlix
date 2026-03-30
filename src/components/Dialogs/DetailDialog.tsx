@@ -1,19 +1,9 @@
 "use client";
 
-import { Movie } from "@/types/movie";
+import type { DetailDialogProps } from "@/types/components";
 import BaseDialog from "@/components/UI/BaseDialog";
 import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import MovieGrid from "@/components/UI/MovieGrid";
-
-export interface DetailDialogProps {
-  isOpen: boolean;
-  title: string;
-  movies: Movie[];
-  onClose: () => void;
-  onBack?: () => void;
-  onMovieClick: (movieId: number | string) => void;
-  zIndex?: number;
-}
 
 export default function DetailDialog({
   isOpen,

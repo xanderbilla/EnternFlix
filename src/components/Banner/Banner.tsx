@@ -41,7 +41,7 @@ const Banner = () => {
   }
 
   const movieTitle =
-    movie.title ?? movie.name ?? movie.original_name ?? "Untitled";
+    movie.title ?? "Untitled";
   const movieDescription = truncateText(movie.overview, 200);
   const backdropUrl = getImageUrl(movie.backdrop_path, "original");
 

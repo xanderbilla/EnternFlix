@@ -12,10 +12,11 @@ import {
 import { useDialogManager } from "@/hooks/ui/useDialogManager";
 import { useMovieScroll } from "@/hooks/ui/useMovieScroll";
 import { useDialogBodyScroll } from "@/hooks/ui/useDialogBodyScroll";
+import { useBodyOverflow } from "@/hooks/ui/useBodyOverflow";
+import { useHoverState } from "@/hooks/ui/useHoverState";
 
 const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [showButtons, setShowButtons] = useState(false);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
   const [showExploreButton, setShowExploreButton] = useState(false);
@@ -32,6 +33,18 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   } = useDialogManager();
 
   const movies = useMemo(() => response?.results || [], [response?.results]);
+
+  // Use body overflow hook for managing horizontal overflow
+  const { setOverflowVisible, setOverflowHidden } = useBodyOverflow(
+    dialogState.isOpen,
+  );
+
+  // Use hover state hook for managing button visibility
+  const {
+    isHovered: showButtons,
+    handleMouseEnter,
+    handleMouseLeave,
+  } = useHoverState(setOverflowVisible, setOverflowHidden);
 
   // Only show scroll buttons if there are more than 7 movies
   const shouldShowScrollButtons = useMemo(
@@ -50,15 +63,6 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   const { scroll } = useMovieScroll(scrollRef, checkScrollButtons);
 
   useDialogBodyScroll(dialogState.isOpen);
-
-  // Reset hover state when dialog opens
-  useEffect(() => {
-    if (dialogState.isOpen) {
-      setShowButtons(false);
-      // Also restore body overflow when dialog opens
-      document.body.style.overflowX = "hidden";
-    }
-  }, [dialogState.isOpen]);
 
   // Handle explore button visibility with smooth transitions
   const handleTitleHoverEnter = useCallback(() => {
@@ -122,16 +126,8 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
         </div>
         <div
           className="relative overflow-visible group/movielist"
-          onMouseEnter={() => {
-            setShowButtons(true);
-            // Temporarily allow horizontal overflow for hover overlays
-            document.body.style.overflowX = "visible";
-          }}
-          onMouseLeave={() => {
-            setShowButtons(false);
-            // Restore horizontal overflow hidden
-            document.body.style.overflowX = "hidden";
-          }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           {/* Left gradient overlay */}
           {!dialogState.isOpen &&

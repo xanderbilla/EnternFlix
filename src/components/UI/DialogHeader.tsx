@@ -1,17 +1,8 @@
 "use client";
 
+import type { DialogHeaderProps } from "@/types/components";
 import DialogHeaderCast from "./DialogHeaderCast";
 import SimpleDialogHeader from "./DialogHeaderSimple";
-
-export interface DialogHeaderProps {
-  title: string;
-  onClose: () => void;
-  onBack?: () => void;
-  showBackButton?: boolean;
-  backdropUrl?: string;
-  variant?: "default" | "cast" | "info";
-  subtitle?: string;
-}
 
 export default function DialogHeader({
   title,

@@ -1,11 +1,7 @@
 "use client";
 
-import { Movie } from "@/types/movie";
+import type { FavoritesBannerProps } from "@/types/components";
 import { getImageUrl } from "@/utils/movieHelpers";
-
-interface FavoritesBannerProps {
-  movie: Movie | null;
-}
 
 export default function FavoritesBanner({ movie }: FavoritesBannerProps) {
   if (!movie) {

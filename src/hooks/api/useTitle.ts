@@ -2,11 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "@/helper/axios";
 import customAxios from "@/helper/customAxios";
 import requests from "@/helper/request";
-import {
-  Movie,
-  CustomMovieResponse,
-  convertCustomMovieToMovie,
-} from "@/types/movie";
+import { Movie, MovieResponse } from "@/types/movie";
 
 export interface TVShow extends Movie {
   number_of_seasons: number;
@@ -34,10 +30,10 @@ const fetchTitleData = async (id: string): Promise<TitleData> => {
   // Try custom API first (if ID looks like UUID or is long)
   if (id.includes("-") || id.length > 10) {
     try {
-      const response = await customAxios.get<CustomMovieResponse>(
+      const response = await customAxios.get<MovieResponse>(
         requests.fetchMovieById(id),
       );
-      const movie = convertCustomMovieToMovie(response.data.data);
+      const movie = response.data.data;
       return {
         content: movie,
         mediaType: "movie",

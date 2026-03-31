@@ -42,23 +42,23 @@ describe("Property 2: Validation Error Completeness", () => {
             ),
             { nil: undefined },
           ),
-          // backdrop_path can be missing, wrong type, or valid
-          backdrop_path: fc.option(
+          // backdropPath can be missing, wrong type, or valid
+          backdropPath: fc.option(
             fc.oneof(fc.string(), fc.integer(), fc.boolean()),
             { nil: undefined },
           ),
-          // poster_path can be missing, wrong type, or valid
-          poster_path: fc.option(
+          // posterPath can be missing, wrong type, or valid
+          posterPath: fc.option(
             fc.oneof(fc.string(), fc.integer(), fc.boolean()),
             { nil: undefined },
           ),
-          // vote_average can be missing, wrong type, or valid
-          vote_average: fc.option(
+          // voteAverage can be missing, wrong type, or valid
+          voteAverage: fc.option(
             fc.oneof(fc.float(), fc.string(), fc.constant(null)),
             { nil: undefined },
           ),
-          // vote_count can be missing, wrong type, or valid
-          vote_count: fc.option(
+          // voteCount can be missing, wrong type, or valid
+          voteCount: fc.option(
             fc.oneof(fc.integer(), fc.string(), fc.constant(null)),
             { nil: undefined },
           ),
@@ -67,8 +67,8 @@ describe("Property 2: Validation Error Completeness", () => {
             fc.oneof(fc.float(), fc.string(), fc.constant(null)),
             { nil: undefined },
           ),
-          // original_language can be missing, wrong type, or valid
-          original_language: fc.option(
+          // originalLanguage can be missing, wrong type, or valid
+          originalLanguage: fc.option(
             fc.oneof(fc.string(), fc.integer(), fc.constant(null)),
             { nil: undefined },
           ),

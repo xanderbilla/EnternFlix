@@ -11,7 +11,7 @@ export default function DialogAboutSection({
   tags,
   moodTags,
   productionCompanies,
-  content_rating,
+  contentRating,
   releaseDate,
   auditDate,
   isTV,
@@ -21,9 +21,9 @@ export default function DialogAboutSection({
   // Use centralized content rating utility if movieData is available
   const rating = movieData
     ? getContentRating(movieData)
-    : content_rating === "18_PLUS"
+    : contentRating === "18_PLUS"
       ? "A 18+"
-      : content_rating === "21_PLUS"
+      : contentRating === "21_PLUS"
         ? "A 21+"
         : "U/A 16+";
 
@@ -184,9 +184,9 @@ export default function DialogAboutSection({
             </span>
           </div>
           <p className="text-white/90 text-xs mt-2 leading-relaxed">
-            {content_rating === "21_PLUS"
+            {contentRating === "21_PLUS"
               ? "Suitable for persons aged 21 and above"
-              : content_rating === "18_PLUS"
+              : contentRating === "18_PLUS"
                 ? "Suitable for persons aged 18 and above"
                 : "Suitable for persons aged 16 and above and under parental guidance for people under age of 16"}
           </p>

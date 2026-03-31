@@ -16,43 +16,32 @@ export default function TitleDialog({
   titleId,
   onClose,
   onMovieChange,
+  onOpenCastDialog,
+  onOpenDetailDialog,
 }: TitleDialogProps) {
   const [shouldFetchData, setShouldFetchData] = useState(false);
   const { data, error } = useTitle(titleId, shouldFetchData);
   const { data: trendingData } = useTrending();
-  const {
-    dialogState,
-    hasBackNavigation,
-    openCastDialog,
-    openDetailDialog,
-    openInfoDialog,
-    goBack,
-    closeDialog,
-  } = useDialogManager();
-
-  // Use movie transition hook for managing movie changes
-  const { isTransitioning, internalIsOpen, transitionToMovie } =
-    useMovieTransition(onMovieChange, closeDialog);
 
   // Use explore navigation hook for handling explore clicks
-  const { handleExploreClick } = useExploreNavigation({
-    data,
-    trendingData,
-    openCastDialog,
-    openDetailDialog,
-  });
+  const handleExploreClick = useCallback(
+    (name: string, title: string, isCast: boolean) => {
+      if (isCast && onOpenCastDialog) {
+        // Open cast dialog
+        const castMovies = trendingData?.results || [];
+        onOpenCastDialog(name, castMovies, undefined, 10001);
+      } else if (onOpenDetailDialog) {
+        // Open detail dialog
+        const detailMovies = trendingData?.results || [];
+        onOpenDetailDialog(title, detailMovies, 10001);
+      }
+    },
+    [trendingData, onOpenCastDialog, onOpenDetailDialog],
+  );
 
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
-
-  // Handle movie click from cast/detail dialogs to open info dialog
-  const handleMovieClickFromDialog = useCallback(
-    (movieId: number | string) => {
-      transitionToMovie(movieId.toString());
-    },
-    [transitionToMovie],
-  );
 
   useEffect(() => {
     if (isOpen) {
@@ -83,8 +72,6 @@ export default function TitleDialog({
       document.removeEventListener("keydown", handleEscapeKey);
     };
   }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
 
   const renderContent = () => {
     if (error) {
@@ -121,27 +108,9 @@ export default function TitleDialog({
 
   return (
     <>
-      <InfoDialog
-        isOpen={
-          isOpen && !dialogState.isOpen && !isTransitioning && internalIsOpen
-        }
-        onClose={onClose}
-        zIndex={9999}
-      >
+      <InfoDialog isOpen={isOpen} onClose={onClose} zIndex={9999}>
         {renderContent()}
       </InfoDialog>
-
-      <DialogRenderer
-        dialogState={dialogState}
-        hasBackNavigation={hasBackNavigation}
-        onClose={closeDialog}
-        onBack={goBack}
-        onMovieClick={(movieId) => {
-          // Handle movie click from cast/detail dialogs - update parent state
-          handleMovieClickFromDialog(movieId);
-        }}
-        onInfoDialogOpen={handleMovieClickFromDialog}
-      />
     </>
   );
 }

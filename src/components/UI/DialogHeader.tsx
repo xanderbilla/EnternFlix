@@ -37,7 +37,7 @@ export default function DialogHeader({
       {showBackButton && onBack && (
         <button
           onClick={onBack}
-          className="absolute left-6 top-6 text-gray-400 hover:text-white transition-colors p-2"
+          className="absolute left-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm"
           aria-label="Go back"
         >
           <svg
@@ -62,7 +62,7 @@ export default function DialogHeader({
       {!showBackButton && (
         <button
           onClick={onClose}
-          className="text-gray-400 hover:text-white transition-colors p-2 absolute right-6 top-6"
+          className="absolute right-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm"
           aria-label="Close"
         >
           <svg

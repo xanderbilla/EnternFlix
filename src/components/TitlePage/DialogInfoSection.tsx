@@ -15,15 +15,15 @@ function DialogInfoSection({
   numberOfSeasons,
   overview,
   runtime,
-  content_rating,
+  contentRating,
   movieData,
 }: DialogInfoSectionProps) {
   // Use centralized content rating utility
   const rating = movieData
     ? getContentRating(movieData)
-    : content_rating === "18_PLUS"
+    : contentRating === "18_PLUS"
       ? "A 18+"
-      : content_rating === "21_PLUS"
+      : contentRating === "21_PLUS"
         ? "A 21+"
         : "U/A 16+";
 

@@ -12,10 +12,6 @@ export default function MovieCardHoverOverlay({
   handleKeyPress,
   children,
 }: MovieCardHoverOverlayProps) {
-  const handleArrowClick = () => {
-    navigateToTitle();
-  };
-
   // Get directional transform classes based on viewport position
   const getDirectionalTransforms = () => {
     switch (viewportPosition) {
@@ -50,32 +46,32 @@ export default function MovieCardHoverOverlay({
         w-[320px] md:w-[380px] lg:w-[420px] aspect-video
         ${positionClass}`}
     >
-      <div className="relative w-full h-full rounded-md overflow-hidden">
-        <button
-          className="w-full h-full p-0 cursor-pointer relative"
-          onClick={handleArrowClick}
-          onKeyDown={(e) => handleKeyPress(e, handleArrowClick)}
-          aria-label={`View details for ${data?.title || "this title"}`}
-        >
-          {/* Show backdrop image only - No Video */}
-          {backdropUrl ? (
-            <Image
-              className="object-contain w-full h-full"
-              fill
-              sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
-              src={backdropUrl}
-              alt={data?.title || "Movie backdrop"}
-              unoptimized={!backdropUrl.includes("tmdb.org")}
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
-              Image not available
-            </div>
-          )}
-        </button>
+      <div
+        className="relative w-full h-full rounded-md overflow-hidden cursor-pointer"
+        onClick={navigateToTitle}
+        onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
+        role="button"
+        tabIndex={0}
+        aria-label={`View details for ${data?.title || "this title"}`}
+      >
+        {/* Show backdrop image only - No Video */}
+        {backdropUrl ? (
+          <Image
+            className="object-contain w-full h-full"
+            fill
+            sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
+            src={backdropUrl}
+            alt={data?.title || "Movie backdrop"}
+            unoptimized={!backdropUrl.includes("tmdb.org")}
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-400">
+            Image not available
+          </div>
+        )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent">
-          <div className="absolute bottom-0 w-full p-4 flex flex-col">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none">
+          <div className="absolute bottom-0 w-full p-4 flex flex-col pointer-events-auto">
             {children}
           </div>
         </div>

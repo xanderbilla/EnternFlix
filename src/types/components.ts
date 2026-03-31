@@ -7,6 +7,7 @@ export interface MovieCardProps {
   isFirst?: boolean;
   isLast?: boolean;
   onMovieClick?: (movieId: number | string) => void;
+  index?: number;
 }
 
 export interface MovieListProps {
@@ -287,7 +288,18 @@ export interface TitleDialogProps {
   isOpen: boolean;
   titleId: string;
   onClose: () => void;
-  onMovieChange?: (movieId: string) => void; // New prop for handling movie changes
+  onMovieChange?: (movieId: string) => void;
+  onOpenCastDialog?: (
+    castName: string,
+    movies: Movie[],
+    backdropUrl?: string,
+    zIndex?: number,
+  ) => void;
+  onOpenDetailDialog?: (
+    title: string,
+    movies: Movie[],
+    zIndex?: number,
+  ) => void;
 }
 
 export interface ExploreDialogGridProps {
@@ -315,15 +327,27 @@ export interface MovieGridProps {
   movies: Movie[];
   onMovieClick: (movieId: number | string) => void;
   columns?: number;
+  disableHover?: boolean;
 }
 
 export interface DialogRendererProps {
-  dialogState: DialogState;
+  dialogStack: DialogState[];
   hasBackNavigation: boolean;
   onClose: () => void;
   onBack: () => void;
   onMovieClick: (movieId: number | string) => void;
   onInfoDialogOpen?: (movieId: number | string) => void;
+  onOpenCastDialog?: (
+    castName: string,
+    movies: Movie[],
+    backdropUrl?: string,
+    zIndex?: number,
+  ) => void;
+  onOpenDetailDialog?: (
+    title: string,
+    movies: Movie[],
+    zIndex?: number,
+  ) => void;
 }
 
 // Banner component props

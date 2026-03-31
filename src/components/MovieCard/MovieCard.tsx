@@ -25,6 +25,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   isFirst,
   isLast,
   onMovieClick,
+  index = 0,
 }) => {
   const [showTitleDialog, setShowTitleDialog] = useState(false);
   const [currentMovieId, setCurrentMovieId] = useState(
@@ -95,7 +96,14 @@ const MovieCard: React.FC<MovieCardProps> = ({
   };
 
   return (
-    <div ref={cardRef} className="relative w-full aspect-[2/3]">
+    <div
+      ref={cardRef}
+      className="relative w-full aspect-[2/3] opacity-0 scale-95 animate-fadeInScale transition-all duration-300 ease-in-out"
+      style={{
+        animationDelay: `${index * 50}ms`,
+        animationFillMode: "forwards",
+      }}
+    >
       <button
         onClick={handleTitleDialog}
         className="w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden"

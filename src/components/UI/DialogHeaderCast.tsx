@@ -18,8 +18,9 @@ export default function CastDialogHeader({
           src={backdropUrl}
           alt={title}
           fill
-          className="object-cover"
+          className="object-cover object-center"
           priority
+          unoptimized={!backdropUrl.includes("tmdb.org")}
         />
       </div>
 
@@ -29,7 +30,7 @@ export default function CastDialogHeader({
       {/* Content */}
       <div className="relative h-full flex items-end justify-start pb-16 pl-16">
         <div>
-          <h2 className="text-white text-7xl text-white0 font-bold leading-none tracking-tight">
+          <h2 className="text-white text-7xl font-bold leading-none tracking-tight">
             {title}
           </h2>
         </div>

@@ -53,20 +53,20 @@ export function useExploreNavigation({
         moviesToShow = Array.from({ length: 8 }, (_, i) => ({
           id: i + 1,
           title: `${query} Content ${i + 1}`,
-          backdrop_path: "/sample-backdrop.jpg",
-          poster_path: "/sample-poster.jpg",
+          backdropPath: "/sample-backdrop.jpg",
+          posterPath: "/sample-poster.jpg",
           overview: `Content related to ${query}`,
-          release_date: "2023-01-01",
-          vote_average: 7.5,
-          vote_count: 1000,
+          releaseDate: "2023-01-01",
+          voteAverage: 7.5,
+          voteCount: 1000,
           popularity: 100.5,
-          original_language: "en",
+          originalLanguage: "en",
           genre_ids: [28, 12],
         }));
       }
 
       const backdropUrl = data
-        ? getImageUrl((data as TitleData).content?.backdrop_path, "original") ||
+        ? getImageUrl((data as TitleData).content?.backdropPath, "original") ||
           undefined
         : undefined;
 

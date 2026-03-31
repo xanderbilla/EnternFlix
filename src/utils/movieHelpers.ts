@@ -6,21 +6,21 @@ type MovieData = Movie;
 
 /**
  * Determine content type (MOVIE or TV)
- * Uses content_type field or infers from movie properties
+ * Uses contentType field or infers from movie properties
  * @param data - Movie object containing content type indicators
- * @returns Content type string ("MOVIE" or "TV")
+ * @returns Content type string ("Movie" or "TV")
  */
-export const getContentType = (data: MovieData): "MOVIE" | "TV" => {
-  // Use content_type from API if available
-  if (data?.content_type === "TV") return "TV";
-  if (data?.content_type === "MOVIE") return "MOVIE";
+export const getContentType = (data: MovieData): string => {
+  // Use contentType from API if available
+  if (data?.contentType === "TV") return "TV";
+  if (data?.contentType === "MOVIE") return "Movie";
 
   // Check if it has TV-specific properties
-  if (data?.first_air_date && data.first_air_date !== "0001-01-01") return "TV";
-  if (data?.number_of_seasons && data.number_of_seasons > 0) return "TV";
+  if (data?.firstAirDate && data.firstAirDate !== "0001-01-01") return "TV";
+  if (data?.numberOfSeasons && data.numberOfSeasons > 0) return "TV";
 
-  // Default to MOVIE
-  return "MOVIE";
+  // Default to Movie
+  return "Movie";
 };
 
 /**
@@ -69,8 +69,8 @@ export const getGenres = (data: MovieData): string => {
 export const getDuration = (data: MovieData): string => {
   const contentType = getContentType(data);
   if (contentType === "TV") {
-    if (data?.number_of_seasons) {
-      return `${data.number_of_seasons} Season${data.number_of_seasons > 1 ? "s" : ""}`;
+    if (data?.numberOfSeasons) {
+      return `${data.numberOfSeasons} Season${data.numberOfSeasons > 1 ? "s" : ""}`;
     }
     return "TV Series";
   } else {
@@ -88,12 +88,12 @@ export const getDuration = (data: MovieData): string => {
 
 /**
  * Extract release year from movie data
- * Returns the year from release_date or first_air_date
+ * Returns the year from releaseDate or firstAirDate
  * @param data - Movie object containing release or air date
  * @returns Release year as string or "Unknown" if not available
  */
 export const getReleaseYear = (data: MovieData): string => {
-  const date = data?.release_date || data?.first_air_date;
+  const date = data?.releaseDate || data?.firstAirDate;
   if (!date || date === "0001-01-01") return "Unknown";
   return date.substring(0, 4);
 };
@@ -113,9 +113,12 @@ export const getImageUrl = (
 
   // Check if it's a custom API image (doesn't start with /)
   if (!path.startsWith("/")) {
-    const customImageBaseUrl =
-      process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL ||
-      "https://bi8s.s3.us-east-1.amazonaws.com/";
+    const customImageBaseUrl = process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL;
+
+    if (!customImageBaseUrl) {
+      console.error("NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL is not configured");
+      return "";
+    }
 
     // Ensure no double slashes
     const cleanPath = path.startsWith("/") ? path.slice(1) : path;
@@ -123,13 +126,7 @@ export const getImageUrl = (
       ? customImageBaseUrl
       : `${customImageBaseUrl}/`;
 
-    const finalUrl = `${cleanBaseUrl}${cleanPath}`;
-
-    if (process.env.NODE_ENV === "development") {
-      console.log("Custom Image URL:", finalUrl);
-    }
-
-    return finalUrl;
+    return `${cleanBaseUrl}${cleanPath}`;
   }
 
   // TMDB image

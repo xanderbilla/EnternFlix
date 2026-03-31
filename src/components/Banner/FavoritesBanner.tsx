@@ -8,8 +8,8 @@ export default function FavoritesBanner({ movie }: FavoritesBannerProps) {
     return null;
   }
 
-  const backdropUrl = movie?.backdrop_path
-    ? getImageUrl(movie.backdrop_path, "original")
+  const backdropUrl = movie?.backdropPath
+    ? getImageUrl(movie.backdropPath, "original")
     : null;
 
   return (

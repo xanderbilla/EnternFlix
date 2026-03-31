@@ -1,9 +1,8 @@
 "use client";
 
 import { memo } from "react";
-import Button from "@/components/Button/Button";
-import Icon from "@/components/Icon/Icon";
-import CircularButton from "@/components/UI/CircularButton";
+import ActionButton from "@/components/Button/ActionButton";
+import IconButton from "@/components/Button/IconButton";
 import { DialogActionButtonsProps } from "@/types/title";
 
 function DialogActionButtons({
@@ -19,29 +18,14 @@ function DialogActionButtons({
       </h1>
 
       <div className="flex flex-row items-center gap-3">
-        <Button
+        <ActionButton
+          variant="primary"
+          icon="play"
+          label="Play"
           onClick={onPlayClick}
-          variant="banner-play"
-          className="py-2 px-6 w-auto text-base font-semibold flex flex-row items-center"
-        >
-          <Icon name="playFill" className="mr-2" size={20} /> Play
-        </Button>
-
-        <CircularButton
-          onClick={onAddToListClick}
-          variant="secondary"
-          size="md"
-          aria-label="Add to list"
-          icon={<Icon name="add" size={20} color="white" />}
         />
-
-        <CircularButton
-          onClick={onLikeClick}
-          variant="secondary"
-          size="md"
-          aria-label="Like"
-          icon={<Icon name="like" size={18} color="white" />}
-        />
+        <IconButton variant="add" onClick={onAddToListClick} />
+        <IconButton variant="like" onClick={onLikeClick} />
       </div>
     </div>
   );

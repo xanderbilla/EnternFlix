@@ -6,7 +6,7 @@ export interface Genre {
 export interface Cast {
   id: string | number;
   name: string;
-  cover_picture?: string;
+  coverPicture?: string;
 }
 
 export interface Tag {
@@ -17,39 +17,40 @@ export interface Tag {
 export interface Studio {
   id: string | number;
   name: string;
-  cover_picture?: string;
+  coverPicture?: string;
 }
 
 export interface Audit {
-  created_at: string;
-  is_deleted: boolean;
+  createdAt: string;
+  version: number;
+  isDeleted: boolean;
 }
 
 export interface Movie {
   id: string | number;
   title?: string;
   overview: string;
-  backdrop_path: string | null;
-  poster_path: string | null;
-  release_date?: string;
-  first_air_date?: string;
-  vote_average: number;
-  vote_count: number;
+  backdropPath: string | null;
+  posterPath: string | null;
+  releaseDate?: string;
+  firstAirDate?: string;
+  voteAverage: number;
+  voteCount: number;
   popularity: number;
   adult?: boolean;
-  content_rating?: "18_PLUS" | "21_PLUS";
-  original_language: string;
+  contentRating?: "18_PLUS" | "21_PLUS";
+  originalLanguage: string;
   genres?: Genre[];
   casts?: Cast[];
   tags?: Tag[];
-  content_type?: "MOVIE" | "TV" | "PERSON";
-  origin_country?: string[];
-  mood_tags?: Tag[];
+  contentType?: "MOVIE" | "TV" | "PERSON";
+  originCountry?: string[];
+  moodTags?: Tag[];
 
   // TV Show specific
-  number_of_seasons?: number;
-  number_of_episodes?: number;
-  last_air_date?: string;
+  numberOfSeasons?: number;
+  numberOfEpisodes?: number;
+  lastAirDate?: string;
 
   // Movie specific
   runtime?: number;
@@ -57,7 +58,7 @@ export interface Movie {
   // Extended details
   status?: string;
   tagline?: string;
-  created_by?: Array<{ id: number; name: string; profile_path: string }>;
+  createdBy?: Array<{ id: number; name: string; profilePath: string }>;
   studios?: Studio[];
 
   // Audit info

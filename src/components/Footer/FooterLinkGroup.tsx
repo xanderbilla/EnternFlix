@@ -7,16 +7,24 @@ export default function FooterLinkGroup({
 }: FooterLinkGroupProps) {
   return (
     <div>
-      <h3 className="text-white font-medium mb-4">{title}</h3>
-      <ul className="space-y-2">
+      <h3 className="text-white font-medium mb-3 sm:mb-4 text-sm sm:text-base">
+        {title}
+      </h3>
+      <ul className="space-y-1.5 sm:space-y-2">
         {links.map((link) => (
           <li key={link.label}>
             {link.isEmail ? (
-              <a href={link.href} className="hover:text-white transition">
+              <a
+                href={link.href}
+                className="hover:text-white transition text-xs sm:text-sm"
+              >
                 {link.label}
               </a>
             ) : (
-              <Link href={link.href} className="hover:text-white transition">
+              <Link
+                href={link.href}
+                className="hover:text-white transition text-xs sm:text-sm"
+              >
                 {link.label}
               </Link>
             )}

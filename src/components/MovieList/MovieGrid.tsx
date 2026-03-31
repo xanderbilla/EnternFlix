@@ -3,7 +3,11 @@ import { Movie } from "@/types/movie";
 import { DynamicMovieCard as MovieCard } from "@/utils/dynamicImports";
 import { MovieListScrollGridProps } from "@/types/components";
 
-function MovieGrid({ movies, scrollRef, onMovieClick }: MovieListScrollGridProps) {
+function MovieGrid({
+  movies,
+  scrollRef,
+  onMovieClick,
+}: MovieListScrollGridProps) {
   return (
     <div
       id="movie-list"
@@ -22,6 +26,7 @@ function MovieGrid({ movies, scrollRef, onMovieClick }: MovieListScrollGridProps
             isFirst={index === 0}
             isLast={index === movies.length - 1}
             onMovieClick={onMovieClick}
+            index={index}
           />
         </div>
       ))}

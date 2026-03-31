@@ -25,7 +25,7 @@ function ExploreDialogGrid({ movies, onMovieClick }: ExploreDialogGridProps) {
     <div className="px-16 pb-32">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-24">
         {movies.map((movie, index) => {
-          const backdropUrl = getImageUrl(movie?.backdrop_path, "w780");
+          const backdropUrl = getImageUrl(movie?.backdropPath, "w780");
           const positionClass = getCardPositionClass(index, 4);
 
           return (

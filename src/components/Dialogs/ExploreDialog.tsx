@@ -18,12 +18,17 @@ export default function ExploreDialog({
       isOpen={isOpen}
       onClose={onClose}
       zIndex={zIndex}
-      className="w-full max-w-[80vw]"
+      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] max-w-[1400px] h-[90vh] sm:h-[85vh] md:h-[80vh]"
     >
       {({ handleClose }) => (
         <>
           <DialogHeader title={title} onClose={handleClose} variant="default" />
-          <MovieGrid movies={movies} onMovieClick={onMovieClick} columns={4} />
+          <MovieGrid
+            movies={movies}
+            onMovieClick={onMovieClick}
+            columns={4}
+            disableHover={true}
+          />
         </>
       )}
     </BaseDialog>

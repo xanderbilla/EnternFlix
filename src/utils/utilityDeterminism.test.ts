@@ -29,15 +29,15 @@ describe("Property 1: Utility Function Determinism", () => {
     id: fc.oneof(fc.integer({ min: 1 }), fc.string({ minLength: 1 })),
     title: fc.option(fc.string(), { nil: undefined }),
     overview: fc.string(),
-    backdrop_path: fc.option(fc.string(), { nil: null }),
-    poster_path: fc.option(fc.string(), { nil: null }),
-    release_date: fc.option(fc.string(), { nil: undefined }),
-    first_air_date: fc.option(fc.string(), { nil: undefined }),
-    vote_average: fc.float({ min: 0, max: 10 }),
-    vote_count: fc.integer({ min: 0 }),
+    backdropPath: fc.option(fc.string(), { nil: null }),
+    posterPath: fc.option(fc.string(), { nil: null }),
+    releaseDate: fc.option(fc.string(), { nil: undefined }),
+    firstAirDate: fc.option(fc.string(), { nil: undefined }),
+    voteAverage: fc.float({ min: 0, max: 10 }),
+    voteCount: fc.integer({ min: 0 }),
     popularity: fc.float({ min: 0, max: 10000 }),
     adult: fc.option(fc.boolean(), { nil: undefined }),
-    content_rating: fc.option(fc.constantFrom("18_PLUS", "21_PLUS"), {
+    contentRating: fc.option(fc.constantFrom("18_PLUS", "21_PLUS"), {
       nil: undefined,
     }),
     genres: fc.option(
@@ -50,13 +50,13 @@ describe("Property 1: Utility Function Determinism", () => {
       ),
       { nil: undefined },
     ),
-    content_type: fc.option(fc.constantFrom("MOVIE", "TV", "PERSON"), {
+    contentType: fc.option(fc.constantFrom("MOVIE", "TV", "PERSON"), {
       nil: undefined,
     }),
-    number_of_seasons: fc.option(fc.integer({ min: 0, max: 20 }), {
+    numberOfSeasons: fc.option(fc.integer({ min: 0, max: 20 }), {
       nil: undefined,
     }),
-    number_of_episodes: fc.option(fc.integer({ min: 0, max: 500 }), {
+    numberOfEpisodes: fc.option(fc.integer({ min: 0, max: 500 }), {
       nil: undefined,
     }),
     runtime: fc.option(fc.integer({ min: 0, max: 500 }), { nil: undefined }),
@@ -307,7 +307,7 @@ describe("Property 1: Utility Function Determinism", () => {
         fc.property(movieArbitrary, (movie) => {
           // Call all functions in sequence multiple times
           const sequence1 = {
-            imageUrl: getImageUrl(movie.poster_path, "w500"),
+            imageUrl: getImageUrl(movie.posterPath, "w500"),
             releaseYear: getReleaseYear(movie),
             contentType: getContentType(movie),
             contentRating: getContentRating(movie),
@@ -316,7 +316,7 @@ describe("Property 1: Utility Function Determinism", () => {
           };
 
           const sequence2 = {
-            imageUrl: getImageUrl(movie.poster_path, "w500"),
+            imageUrl: getImageUrl(movie.posterPath, "w500"),
             releaseYear: getReleaseYear(movie),
             contentType: getContentType(movie),
             contentRating: getContentRating(movie),
@@ -325,7 +325,7 @@ describe("Property 1: Utility Function Determinism", () => {
           };
 
           const sequence3 = {
-            imageUrl: getImageUrl(movie.poster_path, "w500"),
+            imageUrl: getImageUrl(movie.posterPath, "w500"),
             releaseYear: getReleaseYear(movie),
             contentType: getContentType(movie),
             contentRating: getContentRating(movie),
@@ -353,7 +353,7 @@ describe("Property 1: Utility Function Determinism", () => {
           const originalMovie = structuredClone(movie);
 
           // Call all utility functions
-          getImageUrl(movie.poster_path, "w500");
+          getImageUrl(movie.posterPath, "w500");
           getReleaseYear(movie);
           getContentType(movie);
           getContentRating(movie);

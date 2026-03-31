@@ -39,8 +39,8 @@ export const useMovieData = (data: Movie | undefined) => {
       genres: getGenres(data),
       duration: getDuration(data),
       releaseYear: getReleaseYear(data),
-      posterUrl: getImageUrl(data?.poster_path),
-      backdropUrl: getImageUrl(data?.backdrop_path),
+      posterUrl: getImageUrl(data?.posterPath),
+      backdropUrl: getImageUrl(data?.backdropPath),
       contentRating: getContentRating(data),
       quality: getQuality(data),
     };

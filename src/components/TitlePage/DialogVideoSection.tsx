@@ -81,7 +81,7 @@ export default function DialogVideoSection({
           />
 
           <DialogActionButtons
-            title={data.title ?? data.name ?? data.original_name ?? ""}
+            title={data.title ?? data.name ?? data.originalName ?? ""}
           />
 
           {showVideo && (

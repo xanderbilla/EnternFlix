@@ -40,37 +40,37 @@ export interface Creator {
 // This is a transitional type that will be removed in future refactoring
 export interface TitleData {
   id: number | string;
-  backdrop_path: string; // Made non-null for title pages (always expected)
-  poster_path: string; // Made non-null for title pages (always expected)
+  backdropPath: string; // Made non-null for title pages (always expected)
+  posterPath: string; // Made non-null for title pages (always expected)
   title?: string;
   name?: string;
-  original_name?: string;
-  original_title?: string;
+  originalName?: string;
+  originalTitle?: string;
   overview: string;
-  first_air_date?: string;
-  release_date?: string;
-  number_of_seasons?: number;
-  number_of_episodes?: number;
+  firstAirDate?: string;
+  releaseDate?: string;
+  numberOfSeasons?: number;
+  numberOfEpisodes?: number;
   genres?: Array<{ id: string | number; name: string }>;
-  casts?: Array<{ id: string | number; name: string; cover_picture?: string }>;
+  casts?: Array<{ id: string | number; name: string; coverPicture?: string }>;
   tags?: Array<{ id: string | number; name: string }>;
-  mood_tags?: Array<{ id: string | number; name: string }>;
-  content_type?: "MOVIE" | "TV" | "PERSON";
+  moodTags?: Array<{ id: string | number; name: string }>;
+  contentType?: "MOVIE" | "TV" | "PERSON";
   runtime?: number;
   status?: string;
   tagline?: string;
-  vote_average?: number;
-  content_rating?: "18_PLUS" | "21_PLUS";
-  created_by?: Creator[];
+  voteAverage?: number;
+  contentRating?: "18_PLUS" | "21_PLUS";
+  createdBy?: Creator[];
   production_companies?: Array<{
     id: string | number;
     name: string;
-    cover_picture?: string;
+    coverPicture?: string;
     logo_path?: string;
   }>;
   audit?: {
-    created_at: string;
-    is_deleted: boolean;
+    createdAt: string;
+    isDeleted: boolean;
   };
 }
 
@@ -108,7 +108,7 @@ export interface DialogAboutSectionProps {
   tags: Array<{ id: string | number; name: string }>;
   moodTags: Array<{ id: string | number; name: string }>;
   productionCompanies: Array<{ id: string | number; name: string }>;
-  content_rating?: "18_PLUS" | "21_PLUS";
+  contentRating?: "18_PLUS" | "21_PLUS";
   releaseDate?: string;
   auditDate?: string;
   isTV: boolean;
@@ -122,7 +122,7 @@ export interface DialogInfoSectionProps {
   numberOfSeasons: number;
   overview: string;
   runtime?: number;
-  content_rating?: "18_PLUS" | "21_PLUS";
+  contentRating?: "18_PLUS" | "21_PLUS";
   movieData?: import("./movie").Movie;
 }
 

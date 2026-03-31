@@ -20,7 +20,7 @@ export default function DetailDialog({
       onClose={onClose}
       onBack={onBack}
       zIndex={zIndex}
-      className="w-full max-w-[80vw]"
+      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] max-w-[1400px] h-[90vh] sm:h-[85vh] md:h-[80vh]"
     >
       {({ handleClose, handleBack }) => (
         <>
@@ -31,7 +31,12 @@ export default function DetailDialog({
             showBackButton={!!onBack}
             variant="default"
           />
-          <MovieGrid movies={movies} onMovieClick={onMovieClick} columns={4} />
+          <MovieGrid
+            movies={movies}
+            onMovieClick={onMovieClick}
+            columns={4}
+            disableHover={true}
+          />
         </>
       )}
     </BaseDialog>

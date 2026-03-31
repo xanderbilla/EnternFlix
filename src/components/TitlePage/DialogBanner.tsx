@@ -34,15 +34,15 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
   // Extract release year from the API - use actual value even if it's 0001
   const releaseYear = data ? getReleaseYear(data as any) : "Unknown";
 
-  // Check content_type first, then fall back to other indicators
+  // Check contentType first, then fall back to other indicators
   const isTV = data ? getContentType(data as any) === "TV" : false;
-  const numberOfSeasons = data?.number_of_seasons || 1;
+  const numberOfSeasons = data?.numberOfSeasons || 1;
 
   // Get data from API
   const casts = data?.casts || [];
   const genres = data?.genres || [];
   const tags = data?.tags || [];
-  const moodTags = data?.mood_tags || [];
+  const moodTags = data?.moodTags || [];
 
   return (
     <div className="bg-zinc-900">
@@ -59,7 +59,7 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
             numberOfSeasons={numberOfSeasons}
             overview={data?.overview || ""}
             runtime={data?.runtime}
-            content_rating={data?.content_rating}
+            contentRating={data?.contentRating}
             movieData={data as any}
           />
 
@@ -92,9 +92,9 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
           tags={tags}
           moodTags={moodTags}
           productionCompanies={data?.production_companies || []}
-          content_rating={data?.content_rating}
-          releaseDate={data?.release_date || data?.first_air_date}
-          auditDate={data?.audit?.created_at}
+          contentRating={data?.contentRating}
+          releaseDate={data?.releaseDate || data?.firstAirDate}
+          auditDate={data?.audit?.createdAt}
           isTV={!!isTV}
           onExploreClick={onExploreClick}
           movieData={data as any}

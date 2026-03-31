@@ -4,6 +4,7 @@ import type { CastDialogProps } from "@/types/components";
 import BaseDialog from "@/components/UI/BaseDialog";
 import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import MovieGrid from "@/components/UI/MovieGrid";
+import CastInfo from "./CastInfo";
 
 export default function CastDialog({
   isOpen,
@@ -21,10 +22,10 @@ export default function CastDialog({
       onClose={onClose}
       onBack={onBack}
       zIndex={zIndex}
-      className="w-full max-w-4xl"
+      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[75vw] max-w-[1200px]"
     >
       {({ handleClose, handleBack }) => (
-        <>
+        <div className="relative">
           <DialogHeader
             title={castName}
             onClose={handleClose}
@@ -34,8 +35,12 @@ export default function CastDialog({
             variant="cast"
             subtitle="Movies & TV Shows"
           />
-          <MovieGrid movies={movies} onMovieClick={onMovieClick} columns={4} />
-        </>
+          <CastInfo
+            castName={castName}
+            movies={movies}
+            onMovieClick={onMovieClick}
+          />
+        </div>
       )}
     </BaseDialog>
   );

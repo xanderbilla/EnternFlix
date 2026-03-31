@@ -14,51 +14,87 @@ export interface DialogState {
   backdropUrl?: string;
   titleId?: string;
   zIndex?: number;
-  parentDialog?: DialogType; // Track parent dialog for back navigation
+  parentDialog?: DialogType;
 }
 
 export function useDialogManager() {
-  const [dialogState, setDialogState] = useState<DialogState>({
+  const [dialogStack, setDialogStack] = useState<DialogState[]>([]);
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  // Get current dialog (top of stack)
+  const currentDialog = dialogStack[dialogStack.length - 1] || {
     type: null,
     isOpen: false,
     title: "",
     movies: [],
-  });
-
-  const [dialogHistory, setDialogHistory] = useState<DialogState[]>([]);
+  };
 
   const openExploreDialog = useCallback(
     (title: string, movies: Movie[], zIndex?: number) => {
-      setDialogState({
-        type: "explore",
-        isOpen: true,
-        title,
-        movies,
-        zIndex,
-      });
-      setDialogHistory([]);
+      setDialogStack([
+        {
+          type: "explore",
+          isOpen: true,
+          title,
+          movies,
+          zIndex,
+        },
+      ]);
     },
     [],
   );
 
   const openInfoDialog = useCallback(
-    (titleId: string, zIndex?: number, fromDialog?: DialogType) => {
-      // Save current dialog to history if it exists and we're coming from another dialog
-      if (fromDialog && dialogState.isOpen && dialogState.type) {
-        setDialogHistory((prev) => [...prev, dialogState]);
-      }
+    (titleId: string, zIndex?: number) => {
+      // If there's already a dialog open, do collapse → expand transition
+      // But keep the previous dialog in stack for back navigation
+      if (dialogStack.length > 0) {
+        if (isTransitioning) return;
 
-      setDialogState({
-        type: "info",
-        isOpen: true,
-        title: "",
-        movies: [],
-        titleId,
-        zIndex,
-        parentDialog: fromDialog,
-      });
+        setIsTransitioning(true);
+
+        // Step 1: Collapse current dialog (but keep in stack)
+        setDialogStack((prev) => {
+          const updated = [...prev];
+          if (updated.length > 0) {
+            updated[updated.length - 1] = {
+              ...updated[updated.length - 1],
+              isOpen: false,
+            };
+          }
+          return updated;
+        });
+
+        // Step 2: After collapse (500ms), add new info dialog
+        setTimeout(() => {
+          setDialogStack((prev) => [
+            ...prev,
+            {
+              type: "info",
+              isOpen: true, // Open immediately, BaseDialog will handle animation
+              title: "",
+              movies: [],
+              titleId,
+              zIndex,
+            },
+          ]);
+          setIsTransitioning(false);
+        }, 550); // Slightly longer to ensure previous dialog is gone
+      } else {
+        // No dialog open, just open directly
+        setDialogStack([
+          {
+            type: "info",
+            isOpen: true,
+            title: "",
+            movies: [],
+            titleId,
+            zIndex,
+          },
+        ]);
+      }
     },
-    [dialogState],
+    [dialogStack.length, isTransitioning],
   );
 
   const openCastDialog = useCallback(
@@ -67,120 +103,214 @@ export function useDialogManager() {
       movies: Movie[],
       backdropUrl?: string,
       zIndex?: number,
-      parentDialog?: DialogType,
     ) => {
-      // If we have a parent dialog, create a fake dialog state to represent it in history
-      if (parentDialog === "info") {
-        setDialogHistory([
+      // If there's already a dialog open, do collapse → expand transition
+      if (dialogStack.length > 0) {
+        if (isTransitioning) return;
+
+        setIsTransitioning(true);
+
+        // Step 1: Collapse current dialog
+        setDialogStack((prev) => {
+          const updated = [...prev];
+          if (updated.length > 0) {
+            updated[updated.length - 1] = {
+              ...updated[updated.length - 1],
+              isOpen: false,
+            };
+          }
+          return updated;
+        });
+
+        // Step 2: After collapse (500ms), add new cast dialog
+        setTimeout(() => {
+          setDialogStack((prev) => [
+            ...prev,
+            {
+              type: "cast",
+              isOpen: true,
+              title: castName,
+              movies,
+              castName,
+              backdropUrl,
+              zIndex,
+            },
+          ]);
+          setIsTransitioning(false);
+        }, 550);
+      } else {
+        // No dialog open, just open directly
+        setDialogStack([
           {
-            type: "info",
+            type: "cast",
             isOpen: true,
-            title: "",
-            movies: [],
-            titleId: "", // This will be handled by the parent TitleDialog
+            title: castName,
+            movies,
+            castName,
+            backdropUrl,
+            zIndex,
           },
         ]);
-      } else if (dialogState.isOpen && dialogState.type) {
-        // Save current dialog to history if it exists
-        setDialogHistory((prev) => [...prev, dialogState]);
       }
-
-      setDialogState({
-        type: "cast",
-        isOpen: true,
-        title: castName,
-        movies,
-        castName,
-        backdropUrl,
-        zIndex,
-        parentDialog,
-      });
     },
-    [dialogState],
+    [dialogStack.length, isTransitioning],
   );
 
   const openDetailDialog = useCallback(
-    (
-      title: string,
-      movies: Movie[],
-      zIndex?: number,
-      parentDialog?: DialogType,
-    ) => {
-      // If we have a parent dialog, create a fake dialog state to represent it in history
-      if (parentDialog === "info") {
-        setDialogHistory([
+    (title: string, movies: Movie[], zIndex?: number) => {
+      // If there's already a dialog open, do collapse → expand transition
+      if (dialogStack.length > 0) {
+        if (isTransitioning) return;
+
+        setIsTransitioning(true);
+
+        // Step 1: Collapse current dialog
+        setDialogStack((prev) => {
+          const updated = [...prev];
+          if (updated.length > 0) {
+            updated[updated.length - 1] = {
+              ...updated[updated.length - 1],
+              isOpen: false,
+            };
+          }
+          return updated;
+        });
+
+        // Step 2: After collapse (500ms), add new detail dialog
+        setTimeout(() => {
+          setDialogStack((prev) => [
+            ...prev,
+            {
+              type: "detail",
+              isOpen: true,
+              title,
+              movies,
+              zIndex,
+            },
+          ]);
+          setIsTransitioning(false);
+        }, 550);
+      } else {
+        // No dialog open, just open directly
+        setDialogStack([
           {
-            type: "info",
+            type: "detail",
             isOpen: true,
-            title: "",
-            movies: [],
-            titleId: "", // This will be handled by the parent TitleDialog
+            title,
+            movies,
+            zIndex,
           },
         ]);
-      } else if (dialogState.isOpen && dialogState.type) {
-        // Save current dialog to history if it exists
-        setDialogHistory((prev) => [...prev, dialogState]);
       }
-
-      setDialogState({
-        type: "detail",
-        isOpen: true,
-        title,
-        movies,
-        zIndex,
-        parentDialog,
-      });
     },
-    [dialogState],
+    [dialogStack.length, isTransitioning],
   );
 
-  const goBack = useCallback(() => {
-    const previousDialog = dialogHistory[dialogHistory.length - 1];
-    if (previousDialog) {
-      if (previousDialog.type === "info") {
-        // Going back to info dialog - just close the current dialog
-        setDialogState({
-          type: null,
-          isOpen: false,
-          title: "",
-          movies: [],
-        });
-        setDialogHistory([]);
-      } else {
-        // Going back to another dialog type
-        setDialogState(previousDialog);
-        setDialogHistory((prev) => prev.slice(0, -1));
-      }
-    } else {
-      // No history, just close
-      setDialogState({
-        type: null,
-        isOpen: false,
-        title: "",
-        movies: [],
+  // Replace current dialog with new one (collapse → expand)
+  const replaceDialog = useCallback(
+    (newDialog: DialogState, onComplete?: () => void) => {
+      if (isTransitioning) return;
+
+      setIsTransitioning(true);
+
+      // Step 1: Collapse current dialog
+      setDialogStack((prev) => {
+        const updated = [...prev];
+        if (updated.length > 0) {
+          updated[updated.length - 1] = {
+            ...updated[updated.length - 1],
+            isOpen: false,
+          };
+        }
+        return updated;
       });
-    }
-  }, [dialogHistory]);
 
-  const closeDialog = useCallback(() => {
-    setDialogState({
-      type: null,
-      isOpen: false,
-      title: "",
-      movies: [],
+      // Step 2: After collapse animation (500ms), replace with new dialog
+      setTimeout(() => {
+        setDialogStack((prev) => {
+          const updated = [...prev];
+          updated[updated.length - 1] = { ...newDialog, isOpen: true };
+          return updated;
+        });
+        setIsTransitioning(false);
+        onComplete?.();
+      }, 500);
+    },
+    [isTransitioning],
+  );
+
+  // Go back (collapse current → expand previous)
+  const goBack = useCallback(() => {
+    if (isTransitioning || dialogStack.length === 0) return;
+
+    setIsTransitioning(true);
+
+    // Step 1: Collapse current dialog
+    setDialogStack((prev) => {
+      const updated = [...prev];
+      if (updated.length > 0) {
+        updated[updated.length - 1] = {
+          ...updated[updated.length - 1],
+          isOpen: false,
+        };
+      }
+      return updated;
     });
-    setDialogHistory([]);
-  }, []);
 
-  const hasBackNavigation = dialogHistory.length > 0;
+    // Step 2: After collapse animation (500ms), remove from stack and reopen previous
+    setTimeout(() => {
+      setDialogStack((prev) => {
+        const updated = prev.slice(0, -1);
+        // Reopen the previous dialog (now at top of stack)
+        if (updated.length > 0) {
+          updated[updated.length - 1] = {
+            ...updated[updated.length - 1],
+            isOpen: true,
+          };
+        }
+        return updated;
+      });
+      setIsTransitioning(false);
+    }, 500);
+  }, [dialogStack.length, isTransitioning]);
+
+  // Close all dialogs
+  const closeDialog = useCallback(() => {
+    if (isTransitioning) return;
+
+    setIsTransitioning(true);
+
+    // Collapse current dialog
+    setDialogStack((prev) => {
+      const updated = [...prev];
+      if (updated.length > 0) {
+        updated[updated.length - 1] = {
+          ...updated[updated.length - 1],
+          isOpen: false,
+        };
+      }
+      return updated;
+    });
+
+    // After animation, clear stack
+    setTimeout(() => {
+      setDialogStack([]);
+      setIsTransitioning(false);
+    }, 500);
+  }, [isTransitioning]);
+
+  const hasBackNavigation = dialogStack.length > 1;
 
   return {
-    dialogState,
+    dialogState: currentDialog,
+    dialogStack,
     hasBackNavigation,
+    isTransitioning,
     openExploreDialog,
     openInfoDialog,
     openCastDialog,
     openDetailDialog,
+    replaceDialog,
     goBack,
     closeDialog,
   };

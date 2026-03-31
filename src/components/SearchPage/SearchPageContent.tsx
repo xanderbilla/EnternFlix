@@ -95,12 +95,12 @@ export default function SearchPageContent() {
       {/* Banner with centered search input */}
       <div className="relative h-[50vh] -mt-24 bg-zinc-900 overflow-hidden">
         {/* Random backdrop */}
-        {movie?.backdrop_path && (
+        {movie?.backdropPath && (
           <>
             <div
               className="absolute inset-0 w-full h-full bg-cover bg-top"
               style={{
-                backgroundImage: `url('${getImageUrl(movie.backdrop_path, "original")}')`,
+                backgroundImage: `url('${getImageUrl(movie.backdropPath, "original")}')`,
               }}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />

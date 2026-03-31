@@ -15,7 +15,7 @@ function InfoDialog({
       isOpen={isOpen}
       onClose={onClose}
       zIndex={zIndex}
-      className="w-full max-w-4xl relative"
+      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[75vw] max-w-[1000px] relative"
     >
       {children}
     </BaseDialog>

@@ -14,7 +14,7 @@ export default function NotFoundContent() {
   const backdrop = trendingData?.results?.length
     ? trendingData.results[
         Math.floor(Math.random() * trendingData.results.length)
-      ].backdrop_path
+      ].backdropPath
     : null;
 
   return (

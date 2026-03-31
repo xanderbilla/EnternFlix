@@ -5,7 +5,7 @@ import { TitleVideoPlayerProps } from "@/types/title";
 import { getImageUrl } from "@/utils/movieHelpers";
 
 export default function VideoPlayer({ data }: TitleVideoPlayerProps) {
-  const backdropUrl = getImageUrl(data.backdrop_path || "", "original");
+  const backdropUrl = getImageUrl(data.backdropPath || "", "original");
 
   return (
     <>
@@ -14,7 +14,7 @@ export default function VideoPlayer({ data }: TitleVideoPlayerProps) {
         <Image
           className="absolute inset-0 w-full h-full object-cover brightness-[60%]"
           src={backdropUrl}
-          alt={`${data.title ?? data.name ?? data.original_name} backdrop`}
+          alt={`${data.title ?? data.name ?? data.originalName} backdrop`}
           width={1920}
           height={1080}
           unoptimized={!backdropUrl.includes("tmdb.org")}

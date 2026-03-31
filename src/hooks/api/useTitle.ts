@@ -5,7 +5,7 @@ import requests from "@/helper/request";
 import { Movie, MovieResponse } from "@/types/movie";
 
 export interface TVShow extends Movie {
-  number_of_seasons: number;
+  numberOfSeasons: number;
   seasons?: Array<{
     id: number;
     season_number: number;
@@ -13,7 +13,7 @@ export interface TVShow extends Movie {
     overview: string;
     air_date: string;
     episode_count: number;
-    poster_path: string;
+    posterPath: string;
   }>;
 }
 

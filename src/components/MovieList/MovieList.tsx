@@ -25,9 +25,12 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   const { data: response, error } = useHook?.() || {};
   const {
     dialogState,
+    dialogStack,
     hasBackNavigation,
     openExploreDialog,
     openInfoDialog,
+    openCastDialog,
+    openDetailDialog,
     goBack,
     closeDialog,
   } = useDialogManager();
@@ -182,12 +185,14 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
       </div>
 
       <DialogRenderer
-        dialogState={dialogState}
+        dialogStack={dialogStack}
         hasBackNavigation={hasBackNavigation}
         onClose={closeDialog}
         onBack={goBack}
         onMovieClick={handleMovieClick}
-        onInfoDialogOpen={handleMovieClick} // For MovieList, both actions are the same
+        onInfoDialogOpen={handleMovieClick}
+        onOpenCastDialog={openCastDialog}
+        onOpenDetailDialog={openDetailDialog}
       />
     </>
   );

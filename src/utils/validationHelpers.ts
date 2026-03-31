@@ -40,33 +40,33 @@ export function validateMovie(data: unknown): ValidationResult<Movie> {
     });
   }
 
-  if (movie.backdrop_path !== null && typeof movie.backdrop_path !== "string") {
+  if (movie.backdropPath !== null && typeof movie.backdropPath !== "string") {
     errors.push({
-      field: "backdrop_path",
+      field: "backdropPath",
       message: "Backdrop path must be a string or null",
       code: "INVALID_TYPE",
     });
   }
 
-  if (movie.poster_path !== null && typeof movie.poster_path !== "string") {
+  if (movie.posterPath !== null && typeof movie.posterPath !== "string") {
     errors.push({
-      field: "poster_path",
+      field: "posterPath",
       message: "Poster path must be a string or null",
       code: "INVALID_TYPE",
     });
   }
 
-  if (typeof movie.vote_average !== "number") {
+  if (typeof movie.voteAverage !== "number") {
     errors.push({
-      field: "vote_average",
+      field: "voteAverage",
       message: "Vote average must be a number",
       code: "INVALID_TYPE",
     });
   }
 
-  if (typeof movie.vote_count !== "number") {
+  if (typeof movie.voteCount !== "number") {
     errors.push({
-      field: "vote_count",
+      field: "voteCount",
       message: "Vote count must be a number",
       code: "INVALID_TYPE",
     });
@@ -80,9 +80,9 @@ export function validateMovie(data: unknown): ValidationResult<Movie> {
     });
   }
 
-  if (typeof movie.original_language !== "string") {
+  if (typeof movie.originalLanguage !== "string") {
     errors.push({
-      field: "original_language",
+      field: "originalLanguage",
       message: "Original language must be a string",
       code: "INVALID_TYPE",
     });

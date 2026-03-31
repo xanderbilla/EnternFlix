@@ -14,15 +14,6 @@ export default function FooterBrand() {
       />
       <div className="flex space-x-4">
         <Link
-          href="https://linkedin.com/in/xanderbilla"
-          className="hover:text-white transition"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="LinkedIn"
-        >
-          <Icon name="linkedin" size={20} />
-        </Link>
-        <Link
           href="https://x.com/xanderbilla"
           className="hover:text-white transition"
           target="_blank"

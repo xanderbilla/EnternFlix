@@ -1,21 +1,29 @@
 "use client";
 
-import { useCallback, memo, useState, lazy, Suspense } from "react";
+import { useCallback, memo, lazy, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText } from "@/utils/contentHelpers";
 import { useRandomContent } from "@/hooks/api/useMovies";
 import { DynamicBannerContent as BannerContent } from "@/utils/dynamicImports";
+import { DynamicDialogRenderer as DialogRenderer } from "@/utils/dynamicImports";
+import { useDialogManager } from "@/hooks/ui/useDialogManager";
 import FavoritesBanner from "./FavoritesBanner";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
 
 const Banner = () => {
   const pathname = usePathname();
-  const [dialogState, setDialogState] = useState({
-    isOpen: false,
-    movieId: "",
-  });
+  const {
+    dialogState,
+    dialogStack,
+    hasBackNavigation,
+    openInfoDialog,
+    openCastDialog,
+    openDetailDialog,
+    goBack,
+    closeDialog,
+  } = useDialogManager();
 
   const isFavoritesPage = pathname.includes("/favorites");
 
@@ -24,26 +32,28 @@ const Banner = () => {
 
   const handleMoreInfo = useCallback(() => {
     if (movie?.id) {
-      setDialogState({ isOpen: true, movieId: movie.id.toString() });
+      openInfoDialog(movie.id.toString(), 9999);
     }
-  }, [movie?.id]);
+  }, [movie?.id, openInfoDialog]);
 
-  const handleMovieChange = useCallback((newMovieId: string) => {
-    setDialogState((prev) => ({ ...prev, movieId: newMovieId }));
-  }, []);
+  const handleMovieChange = useCallback(
+    (newMovieId: string) => {
+      openInfoDialog(newMovieId, 9999);
+    },
+    [openInfoDialog],
+  );
 
   if (isFavoritesPage) {
     return <FavoritesBanner movie={movie ?? null} />;
   }
 
-  if (error || !movie?.backdrop_path) {
+  if (error || !movie?.backdropPath) {
     return null;
   }
 
-  const movieTitle =
-    movie.title ?? "Untitled";
+  const movieTitle = movie.title ?? "Untitled";
   const movieDescription = truncateText(movie.overview, 200);
-  const backdropUrl = getImageUrl(movie.backdrop_path, "original");
+  const backdropUrl = getImageUrl(movie.backdropPath, "original");
 
   return (
     <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
@@ -62,17 +72,17 @@ const Banner = () => {
         onMoreInfoClick={handleMoreInfo}
       />
 
-      {/* Title Dialog */}
-      {dialogState.isOpen && (
-        <Suspense fallback={null}>
-          <TitleDialog
-            isOpen={dialogState.isOpen}
-            titleId={dialogState.movieId}
-            onClose={() => setDialogState({ isOpen: false, movieId: "" })}
-            onMovieChange={handleMovieChange}
-          />
-        </Suspense>
-      )}
+      {/* Dialog Renderer for all dialogs */}
+      <DialogRenderer
+        dialogStack={dialogStack}
+        hasBackNavigation={hasBackNavigation}
+        onClose={closeDialog}
+        onBack={goBack}
+        onMovieClick={handleMovieChange}
+        onInfoDialogOpen={handleMovieChange}
+        onOpenCastDialog={openCastDialog}
+        onOpenDetailDialog={openDetailDialog}
+      />
     </div>
   );
 };

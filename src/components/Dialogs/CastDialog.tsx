@@ -19,7 +19,7 @@ export default function CastDialog({
   zIndex = 10000,
 }: CastDialogProps) {
   const { data: personData } = usePerson(castId, isOpen);
-  const { data: personMovies } = usePersonMovies(castId, isOpen);
+  const { data: personMovies } = usePersonMovies(castId, "all", isOpen);
 
   // Memoize movies array to prevent reference changes
   const movies = useMemo(() => personMovies || [], [personMovies]);

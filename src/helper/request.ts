@@ -3,14 +3,18 @@ const customApiUrl = process.env.NEXT_PUBLIC_CUSTOM_API_URL;
 
 const requests = {
   // Custom API endpoints
-  fetchAllMovies: `${customApiUrl}/movies`,
-  fetchMovieById: (id: string) => `${customApiUrl}/movies/${id}`,
-  fetchPersonById: (id: string) => `${customApiUrl}/persons/${id}`,
-  fetchPersonMovies: (id: string) => `${customApiUrl}/persons/${id}/movies`,
-  fetchDiscoverByAttribute: (attributeId: string) =>
-    `${customApiUrl}/discover/${attributeId}`,
-  fetchBanner: `${customApiUrl}/banner`,
-  fetchBannerByPage: (page: string) => `${customApiUrl}/banner?pg=${page}`,
+  fetchAllContent: (type: string = "all") =>
+    `${customApiUrl}/c/content?type=${type}`,
+  fetchMovieById: (id: string) => `${customApiUrl}/c/content/${id}`,
+  fetchPersonById: (id: string) => `${customApiUrl}/c/people/${id}`,
+  fetchPersonMovies: (id: string, type: string = "all") =>
+    `${customApiUrl}/c/people/${id}/content?type=${type}`,
+  fetchDiscoverByAttribute: (attributeId: string, content: string = "all") =>
+    `${customApiUrl}/c/attributes/${attributeId}?content=${content}`,
+  fetchDiscover: (type: string = "latest", content: string = "all") =>
+    `${customApiUrl}/c/discover?type=${type}&content=${content}`,
+  fetchBanner: (type: string = "all") =>
+    `${customApiUrl}/c/banner?type=${type}`,
 
   // TMDB API endpoints (keep for search and other features)
   fetchTrending: `trending/all/week?api_key=${key}&language=en-US`,

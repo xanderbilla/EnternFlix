@@ -7,6 +7,7 @@ const Home = () => {
   return (
     <PageLayout showBanner={true} bannerVariant="home">
       <DynamicMovieList title="Recently Added" hookName="trending" />
+      <DynamicMovieList title="Latest Release" hookName="latestRelease" />
     </PageLayout>
   );
 };

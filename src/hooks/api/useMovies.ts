@@ -6,13 +6,13 @@ import { Movie, MoviesResponse, MovieResponse } from "@/types/movie";
 import type { PaginatedResponse } from "@/types/api";
 import { queryKeys } from "@/constants/queryKeys";
 
-// Custom API hooks
-export const useCustomMovies = () => {
+// Custom API hooks - fetch content by type (all, movie, tv)
+export const useCustomContent = (type: string = "all") => {
   return useQuery<PaginatedResponse<Movie>, Error>({
-    queryKey: ["custom", "movies"],
+    queryKey: ["custom", "content", type],
     queryFn: async () => {
       const response = await customAxios.get<MoviesResponse>(
-        requests.fetchAllMovies,
+        requests.fetchAllContent(type),
       );
       const movies = response.data.data;
       // Format as TMDB-style response for compatibility
@@ -25,6 +25,11 @@ export const useCustomMovies = () => {
     },
     retry: 2,
   });
+};
+
+// Backward compatibility - useCustomMovies now uses type="movie"
+export const useCustomMovies = () => {
+  return useCustomContent("movie");
 };
 
 export const useCustomMovie = (id: string, enabled: boolean = true) => {
@@ -41,13 +46,13 @@ export const useCustomMovie = (id: string, enabled: boolean = true) => {
   });
 };
 
-// Use custom API for trending (homepage)
+// Use custom API for trending (homepage) - fetch all content types
 export const useTrending = () => {
   return useQuery<PaginatedResponse<Movie>, Error>({
     queryKey: [...queryKeys.trending],
     queryFn: async () => {
       const response = await customAxios.get<MoviesResponse>(
-        requests.fetchAllMovies,
+        requests.fetchAllContent("all"),
       );
       const movies = response.data.data;
       // Format as TMDB-style response for compatibility
@@ -89,7 +94,7 @@ export const useRandomContent = () => {
     queryKey: ["random", "content"],
     queryFn: async () => {
       const response = await customAxios.get<MoviesResponse>(
-        requests.fetchAllMovies,
+        requests.fetchAllContent("all"),
       );
       const movies = response.data.data;
 
@@ -103,31 +108,16 @@ export const useRandomContent = () => {
   });
 };
 
-// Banner hook for home page
-export const useBanner = () => {
+// Banner hook for home page (all content types)
+export const useBanner = (type: string = "all") => {
   return useQuery<Movie, Error>({
-    queryKey: ["banner"],
+    queryKey: ["banner", type],
     queryFn: async () => {
       const response = await customAxios.get<MovieResponse>(
-        requests.fetchBanner,
+        requests.fetchBanner(type),
       );
       return response.data.data;
     },
-    retry: 2,
-  });
-};
-
-// Banner hook for specific page (e.g., MOVIE, TV)
-export const useBannerByPage = (page: string) => {
-  return useQuery<Movie, Error>({
-    queryKey: ["banner", page],
-    queryFn: async () => {
-      const response = await customAxios.get<MovieResponse>(
-        requests.fetchBannerByPage(page),
-      );
-      return response.data.data;
-    },
-    enabled: !!page,
     retry: 2,
   });
 };
@@ -135,17 +125,42 @@ export const useBannerByPage = (page: string) => {
 // Discover by attribute hook (tags, genres, categories, specialties, mood tags)
 export const useDiscoverByAttribute = (
   attributeId: string,
+  content: string = "all",
   enabled: boolean = true,
 ) => {
   return useQuery<Movie[], Error>({
-    queryKey: ["discover", "attribute", attributeId],
+    queryKey: ["discover", "attribute", attributeId, content],
     queryFn: async () => {
       const response = await customAxios.get<MoviesResponse>(
-        requests.fetchDiscoverByAttribute(attributeId),
+        requests.fetchDiscoverByAttribute(attributeId, content),
       );
       return response.data.data;
     },
     enabled: enabled && !!attributeId,
+    retry: 2,
+  });
+};
+
+// Discover content hook (latest, popular, trending)
+export const useDiscover = (
+  type: string = "latest",
+  content: string = "all",
+) => {
+  return useQuery<PaginatedResponse<Movie>, Error>({
+    queryKey: ["discover", type, content],
+    queryFn: async () => {
+      const response = await customAxios.get<MoviesResponse>(
+        requests.fetchDiscover(type, content),
+      );
+      const movies = response.data.data;
+      // Format as TMDB-style response for compatibility
+      return {
+        results: movies,
+        page: 1,
+        total_pages: 1,
+        total_results: movies.length,
+      };
+    },
     retry: 2,
   });
 };

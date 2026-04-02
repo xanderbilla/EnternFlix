@@ -16,7 +16,7 @@ export default function DiscoverDialog({
   onMovieClick,
   zIndex = 10000,
 }: DiscoverDialogProps) {
-  const { data: movies } = useDiscoverByAttribute(attributeId, isOpen);
+  const { data: movies } = useDiscoverByAttribute(attributeId, "all", isOpen);
 
   // Memoize movies array to prevent reference changes
   const displayMovies = useMemo(() => movies || [], [movies]);

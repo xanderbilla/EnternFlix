@@ -38,7 +38,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
         <div className="flex-row ml-8 gap-8 hidden md:flex">
           <Link
             href="/movies"
-            className="text-white hover:text-gray-300 transition cursor-pointer"
+            className="text-gray-300 hover:text-white transition cursor-pointer"
           >
             Movies
           </Link>

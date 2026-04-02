@@ -23,15 +23,19 @@ export const usePerson = (id: string, enabled: boolean = true) => {
   });
 };
 
-export const usePersonMovies = (id: string, enabled: boolean = true) => {
+export const usePersonMovies = (
+  id: string,
+  type: string = "all",
+  enabled: boolean = true,
+) => {
   return useQuery({
-    queryKey: ["personMovies", id],
+    queryKey: ["personMovies", id, type],
     queryFn: async () => {
       if (!id) {
         throw new Error("Person ID is required");
       }
       const response = await customAxios.get<MoviesResponse>(
-        requests.fetchPersonMovies(id),
+        requests.fetchPersonMovies(id, type),
       );
       return response.data.data;
     },

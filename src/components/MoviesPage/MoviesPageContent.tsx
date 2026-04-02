@@ -3,7 +3,7 @@
 import PageLayout from "@/components/Layout/PageLayout";
 import { DynamicMovieList } from "@/utils/dynamicImports";
 import { MovieListItem } from "@/types/components";
-import { useBannerByPage } from "@/hooks/api/useMovies";
+import { useBanner } from "@/hooks/api/useMovies";
 import { getImageUrl } from "@/utils/movieHelpers";
 
 interface MoviesPageContentProps {
@@ -13,8 +13,8 @@ interface MoviesPageContentProps {
 export default function MoviesPageContent({
   movieLists,
 }: MoviesPageContentProps) {
-  // Fetch banner for movies page
-  const { data: bannerMovie } = useBannerByPage("MOVIE");
+  // Fetch banner for movies page (movie content type)
+  const { data: bannerMovie } = useBanner("movie");
 
   const backdropUrl = bannerMovie?.backdropPath
     ? getImageUrl(bannerMovie.backdropPath, "original")
@@ -51,8 +51,11 @@ export default function MoviesPageContent({
 
       {/* Movie Lists Section */}
       <div className="relative -mt-32 md:-mt-40 lg:-mt-48 z-10 space-y-6">
+        {/* Recently Added Movies List */}
+        <DynamicMovieList title="Recently Added" hookName="recentlyAdded" />
+
         {/* Latest Movies List */}
-        <DynamicMovieList title="Latest Movies" hookName="allMovies" />
+        <DynamicMovieList title="Latest Movies" hookName="latestMovies" />
 
         {/* Other Movie Lists */}
         {movieLists.map((list) => (

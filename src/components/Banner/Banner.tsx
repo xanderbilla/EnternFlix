@@ -27,8 +27,8 @@ const Banner = () => {
 
   const isFavoritesPage = pathname.includes("/favorites");
 
-  // Use banner endpoint for home page
-  const { data: movie, error } = useBanner();
+  // Use banner endpoint for home page (all content types)
+  const { data: movie, error } = useBanner("all");
 
   const handleMoreInfo = useCallback(() => {
     if (movie?.id) {

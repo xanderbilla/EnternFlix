@@ -119,10 +119,11 @@ const MovieCard: React.FC<MovieCardProps> = ({
             alt={data?.title || "Movie poster"}
             loading={isFirst ? "eager" : "lazy"}
             priority={isFirst}
+            placeholder="empty"
             unoptimized={!movieData.posterUrl.includes("tmdb.org")}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base">
+          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base bg-zinc-800 rounded-md">
             Image not available
           </div>
         )}

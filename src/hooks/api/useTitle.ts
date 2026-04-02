@@ -39,7 +39,7 @@ const fetchTitleData = async (id: string): Promise<TitleData> => {
         mediaType: "movie",
       };
     } catch (error) {
-      console.log("Custom API failed, falling back to TMDB", error);
+      // Custom API failed, fallback to TMDB
     }
   }
 

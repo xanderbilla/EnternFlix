@@ -5,6 +5,12 @@ const requests = {
   // Custom API endpoints
   fetchAllMovies: `${customApiUrl}/movies`,
   fetchMovieById: (id: string) => `${customApiUrl}/movies/${id}`,
+  fetchPersonById: (id: string) => `${customApiUrl}/persons/${id}`,
+  fetchPersonMovies: (id: string) => `${customApiUrl}/persons/${id}/movies`,
+  fetchDiscoverByAttribute: (attributeId: string) =>
+    `${customApiUrl}/discover/${attributeId}`,
+  fetchBanner: `${customApiUrl}/banner`,
+  fetchBannerByPage: (page: string) => `${customApiUrl}/banner?pg=${page}`,
 
   // TMDB API endpoints (keep for search and other features)
   fetchTrending: `trending/all/week?api_key=${key}&language=en-US`,

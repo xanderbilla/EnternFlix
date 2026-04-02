@@ -57,7 +57,7 @@ export default function MovieCardHoverOverlay({
         {/* Show backdrop image only - No Video */}
         {backdropUrl ? (
           <Image
-            className="object-contain w-full h-full"
+            className="object-contain w-full h-full rounded-md"
             fill
             sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
             src={backdropUrl}
@@ -65,7 +65,7 @@ export default function MovieCardHoverOverlay({
             unoptimized={!backdropUrl.includes("tmdb.org")}
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400">
+          <div className="w-full h-full flex items-center justify-center text-gray-400 bg-zinc-800 rounded-md">
             Image not available
           </div>
         )}

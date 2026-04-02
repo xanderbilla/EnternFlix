@@ -196,14 +196,16 @@ export interface SearchResultsProps {
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
 }
 
+export interface MovieListItem {
+  title: string;
+  hookName: string;
+}
+
 export interface CategoryPageContentProps {
   title: string;
   description: string;
   category: string;
-  movieLists: Array<{
-    title: string;
-    hookName: string;
-  }>;
+  movieLists: MovieListItem[];
 }
 
 // Navbar sub-component interfaces
@@ -290,14 +292,14 @@ export interface TitleDialogProps {
   onClose: () => void;
   onMovieChange?: (movieId: string) => void;
   onOpenCastDialog?: (
+    castId: string,
     castName: string,
-    movies: Movie[],
     backdropUrl?: string,
     zIndex?: number,
   ) => void;
-  onOpenDetailDialog?: (
-    title: string,
-    movies: Movie[],
+  onOpenDiscoverDialog?: (
+    attributeId: string,
+    attributeName: string,
     zIndex?: number,
   ) => void;
 }
@@ -328,6 +330,7 @@ export interface MovieGridProps {
   onMovieClick: (movieId: number | string) => void;
   columns?: number;
   disableHover?: boolean;
+  disableAnimation?: boolean;
 }
 
 export interface DialogRendererProps {
@@ -338,14 +341,14 @@ export interface DialogRendererProps {
   onMovieClick: (movieId: number | string) => void;
   onInfoDialogOpen?: (movieId: number | string) => void;
   onOpenCastDialog?: (
+    castId: string,
     castName: string,
-    movies: Movie[],
     backdropUrl?: string,
     zIndex?: number,
   ) => void;
-  onOpenDetailDialog?: (
-    title: string,
-    movies: Movie[],
+  onOpenDiscoverDialog?: (
+    attributeId: string,
+    attributeName: string,
     zIndex?: number,
   ) => void;
 }
@@ -371,8 +374,8 @@ export interface EpisodeItemProps {
 // Dialog component props
 export interface CastDialogProps {
   isOpen: boolean;
+  castId: string;
   castName: string;
-  movies: Movie[];
   onClose: () => void;
   onBack?: () => void;
   onMovieClick: (movieId: number | string) => void;
@@ -387,10 +390,10 @@ export interface InfoDialogProps {
   zIndex?: number;
 }
 
-export interface DetailDialogProps {
+export interface DiscoverDialogProps {
   isOpen: boolean;
-  title: string;
-  movies: Movie[];
+  attributeId: string;
+  attributeName: string;
   onClose: () => void;
   onBack?: () => void;
   onMovieClick: (movieId: number | string) => void;
@@ -420,6 +423,9 @@ export interface DialogHeaderProps {
   backdropUrl?: string;
   variant?: "default" | "cast" | "info";
   subtitle?: string;
+  isLoading?: boolean;
+  verified?: boolean;
+  gender?: string;
 }
 
 export interface CastDialogHeaderProps {
@@ -428,6 +434,9 @@ export interface CastDialogHeaderProps {
   onBack?: () => void;
   showBackButton?: boolean;
   backdropUrl: string;
+  isLoading?: boolean;
+  verified?: boolean;
+  gender?: string;
 }
 
 export interface SimpleDialogHeaderProps {

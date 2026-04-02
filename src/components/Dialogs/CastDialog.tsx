@@ -3,19 +3,34 @@
 import type { CastDialogProps } from "@/types/components";
 import BaseDialog from "@/components/UI/BaseDialog";
 import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
-import MovieGrid from "@/components/UI/MovieGrid";
 import CastInfo from "./CastInfo";
+import { usePerson, usePersonMovies } from "@/hooks/api/usePerson";
+import { getImageUrl } from "@/utils/movieHelpers";
+import { useMemo } from "react";
 
 export default function CastDialog({
   isOpen,
+  castId,
   castName,
-  movies,
   onClose,
   onBack,
   onMovieClick,
   backdropUrl,
   zIndex = 10000,
 }: CastDialogProps) {
+  const { data: personData } = usePerson(castId, isOpen);
+  const { data: personMovies } = usePersonMovies(castId, isOpen);
+
+  // Memoize movies array to prevent reference changes
+  const movies = useMemo(() => personMovies || [], [personMovies]);
+
+  // Use person backdrop from API if available, otherwise fallback to passed backdrop
+  const displayBackdrop = useMemo(() => {
+    return personData?.backdropPath
+      ? getImageUrl(personData.backdropPath, "original")
+      : backdropUrl;
+  }, [personData?.backdropPath, backdropUrl]);
+
   return (
     <BaseDialog
       isOpen={isOpen}
@@ -31,11 +46,15 @@ export default function CastDialog({
             onClose={handleClose}
             onBack={handleBack}
             showBackButton={!!onBack}
-            backdropUrl={backdropUrl}
+            backdropUrl={displayBackdrop}
             variant="cast"
             subtitle="Movies & TV Shows"
+            isLoading={!personData}
+            verified={personData?.verified}
+            gender={personData?.gender}
           />
           <CastInfo
+            castId={castId}
             castName={castName}
             movies={movies}
             onMovieClick={onMovieClick}

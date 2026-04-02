@@ -15,13 +15,11 @@ export const getContentRating = (data: Movie): string => {
     if (data.contentRating === "21_PLUS") return "A 21+";
   }
 
-  // Fallback logic for TMDB data
+  // Fallback logic for data without contentRating
   const year = new Date(
     data?.releaseDate || data?.firstAirDate || "",
   ).getFullYear();
-  const isAdult = data?.adult;
 
-  if (isAdult) return "A";
   if (year && year < 2000) return "U/A 18+";
 
   // Check genres array instead of genre_ids
@@ -33,18 +31,13 @@ export const getContentRating = (data: Movie): string => {
 
 /**
  * Determine video quality based on popularity and rating
- * Uses popularity and vote average to estimate available video quality
- * @param data - Movie object containing popularity and voteAverage
- * @returns Quality string (4K, FHD, HD, SD)
+ * Returns default quality since popularity and voteAverage are not available in new API
+ * @param data - Movie object
+ * @returns Quality string (HD as default)
  */
 export const getQuality = (data: Movie): string => {
-  const popularity = data?.popularity || 0;
-  const voteAverage = data?.voteAverage || 0;
-
-  if (popularity > 1000 && voteAverage > 8) return "4K";
-  if (popularity > 500 && voteAverage > 7) return "FHD";
-  if (popularity > 100 && voteAverage > 6) return "HD";
-  return "SD";
+  // Default to HD since we don't have popularity/voteAverage in new API
+  return "HD";
 };
 
 /**

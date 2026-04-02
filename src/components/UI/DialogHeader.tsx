@@ -11,16 +11,22 @@ export default function DialogHeader({
   showBackButton = false,
   backdropUrl,
   variant = "default",
+  isLoading = false,
+  verified,
+  gender,
 }: DialogHeaderProps) {
   // Cast variant with backdrop banner
-  if (variant === "cast" && backdropUrl) {
+  if (variant === "cast") {
     return (
       <DialogHeaderCast
         title={title}
         onClose={onClose}
         onBack={onBack}
         showBackButton={showBackButton}
-        backdropUrl={backdropUrl}
+        backdropUrl={backdropUrl || ""}
+        isLoading={isLoading}
+        verified={verified}
+        gender={gender}
       />
     );
   }

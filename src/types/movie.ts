@@ -29,17 +29,13 @@ export interface Audit {
 export interface Movie {
   id: string | number;
   title?: string;
-  overview: string;
+  overview?: string;
   backdropPath: string | null;
   posterPath: string | null;
   releaseDate?: string;
   firstAirDate?: string;
-  voteAverage: number;
-  voteCount: number;
-  popularity: number;
-  adult?: boolean;
   contentRating?: "18_PLUS" | "21_PLUS";
-  originalLanguage: string;
+  originalLanguage?: string;
   genres?: Genre[];
   casts?: Cast[];
   tags?: Tag[];
@@ -58,11 +54,43 @@ export interface Movie {
   // Extended details
   status?: string;
   tagline?: string;
-  createdBy?: Array<{ id: number; name: string; profilePath: string }>;
   studios?: Studio[];
 
   // Audit info
   audit?: Audit;
+}
+
+// Person type for cast/crew details
+export interface Person {
+  id: string | number;
+  contentType: "PERSON";
+  name: string;
+  roles: string[];
+  stageName?: string;
+  bio?: string;
+  birthDate?: string;
+  birthPlace?: string;
+  nationality?: string;
+  gender?: string;
+  height?: number;
+  verified: boolean;
+  active: boolean;
+  debutYear?: number;
+  careerStatus?: string;
+  profilePath?: string;
+  backdropPath?: string;
+  measurements?: {
+    bust?: number;
+    waist?: number;
+    hips?: number;
+    unit?: string;
+    bodyType?: string;
+    eyeColor?: string;
+    hairColor?: string;
+  };
+  tags?: Tag[];
+  categories?: Tag[];
+  specialties?: Tag[];
 }
 
 // API Response types
@@ -76,4 +104,10 @@ export interface MovieResponse {
   status: number;
   message: string;
   data: Movie;
+}
+
+export interface PersonResponse {
+  status: number;
+  message: string;
+  data: Person;
 }

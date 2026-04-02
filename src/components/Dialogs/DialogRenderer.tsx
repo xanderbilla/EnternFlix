@@ -5,7 +5,7 @@ import { DialogState } from "@/hooks/ui/useDialogManager";
 import { DialogRendererProps } from "@/types/components";
 import ExploreDialog from "./ExploreDialog";
 import CastDialog from "./CastDialog";
-import DetailDialog from "./DetailDialog";
+import DiscoverDialog from "./DiscoverDialog";
 import InfoDialog from "./InfoDialog";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
@@ -18,7 +18,7 @@ export default function DialogRenderer({
   onMovieClick,
   onInfoDialogOpen,
   onOpenCastDialog,
-  onOpenDetailDialog,
+  onOpenDiscoverDialog,
 }: DialogRendererProps) {
   // Render all dialogs in the stack (for collapse animations)
   return (
@@ -30,8 +30,11 @@ export default function DialogRenderer({
           title,
           movies,
           castName,
+          castId,
           backdropUrl,
           titleId,
+          attributeId,
+          attributeName,
           zIndex,
         } = dialog;
 
@@ -57,8 +60,8 @@ export default function DialogRenderer({
               <CastDialog
                 key={key}
                 isOpen={isOpen}
+                castId={castId || ""}
                 castName={castName || title}
-                movies={movies}
                 onClose={isTopDialog ? onClose : () => {}}
                 onBack={isTopDialog && hasBackNavigation ? onBack : undefined}
                 onMovieClick={(movieId) => {
@@ -73,13 +76,13 @@ export default function DialogRenderer({
               />
             );
 
-          case "detail":
+          case "discover":
             return (
-              <DetailDialog
+              <DiscoverDialog
                 key={key}
                 isOpen={isOpen}
-                title={title}
-                movies={movies}
+                attributeId={attributeId || ""}
+                attributeName={attributeName || title}
                 onClose={isTopDialog ? onClose : () => {}}
                 onBack={isTopDialog && hasBackNavigation ? onBack : undefined}
                 onMovieClick={onInfoDialogOpen || onMovieClick}
@@ -98,7 +101,7 @@ export default function DialogRenderer({
                     onInfoDialogOpen?.(id);
                   }}
                   onOpenCastDialog={onOpenCastDialog}
-                  onOpenDetailDialog={onOpenDetailDialog}
+                  onOpenDiscoverDialog={onOpenDiscoverDialog}
                 />
               </Suspense>
             );

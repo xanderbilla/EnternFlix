@@ -30,7 +30,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
     openExploreDialog,
     openInfoDialog,
     openCastDialog,
-    openDetailDialog,
+    openDiscoverDialog,
     goBack,
     closeDialog,
   } = useDialogManager();
@@ -192,7 +192,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
         onMovieClick={handleMovieClick}
         onInfoDialogOpen={handleMovieClick}
         onOpenCastDialog={openCastDialog}
-        onOpenDetailDialog={openDetailDialog}
+        onOpenDiscoverDialog={openDiscoverDialog}
       />
     </>
   );

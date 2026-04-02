@@ -69,6 +69,7 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
             genres={genres}
             moodTags={moodTags}
             isTV={!!isTV}
+            tagline={data?.tagline}
             onExploreClick={onExploreClick}
             onScrollToAbout={handleScrollToAbout}
           />
@@ -91,11 +92,15 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
           genres={genres}
           tags={tags}
           moodTags={moodTags}
-          productionCompanies={data?.production_companies || []}
+          productionCompanies={
+            data?.studios || data?.production_companies || []
+          }
           contentRating={data?.contentRating}
           releaseDate={data?.releaseDate || data?.firstAirDate}
           auditDate={data?.audit?.createdAt}
           isTV={!!isTV}
+          originCountry={data?.originCountry}
+          originalLanguage={data?.originalLanguage}
           onExploreClick={onExploreClick}
           movieData={data as any}
         />

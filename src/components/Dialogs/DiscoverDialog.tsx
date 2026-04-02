@@ -1,43 +1,51 @@
 "use client";
 
-import type { DetailDialogProps } from "@/types/components";
+import type { DiscoverDialogProps } from "@/types/components";
 import BaseDialog from "@/components/UI/BaseDialog";
 import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import MovieGrid from "@/components/UI/MovieGrid";
+import { useDiscoverByAttribute } from "@/hooks/api/useMovies";
+import { useMemo } from "react";
 
-export default function DetailDialog({
+export default function DiscoverDialog({
   isOpen,
-  title,
-  movies,
+  attributeId,
+  attributeName,
   onClose,
   onBack,
   onMovieClick,
   zIndex = 10000,
-}: DetailDialogProps) {
+}: DiscoverDialogProps) {
+  const { data: movies } = useDiscoverByAttribute(attributeId, isOpen);
+
+  // Memoize movies array to prevent reference changes
+  const displayMovies = useMemo(() => movies || [], [movies]);
+
   return (
     <BaseDialog
       isOpen={isOpen}
       onClose={onClose}
       onBack={onBack}
       zIndex={zIndex}
-      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] max-w-[1400px] h-[90vh] sm:h-[85vh] md:h-[80vh]"
+      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[75vw] max-w-[1200px] min-h-[90vh] max-h-[95vh]"
     >
       {({ handleClose, handleBack }) => (
-        <>
+        <div className="relative">
           <DialogHeader
-            title={title}
+            title={attributeName}
             onClose={handleClose}
             onBack={handleBack}
             showBackButton={!!onBack}
             variant="default"
           />
           <MovieGrid
-            movies={movies}
+            movies={displayMovies}
             onMovieClick={onMovieClick}
             columns={4}
             disableHover={true}
+            disableAnimation={true}
           />
-        </>
+        </div>
       )}
     </BaseDialog>
   );

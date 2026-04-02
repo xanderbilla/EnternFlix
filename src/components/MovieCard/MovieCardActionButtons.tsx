@@ -10,12 +10,27 @@ export default function MovieCardActionButtons({
   onInfoClick,
   handleKeyPress,
 }: MovieCardActionButtonsProps) {
+  const handlePlayClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onPlayClick();
+  };
+
+  const handleAddClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAddClick();
+  };
+
+  const handleLikeClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onLikeClick();
+  };
+
   return (
     <div className="flex flex-row items-center gap-2">
       <button
         className="w-8 h-8 bg-white rounded-full 
         flex justify-center items-center transition hover:bg-neutral-300"
-        onClick={onPlayClick}
+        onClick={handlePlayClick}
         onKeyDown={(e) => handleKeyPress(e, onPlayClick)}
         aria-label="Play"
       >
@@ -23,12 +38,12 @@ export default function MovieCardActionButtons({
       </button>
       <IconButton
         variant="add"
-        onClick={onAddClick}
+        onClick={handleAddClick}
         className="!w-8 !h-8 !p-1 !bg-white !border-0 hover:!bg-neutral-300 !text-black"
       />
       <IconButton
         variant="like"
-        onClick={onLikeClick}
+        onClick={handleLikeClick}
         className="!w-8 !h-8 !p-1 !bg-white !border-0 hover:!bg-neutral-300 !text-black"
       />
     </div>

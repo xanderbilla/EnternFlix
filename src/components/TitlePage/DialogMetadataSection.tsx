@@ -7,6 +7,7 @@ interface DialogMetadataSectionProps {
   genres: Genre[];
   moodTags: Tag[];
   isTV: boolean;
+  tagline?: string;
   onExploreClick?: (query: string, title: string, isCast: boolean) => void;
   onScrollToAbout: () => void;
 }
@@ -16,11 +17,21 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
   genres,
   moodTags,
   isTV,
+  tagline,
   onExploreClick,
   onScrollToAbout,
 }) => {
   return (
     <div className="space-y-3">
+      {/* Tagline - First, before cast */}
+      {tagline && (
+        <div className="pb-1">
+          <p className="text-white/70 text-sm italic leading-relaxed">
+            {tagline}
+          </p>
+        </div>
+      )}
+
       {/* Cast */}
       {casts.length > 0 && (
         <div className="text-sm">
@@ -29,7 +40,9 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
             {casts.slice(0, 3).map((cast, index) => (
               <span key={cast.id}>
                 <button
-                  onClick={() => onExploreClick?.(cast.name, cast.name, true)}
+                  onClick={() =>
+                    onExploreClick?.(cast.id.toString(), cast.name, true)
+                  }
                   className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
                 >
                   {cast.name}
@@ -62,7 +75,7 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
                 <button
                   onClick={() =>
                     onExploreClick?.(
-                      genre.name,
+                      genre.id.toString(),
                       `${genre.name} Movies & Shows`,
                       false,
                     )
@@ -100,7 +113,7 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
               <span key={tag.id}>
                 <button
                   onClick={() =>
-                    onExploreClick?.(tag.name, `${tag.name} Content`, false)
+                    onExploreClick?.(tag.id.toString(), tag.name, false)
                   }
                   className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
                 >

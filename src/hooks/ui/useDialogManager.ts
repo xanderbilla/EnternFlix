@@ -3,7 +3,7 @@
 import { useState, useCallback } from "react";
 import { Movie } from "@/types/movie";
 
-export type DialogType = "explore" | "info" | "cast" | "detail" | null;
+export type DialogType = "explore" | "info" | "cast" | "discover" | null;
 
 export interface DialogState {
   type: DialogType;
@@ -11,8 +11,11 @@ export interface DialogState {
   title: string;
   movies: Movie[];
   castName?: string;
+  castId?: string;
   backdropUrl?: string;
   titleId?: string;
+  attributeId?: string;
+  attributeName?: string;
   zIndex?: number;
   parentDialog?: DialogType;
 }
@@ -99,8 +102,8 @@ export function useDialogManager() {
 
   const openCastDialog = useCallback(
     (
+      castId: string,
       castName: string,
-      movies: Movie[],
       backdropUrl?: string,
       zIndex?: number,
     ) => {
@@ -130,9 +133,10 @@ export function useDialogManager() {
               type: "cast",
               isOpen: true,
               title: castName,
-              movies,
+              castId,
               castName,
               backdropUrl,
+              movies: [],
               zIndex,
             },
           ]);
@@ -145,9 +149,10 @@ export function useDialogManager() {
             type: "cast",
             isOpen: true,
             title: castName,
-            movies,
+            castId,
             castName,
             backdropUrl,
+            movies: [],
             zIndex,
           },
         ]);
@@ -156,8 +161,8 @@ export function useDialogManager() {
     [dialogStack.length, isTransitioning],
   );
 
-  const openDetailDialog = useCallback(
-    (title: string, movies: Movie[], zIndex?: number) => {
+  const openDiscoverDialog = useCallback(
+    (attributeId: string, attributeName: string, zIndex?: number) => {
       // If there's already a dialog open, do collapse → expand transition
       if (dialogStack.length > 0) {
         if (isTransitioning) return;
@@ -176,15 +181,17 @@ export function useDialogManager() {
           return updated;
         });
 
-        // Step 2: After collapse (500ms), add new detail dialog
+        // Step 2: After collapse (500ms), add new discover dialog
         setTimeout(() => {
           setDialogStack((prev) => [
             ...prev,
             {
-              type: "detail",
+              type: "discover",
               isOpen: true,
-              title,
-              movies,
+              title: attributeName,
+              attributeId,
+              attributeName,
+              movies: [],
               zIndex,
             },
           ]);
@@ -194,10 +201,12 @@ export function useDialogManager() {
         // No dialog open, just open directly
         setDialogStack([
           {
-            type: "detail",
+            type: "discover",
             isOpen: true,
-            title,
-            movies,
+            title: attributeName,
+            attributeId,
+            attributeName,
+            movies: [],
             zIndex,
           },
         ]);
@@ -309,7 +318,7 @@ export function useDialogManager() {
     openExploreDialog,
     openInfoDialog,
     openCastDialog,
-    openDetailDialog,
+    openDiscoverDialog,
     replaceDialog,
     goBack,
     closeDialog,

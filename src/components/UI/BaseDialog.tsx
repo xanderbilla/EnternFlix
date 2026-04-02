@@ -104,7 +104,7 @@ export default function BaseDialog({
       style={{ zIndex }}
       onClick={onBack ? handleBack : handleClose}
     >
-      <div className="min-h-full flex items-center justify-center pt-8">
+      <div className="min-h-full flex items-center justify-center py-8">
         <div
           className={`bg-zinc-900 rounded-lg shadow-2xl overflow-hidden transition-all duration-500 ease-in-out origin-center ${
             isClosing

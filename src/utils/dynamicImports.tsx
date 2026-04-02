@@ -70,11 +70,6 @@ export const DynamicInfoDialog = dynamic(
   { ssr: false },
 );
 
-export const DynamicDetailDialog = dynamic(
-  () => import("@/components/Dialogs/DetailDialog"),
-  { ssr: false },
-);
-
 export const DynamicCastDialog = dynamic(
   () => import("@/components/Dialogs/CastDialog"),
   { ssr: false },

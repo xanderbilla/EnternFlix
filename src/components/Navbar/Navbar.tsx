@@ -37,10 +37,10 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
         {/* Desktop Navigation */}
         <div className="flex-row ml-8 gap-8 hidden md:flex">
           <Link
-            href="/"
+            href="/movies"
             className="text-white hover:text-gray-300 transition cursor-pointer"
           >
-            Home
+            Movies
           </Link>
         </div>
 

@@ -62,6 +62,14 @@ export interface TitleData {
   voteAverage?: number;
   contentRating?: "18_PLUS" | "21_PLUS";
   createdBy?: Creator[];
+  originCountry?: string[];
+  originalLanguage?: string;
+  studios?: Array<{
+    id: string | number;
+    name: string;
+    coverPicture?: string;
+    logo_path?: string;
+  }>;
   production_companies?: Array<{
     id: string | number;
     name: string;
@@ -112,6 +120,8 @@ export interface DialogAboutSectionProps {
   releaseDate?: string;
   auditDate?: string;
   isTV: boolean;
+  originCountry?: string[];
+  originalLanguage?: string;
   onExploreClick?: (query: string, title: string, isCast?: boolean) => void;
   movieData?: import("./movie").Movie;
 }

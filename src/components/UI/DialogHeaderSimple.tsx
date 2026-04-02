@@ -7,8 +7,8 @@ export default function SimpleDialogHeader({
   onClose,
 }: SimpleDialogHeaderProps) {
   return (
-    <div className="flex items-center justify-center py-8 px-6 sticky top-0 bg-zinc-900 z-10">
-      <h2 className="text-white text-3xl md:text-4xl font-bold text-center">
+    <div className="flex items-center justify-center py-20 px-6 sticky top-0 bg-zinc-900 z-10">
+      <h2 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold text-center">
         {title}
       </h2>
 

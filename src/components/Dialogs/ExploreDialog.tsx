@@ -18,18 +18,19 @@ export default function ExploreDialog({
       isOpen={isOpen}
       onClose={onClose}
       zIndex={zIndex}
-      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[80vw] max-w-[1400px] h-[90vh] sm:h-[85vh] md:h-[80vh]"
+      className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[75vw] max-w-[1200px] min-h-[90vh] max-h-[95vh]"
     >
       {({ handleClose }) => (
-        <>
+        <div className="relative">
           <DialogHeader title={title} onClose={handleClose} variant="default" />
           <MovieGrid
             movies={movies}
             onMovieClick={onMovieClick}
             columns={4}
             disableHover={true}
+            disableAnimation={true}
           />
-        </>
+        </div>
       )}
     </BaseDialog>
   );

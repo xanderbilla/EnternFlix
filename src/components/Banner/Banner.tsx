@@ -4,7 +4,7 @@ import { useCallback, memo, lazy, Suspense } from "react";
 import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText } from "@/utils/contentHelpers";
-import { useRandomContent } from "@/hooks/api/useMovies";
+import { useBanner } from "@/hooks/api/useMovies";
 import { DynamicBannerContent as BannerContent } from "@/utils/dynamicImports";
 import { DynamicDialogRenderer as DialogRenderer } from "@/utils/dynamicImports";
 import { useDialogManager } from "@/hooks/ui/useDialogManager";
@@ -20,15 +20,15 @@ const Banner = () => {
     hasBackNavigation,
     openInfoDialog,
     openCastDialog,
-    openDetailDialog,
+    openDiscoverDialog,
     goBack,
     closeDialog,
   } = useDialogManager();
 
   const isFavoritesPage = pathname.includes("/favorites");
 
-  // Only use random content for home variant
-  const { data: movie, error } = useRandomContent();
+  // Use banner endpoint for home page
+  const { data: movie, error } = useBanner();
 
   const handleMoreInfo = useCallback(() => {
     if (movie?.id) {
@@ -37,8 +37,8 @@ const Banner = () => {
   }, [movie?.id, openInfoDialog]);
 
   const handleMovieChange = useCallback(
-    (newMovieId: string) => {
-      openInfoDialog(newMovieId, 9999);
+    (newMovieId: string | number) => {
+      openInfoDialog(newMovieId.toString(), 9999);
     },
     [openInfoDialog],
   );
@@ -56,7 +56,7 @@ const Banner = () => {
   const backdropUrl = getImageUrl(movie.backdropPath, "original");
 
   return (
-    <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
+    <div className="relative h-[85vh] md:h-[92vh] lg:h-[100vh]">
       {/* Backdrop Image - No Video */}
       <div
         className="absolute inset-0 w-full h-full bg-cover bg-center"
@@ -81,7 +81,7 @@ const Banner = () => {
         onMovieClick={handleMovieChange}
         onInfoDialogOpen={handleMovieChange}
         onOpenCastDialog={openCastDialog}
-        onOpenDetailDialog={openDetailDialog}
+        onOpenDiscoverDialog={openDiscoverDialog}
       />
     </div>
   );

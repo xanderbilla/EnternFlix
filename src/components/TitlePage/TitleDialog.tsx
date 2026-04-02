@@ -17,7 +17,7 @@ export default function TitleDialog({
   onClose,
   onMovieChange,
   onOpenCastDialog,
-  onOpenDetailDialog,
+  onOpenDiscoverDialog,
 }: TitleDialogProps) {
   const [shouldFetchData, setShouldFetchData] = useState(false);
   const { data, error } = useTitle(titleId, shouldFetchData);
@@ -25,18 +25,16 @@ export default function TitleDialog({
 
   // Use explore navigation hook for handling explore clicks
   const handleExploreClick = useCallback(
-    (name: string, title: string, isCast: boolean) => {
+    (idOrName: string, title: string, isCast?: boolean) => {
       if (isCast && onOpenCastDialog) {
-        // Open cast dialog
-        const castMovies = trendingData?.results || [];
-        onOpenCastDialog(name, castMovies, undefined, 10001);
-      } else if (onOpenDetailDialog) {
-        // Open detail dialog
-        const detailMovies = trendingData?.results || [];
-        onOpenDetailDialog(title, detailMovies, 10001);
+        // Open cast dialog with cast ID
+        onOpenCastDialog(idOrName, title, undefined, 10001);
+      } else if (onOpenDiscoverDialog) {
+        // Open discover dialog with attribute ID
+        onOpenDiscoverDialog(idOrName, title, 10001);
       }
     },
-    [trendingData, onOpenCastDialog, onOpenDetailDialog],
+    [onOpenCastDialog, onOpenDiscoverDialog],
   );
 
   const handleClose = useCallback(() => {

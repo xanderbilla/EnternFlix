@@ -13,7 +13,7 @@ export default function FavoritesBanner({ movie }: FavoritesBannerProps) {
     : null;
 
   return (
-    <div className="relative h-[85vh] md:h-[90vh] lg:h-[95vh]">
+    <div className="relative h-[85vh] md:h-[92vh] lg:h-[100vh]">
       {backdropUrl ? (
         <>
           <div

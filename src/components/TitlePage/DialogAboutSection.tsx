@@ -15,6 +15,8 @@ export default function DialogAboutSection({
   releaseDate,
   auditDate,
   isTV,
+  originCountry,
+  originalLanguage,
   onExploreClick,
   movieData,
 }: DialogAboutSectionProps) {
@@ -43,8 +45,37 @@ export default function DialogAboutSection({
     return dateObj.toLocaleDateString("en-US", options);
   };
 
+  // Convert ISO 639-1 language code to readable name
+  const formatLanguage = (langCode?: string) => {
+    if (!langCode) return null;
+
+    const languageNames = new Intl.DisplayNames(["en"], { type: "language" });
+    try {
+      return languageNames.of(langCode);
+    } catch {
+      return langCode.toUpperCase();
+    }
+  };
+
+  // Convert ISO 3166-1 country codes to readable names
+  const formatCountries = (countryCodes?: string[]) => {
+    if (!countryCodes || countryCodes.length === 0) return null;
+
+    const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
+    try {
+      return countryCodes
+        .map((code) => regionNames.of(code.toUpperCase()))
+        .filter(Boolean)
+        .join(", ");
+    } catch {
+      return countryCodes.join(", ");
+    }
+  };
+
   // Use release_date from API directly
   const formattedDate = releaseDate ? formatReleaseDate(releaseDate) : null;
+  const formattedLanguage = formatLanguage(originalLanguage);
+  const formattedCountries = formatCountries(originCountry);
 
   return (
     <div id="about-section" className="mt-12">
@@ -58,6 +89,22 @@ export default function DialogAboutSection({
           <div className="text-sm">
             <span className="text-gray-400">Release Date: </span>
             <span className="text-white/80">{formattedDate}</span>
+          </div>
+        )}
+
+        {/* Original Language */}
+        {formattedLanguage && (
+          <div className="text-sm">
+            <span className="text-gray-400">Original Language: </span>
+            <span className="text-white/80">{formattedLanguage}</span>
+          </div>
+        )}
+
+        {/* Origin Country */}
+        {formattedCountries && (
+          <div className="text-sm">
+            <span className="text-gray-400">Origin Country: </span>
+            <span className="text-white/80">{formattedCountries}</span>
           </div>
         )}
 
@@ -91,7 +138,9 @@ export default function DialogAboutSection({
               {casts.map((cast, index) => (
                 <span key={cast.id}>
                   <button
-                    onClick={() => onExploreClick?.(cast.name, cast.name, true)}
+                    onClick={() =>
+                      onExploreClick?.(cast.id.toString(), cast.name, true)
+                    }
                     className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
                   >
                     {cast.name}
@@ -113,7 +162,7 @@ export default function DialogAboutSection({
                   <button
                     onClick={() =>
                       onExploreClick?.(
-                        genre.name,
+                        genre.id.toString(),
                         `${genre.name} Movies & Shows`,
                         false,
                       )
@@ -138,7 +187,7 @@ export default function DialogAboutSection({
                 <span key={tag.id}>
                   <button
                     onClick={() =>
-                      onExploreClick?.(tag.name, `${tag.name} Content`, false)
+                      onExploreClick?.(tag.id.toString(), tag.name, false)
                     }
                     className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
                   >
@@ -162,7 +211,7 @@ export default function DialogAboutSection({
                 <span key={tag.id}>
                   <button
                     onClick={() =>
-                      onExploreClick?.(tag.name, `${tag.name} Content`, false)
+                      onExploreClick?.(tag.id.toString(), tag.name, false)
                     }
                     className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
                   >

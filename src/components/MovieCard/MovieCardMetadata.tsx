@@ -17,6 +17,9 @@ export default function MovieCardMetadata({
   const rating = getContentRating(data);
   const quality = getQuality(data);
 
+  // Get at most 2 tags from API response
+  const displayTags = data.tags?.slice(0, 2) || [];
+
   return (
     <div className="flex flex-col gap-2 mt-2">
       <button
@@ -40,10 +43,19 @@ export default function MovieCardMetadata({
         </span>
       </div>
 
-      {/* Second row: Genres */}
-      <div className="flex flex-row gap-1 items-center text-white text-xs font-light">
-        <span>{genres}</span>
-      </div>
+      {/* Second row: Tags (at most 2 from API) */}
+      {displayTags.length > 0 && (
+        <div className="flex flex-row gap-1 items-center text-white text-xs font-light">
+          {displayTags.map((tag, index) => (
+            <span key={tag.id} className="flex items-center gap-1">
+              <span>{tag.name}</span>
+              {index < displayTags.length - 1 && (
+                <span className="text-white/30">•</span>
+              )}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

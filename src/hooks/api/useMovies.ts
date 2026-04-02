@@ -8,13 +8,20 @@ import { queryKeys } from "@/constants/queryKeys";
 
 // Custom API hooks
 export const useCustomMovies = () => {
-  return useQuery<Movie[], Error>({
+  return useQuery<PaginatedResponse<Movie>, Error>({
     queryKey: ["custom", "movies"],
     queryFn: async () => {
       const response = await customAxios.get<MoviesResponse>(
         requests.fetchAllMovies,
       );
-      return response.data.data;
+      const movies = response.data.data;
+      // Format as TMDB-style response for compatibility
+      return {
+        results: movies,
+        page: 1,
+        total_pages: 1,
+        total_results: movies.length,
+      };
     },
     retry: 2,
   });
@@ -92,6 +99,53 @@ export const useRandomContent = () => {
       }
       throw new Error("No content available");
     },
+    retry: 2,
+  });
+};
+
+// Banner hook for home page
+export const useBanner = () => {
+  return useQuery<Movie, Error>({
+    queryKey: ["banner"],
+    queryFn: async () => {
+      const response = await customAxios.get<MovieResponse>(
+        requests.fetchBanner,
+      );
+      return response.data.data;
+    },
+    retry: 2,
+  });
+};
+
+// Banner hook for specific page (e.g., MOVIE, TV)
+export const useBannerByPage = (page: string) => {
+  return useQuery<Movie, Error>({
+    queryKey: ["banner", page],
+    queryFn: async () => {
+      const response = await customAxios.get<MovieResponse>(
+        requests.fetchBannerByPage(page),
+      );
+      return response.data.data;
+    },
+    enabled: !!page,
+    retry: 2,
+  });
+};
+
+// Discover by attribute hook (tags, genres, categories, specialties, mood tags)
+export const useDiscoverByAttribute = (
+  attributeId: string,
+  enabled: boolean = true,
+) => {
+  return useQuery<Movie[], Error>({
+    queryKey: ["discover", "attribute", attributeId],
+    queryFn: async () => {
+      const response = await customAxios.get<MoviesResponse>(
+        requests.fetchDiscoverByAttribute(attributeId),
+      );
+      return response.data.data;
+    },
+    enabled: enabled && !!attributeId,
     retry: 2,
   });
 };

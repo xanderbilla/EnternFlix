@@ -26,6 +26,13 @@ export interface Audit {
   isDeleted: boolean;
 }
 
+export type AssetType = "TRAILER" | "TEASER" | "CLIP" | "PROMO" | "BTS";
+
+export interface Asset {
+  asset: AssetType;
+  key: string[];
+}
+
 export interface Movie {
   id: string | number;
   title?: string;
@@ -42,6 +49,7 @@ export interface Movie {
   contentType?: "MOVIE" | "TV" | "PERSON";
   originCountry?: string[];
   moodTags?: Tag[];
+  assets?: Asset[];
 
   // TV Show specific
   numberOfSeasons?: number;

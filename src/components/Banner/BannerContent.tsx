@@ -8,6 +8,7 @@ export default function BannerContent({
   title,
   description,
   movieId,
+  contentRating,
   onMoreInfoClick,
 }: BannerContentProps) {
   return (

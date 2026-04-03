@@ -121,6 +121,7 @@ export interface BannerContentProps {
   title: string;
   description: string;
   movieId: number | string;
+  contentRating?: string;
   onMoreInfoClick: () => void;
 }
 

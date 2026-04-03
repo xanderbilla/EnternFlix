@@ -11,34 +11,27 @@ export default function DialogVideoSection({
   data,
   onClose,
 }: DialogVideoSectionProps) {
-  const [showVideo, setShowVideo] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  useEffect(() => {
-    timeoutRef.current = setTimeout(() => setShowVideo(true), 2000);
-    return () => {
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
-
   const handleVideoEnded = () => {
+    setIsVideoPlaying(false);
     setVideoEnded(true);
-    setShowVideo(false);
   };
 
   const handleVideoLoaded = () => {
-    setVideoLoaded(true);
+    setIsVideoPlaying(true);
   };
 
   const handleReplayVideo = () => {
-    setVideoEnded(false);
-    setVideoLoaded(false);
-    setShowVideo(true);
-    if (videoRef.current) videoRef.current.currentTime = 0;
+    if (videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play();
+      setIsVideoPlaying(true);
+      setVideoEnded(false);
+    }
   };
 
   return (
@@ -46,8 +39,8 @@ export default function DialogVideoSection({
       {data && (
         <>
           <VideoPlayer
-            showVideo={showVideo}
-            videoLoaded={videoLoaded}
+            showVideo={true}
+            videoLoaded={isVideoPlaying}
             isMuted={isMuted}
             videoRef={videoRef}
             data={data}
@@ -84,13 +77,15 @@ export default function DialogVideoSection({
             title={data.title ?? data.name ?? data.originalName ?? ""}
           />
 
-          {showVideo && (
+          {/* Volume Control - Only show when video is playing */}
+          {isVideoPlaying && (
             <VideoControls
               isMuted={isMuted}
               onToggleMute={() => setIsMuted(!isMuted)}
             />
           )}
 
+          {/* Replay Button - Only show when video has ended */}
           {videoEnded && (
             <div className="absolute bottom-6 right-6">
               <CircularButton

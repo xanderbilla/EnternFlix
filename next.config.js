@@ -2,100 +2,67 @@ const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
 
-// Helper function to extract hostname from URL
-const getHostnameFromUrl = (url) => {
+const TMDB_IMAGE_HOST = "image.tmdb.org";
+
+function hostFromUrl(url) {
   if (!url) return null;
   try {
-    const urlObj = new URL(url);
-    return urlObj.hostname;
+    return new URL(url).hostname;
   } catch {
     return null;
   }
-};
+}
 
-// Helper function to extract protocol from URL
-const getProtocolFromUrl = (url) => {
+function protoFromUrl(url) {
   if (!url) return "https";
   try {
-    const urlObj = new URL(url);
-    return urlObj.protocol.replace(":", "");
+    return new URL(url).protocol.replace(":", "");
   } catch {
     return "https";
   }
-};
+}
 
-// Build remote patterns from environment variables
-const buildRemotePatterns = () => {
+function buildRemotePatterns() {
   const patterns = [
-    // TMDB images (always HTTPS)
-    {
-      protocol: "https",
-      hostname: "image.tmdb.org",
-      pathname: "/**",
-    },
+    { protocol: "https", hostname: TMDB_IMAGE_HOST, pathname: "/**" },
   ];
 
-  // Add S3 image base URL if configured
-  const s3ImageUrl = process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL;
-  if (s3ImageUrl) {
-    const s3Hostname = getHostnameFromUrl(s3ImageUrl);
-    if (s3Hostname) {
-      patterns.push({
-        protocol: getProtocolFromUrl(s3ImageUrl),
-        hostname: s3Hostname,
-        pathname: "/**",
-      });
-    }
-  }
+  const seen = new Set([TMDB_IMAGE_HOST]);
+  const push = (proto, host) => {
+    if (!host || seen.has(host)) return;
+    seen.add(host);
+    patterns.push({ protocol: proto, hostname: host, pathname: "/**" });
+  };
 
-  // Fallback S3 hostnames (for development)
-  // Add both dev and prod S3 buckets
-  patterns.push(
-    {
-      protocol: "https",
-      hostname: "bi8s-dev.s3.us-east-1.amazonaws.com",
-      pathname: "/**",
-    },
-    {
-      protocol: "https",
-      hostname: "bi8s.s3.us-east-1.amazonaws.com",
-      pathname: "/**",
-    },
+  push(
+    protoFromUrl(process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL),
+    hostFromUrl(process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL),
+  );
+  push(
+    protoFromUrl(process.env.NEXT_PUBLIC_CUSTOM_API_URL),
+    hostFromUrl(process.env.NEXT_PUBLIC_CUSTOM_API_URL),
   );
 
-  // Add custom API URL if configured
-  const customApiUrl = process.env.NEXT_PUBLIC_CUSTOM_API_URL;
-  if (customApiUrl) {
-    const apiHostname = getHostnameFromUrl(customApiUrl);
-    if (apiHostname) {
-      patterns.push({
-        protocol: getProtocolFromUrl(customApiUrl),
-        hostname: apiHostname,
-        pathname: "/**",
-      });
+  const extra = (process.env.NEXT_PUBLIC_IMAGE_HOSTS || "")
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean);
+  for (const entry of extra) {
+    if (entry.includes("://")) {
+      push(protoFromUrl(entry), hostFromUrl(entry));
+    } else {
+      push("https", entry);
     }
   }
-
-  // Fallback API hostnames
-  patterns.push(
-    {
-      protocol: "https",
-      hostname: "api.xanderbilla.com",
-      pathname: "/**",
-    },
-    {
-      protocol: "http",
-      hostname: "localhost",
-      pathname: "/**",
-    },
-  );
 
   return patterns;
-};
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: "standalone",
+  poweredByHeader: false,
+  reactStrictMode: true,
   images: {
     remotePatterns: buildRemotePatterns(),
     formats: ["image/avif", "image/webp"],
@@ -105,9 +72,24 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-  // Enable compiler optimizations
   compiler: {
     removeConsole: process.env.NODE_ENV === "production",
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Content-Type-Options", value: "nosniff" },
+          { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+        ],
+      },
+    ];
   },
 };
 

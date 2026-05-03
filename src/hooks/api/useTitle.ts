@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import axios from "@/helper/axios";
-import customAxios from "@/helper/customAxios";
-import requests from "@/helper/request";
+import axios from "@/lib/api/axios";
+import customAxios from "@/lib/api/customAxios";
+import requests from "@/lib/api/request";
+import { config } from "@/lib/env/env";
+import { queryKeys } from "@/lib/query/queryKeys";
+import { logger } from "@/lib/logger/logger";
 import { Movie, MovieResponse } from "@/types/movie";
 
 export interface TVShow extends Movie {
@@ -24,63 +27,53 @@ export interface TitleData {
   mediaType: MediaType;
 }
 
-const key = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+const key = config.tmdb.apiKey;
 
-const fetchTitleData = async (id: string): Promise<TitleData> => {
-  // Try custom API first (if ID looks like UUID or is long)
-  if (id.includes("-") || id.length > 10) {
-    try {
-      const response = await customAxios.get<MovieResponse>(
-        requests.fetchMovieById(id),
-      );
-      const movie = response.data.data;
-      return {
-        content: movie,
-        mediaType: "movie",
-      };
-    } catch (error) {
-      // Custom API failed, fallback to TMDB
-    }
-  }
+function looksLikeCustomId(id: string): boolean {
+  return id.includes("-") || id.length > 10;
+}
 
-  // Fallback to TMDB API
+async function fetchFromCustom(id: string): Promise<TitleData | null> {
   try {
-    // Try fetching as a TV show first
-    const tvResponse = await axios.get(
+    const response = await customAxios.get<MovieResponse>(
+      requests.fetchMovieById(id),
+    );
+    return { content: response.data.data, mediaType: "movie" };
+  } catch (error) {
+    logger.debug("[useTitle] custom API miss, falling back to TMDB", id, error);
+    return null;
+  }
+}
+
+async function fetchFromTmdb(id: string): Promise<TitleData> {
+  try {
+    const tv = await axios.get(
       `tv/${id}?api_key=${key}&append_to_response=seasons`,
     );
-
-    if (tvResponse.data) {
-      return {
-        content: tvResponse.data,
-        mediaType: "tv",
-      };
-    }
-  } catch (error) {
-    // If TV show fetch fails, try as a movie
-    try {
-      const movieResponse = await axios.get(`movie/${id}?api_key=${key}`);
-
-      if (movieResponse.data) {
-        return {
-          content: movieResponse.data,
-          mediaType: "movie",
-        };
-      }
-    } catch (movieError) {
-      throw new Error("Content not found");
-    }
+    if (tv.data) return { content: tv.data, mediaType: "tv" };
+  } catch {
+    // try movie next
   }
 
-  throw new Error("Content not found");
-};
+  const movie = await axios.get(`movie/${id}?api_key=${key}`);
+  if (movie.data) return { content: movie.data, mediaType: "movie" };
 
-export const useTitle = (id: string, enabled: boolean = true) => {
-  return useQuery({
-    queryKey: ["title", id],
+  throw new Error("Content not found");
+}
+
+async function fetchTitleData(id: string): Promise<TitleData> {
+  if (looksLikeCustomId(id)) {
+    const fromCustom = await fetchFromCustom(id);
+    if (fromCustom) return fromCustom;
+  }
+  return fetchFromTmdb(id);
+}
+
+export const useTitle = (id: string, enabled: boolean = true) =>
+  useQuery({
+    queryKey: queryKeys.title(id),
     queryFn: () => fetchTitleData(id),
     enabled: !!id && enabled,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
-};

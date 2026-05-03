@@ -1,14 +1,8 @@
-/**
- * Centralized React Query keys for type-safety and consistency
- */
-
 export const queryKeys = {
-  // Trending
   trending: ["trending"] as const,
   trendingMovies: ["trending", "movies"] as const,
   trendingTV: ["trending", "tv"] as const,
 
-  // Movies
   movies: {
     popular: ["movies", "popular"] as const,
     topRated: ["movies", "topRated"] as const,
@@ -20,7 +14,6 @@ export const queryKeys = {
     thriller: ["movies", "thriller"] as const,
   },
 
-  // TV Shows
   tv: {
     popular: ["tv", "popular"] as const,
     topRated: ["tv", "topRated"] as const,
@@ -30,10 +23,8 @@ export const queryKeys = {
     crime: ["tv", "crime"] as const,
   },
 
-  // Netflix Originals
   netflixOriginals: ["netflix", "originals"] as const,
 
-  // Anime
   anime: {
     trending: ["anime", "trending"] as const,
     movies: ["anime", "movies"] as const,
@@ -43,18 +34,21 @@ export const queryKeys = {
     action: ["anime", "action"] as const,
   },
 
-  // Random content
   randomContent: ["random", "content"] as const,
 
-  // Category content
   categoryContent: (category: string) => ["category", category] as const,
 
-  // Title details
   title: (id: string) => ["title", id] as const,
 
-  // Search
   search: (query: string) => ["search", query] as const,
 
-  // Genres
   genres: (category: string) => ["genres", category] as const,
+
+  customContent: (type: string) => ["custom", "content", type] as const,
+  customMovie: (id: string) => ["custom", "movie", id] as const,
+  banner: (type: string) => ["banner", type] as const,
+  discover: (type: string, content: string) =>
+    ["discover", type, content] as const,
+  discoverByAttribute: (attributeId: string, content: string) =>
+    ["discover", "attribute", attributeId, content] as const,
 } as const;

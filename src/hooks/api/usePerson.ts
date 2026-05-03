@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import customAxios from "@/helper/customAxios";
-import requests from "@/helper/request";
+import customAxios from "@/lib/api/customAxios";
+import requests from "@/lib/api/request";
 import { Person, PersonResponse } from "@/types/movie";
 import type { MoviesResponse } from "@/types/movie";
 
@@ -18,7 +18,7 @@ export const usePerson = (id: string, enabled: boolean = true) => {
     },
     enabled: enabled && !!id,
     retry: 2,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };
@@ -41,7 +41,7 @@ export const usePersonMovies = (
     },
     enabled: enabled && !!id,
     retry: 2,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };

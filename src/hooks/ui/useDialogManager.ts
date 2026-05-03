@@ -24,7 +24,6 @@ export function useDialogManager() {
   const [dialogStack, setDialogStack] = useState<DialogState[]>([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  // Get current dialog (top of stack)
   const currentDialog = dialogStack[dialogStack.length - 1] || {
     type: null,
     isOpen: false,
@@ -49,14 +48,11 @@ export function useDialogManager() {
 
   const openInfoDialog = useCallback(
     (titleId: string, zIndex?: number) => {
-      // If there's already a dialog open, do collapse → expand transition
-      // But keep the previous dialog in stack for back navigation
       if (dialogStack.length > 0) {
         if (isTransitioning) return;
 
         setIsTransitioning(true);
 
-        // Step 1: Collapse current dialog (but keep in stack)
         setDialogStack((prev) => {
           const updated = [...prev];
           if (updated.length > 0) {
@@ -68,13 +64,12 @@ export function useDialogManager() {
           return updated;
         });
 
-        // Step 2: After collapse (500ms), add new info dialog
         setTimeout(() => {
           setDialogStack((prev) => [
             ...prev,
             {
               type: "info",
-              isOpen: true, // Open immediately, BaseDialog will handle animation
+              isOpen: true,
               title: "",
               movies: [],
               titleId,
@@ -84,7 +79,6 @@ export function useDialogManager() {
           setIsTransitioning(false);
         }, 550); // Slightly longer to ensure previous dialog is gone
       } else {
-        // No dialog open, just open directly
         setDialogStack([
           {
             type: "info",
@@ -107,13 +101,11 @@ export function useDialogManager() {
       backdropUrl?: string,
       zIndex?: number,
     ) => {
-      // If there's already a dialog open, do collapse → expand transition
       if (dialogStack.length > 0) {
         if (isTransitioning) return;
 
         setIsTransitioning(true);
 
-        // Step 1: Collapse current dialog
         setDialogStack((prev) => {
           const updated = [...prev];
           if (updated.length > 0) {
@@ -125,7 +117,6 @@ export function useDialogManager() {
           return updated;
         });
 
-        // Step 2: After collapse (500ms), add new cast dialog
         setTimeout(() => {
           setDialogStack((prev) => [
             ...prev,
@@ -143,7 +134,6 @@ export function useDialogManager() {
           setIsTransitioning(false);
         }, 550);
       } else {
-        // No dialog open, just open directly
         setDialogStack([
           {
             type: "cast",
@@ -163,13 +153,11 @@ export function useDialogManager() {
 
   const openDiscoverDialog = useCallback(
     (attributeId: string, attributeName: string, zIndex?: number) => {
-      // If there's already a dialog open, do collapse → expand transition
       if (dialogStack.length > 0) {
         if (isTransitioning) return;
 
         setIsTransitioning(true);
 
-        // Step 1: Collapse current dialog
         setDialogStack((prev) => {
           const updated = [...prev];
           if (updated.length > 0) {
@@ -181,7 +169,6 @@ export function useDialogManager() {
           return updated;
         });
 
-        // Step 2: After collapse (500ms), add new discover dialog
         setTimeout(() => {
           setDialogStack((prev) => [
             ...prev,
@@ -198,7 +185,6 @@ export function useDialogManager() {
           setIsTransitioning(false);
         }, 550);
       } else {
-        // No dialog open, just open directly
         setDialogStack([
           {
             type: "discover",
@@ -215,14 +201,12 @@ export function useDialogManager() {
     [dialogStack.length, isTransitioning],
   );
 
-  // Replace current dialog with new one (collapse → expand)
   const replaceDialog = useCallback(
     (newDialog: DialogState, onComplete?: () => void) => {
       if (isTransitioning) return;
 
       setIsTransitioning(true);
 
-      // Step 1: Collapse current dialog
       setDialogStack((prev) => {
         const updated = [...prev];
         if (updated.length > 0) {
@@ -234,7 +218,6 @@ export function useDialogManager() {
         return updated;
       });
 
-      // Step 2: After collapse animation (500ms), replace with new dialog
       setTimeout(() => {
         setDialogStack((prev) => {
           const updated = [...prev];
@@ -248,13 +231,11 @@ export function useDialogManager() {
     [isTransitioning],
   );
 
-  // Go back (collapse current → expand previous)
   const goBack = useCallback(() => {
     if (isTransitioning || dialogStack.length === 0) return;
 
     setIsTransitioning(true);
 
-    // Step 1: Collapse current dialog
     setDialogStack((prev) => {
       const updated = [...prev];
       if (updated.length > 0) {
@@ -266,11 +247,9 @@ export function useDialogManager() {
       return updated;
     });
 
-    // Step 2: After collapse animation (500ms), remove from stack and reopen previous
     setTimeout(() => {
       setDialogStack((prev) => {
         const updated = prev.slice(0, -1);
-        // Reopen the previous dialog (now at top of stack)
         if (updated.length > 0) {
           updated[updated.length - 1] = {
             ...updated[updated.length - 1],
@@ -283,13 +262,11 @@ export function useDialogManager() {
     }, 500);
   }, [dialogStack.length, isTransitioning]);
 
-  // Close all dialogs
   const closeDialog = useCallback(() => {
     if (isTransitioning) return;
 
     setIsTransitioning(true);
 
-    // Collapse current dialog
     setDialogStack((prev) => {
       const updated = [...prev];
       if (updated.length > 0) {
@@ -301,7 +278,6 @@ export function useDialogManager() {
       return updated;
     });
 
-    // After animation, clear stack
     setTimeout(() => {
       setDialogStack([]);
       setIsTransitioning(false);

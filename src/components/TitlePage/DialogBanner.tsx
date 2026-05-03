@@ -31,14 +31,11 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
     }
   };
 
-  // Extract release year from the API - use actual value even if it's 0001
   const releaseYear = data ? getReleaseYear(data as any) : "Unknown";
 
-  // Check contentType first, then fall back to other indicators
   const isTV = data ? getContentType(data as any) === "TV" : false;
   const numberOfSeasons = data?.numberOfSeasons || 1;
 
-  // Get data from API
   const casts = data?.casts || [];
   const genres = data?.genres || [];
   const tags = data?.tags || [];

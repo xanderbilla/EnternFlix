@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import CircularButton from "@/components/UI/CircularButton";
 import VideoPlayer from "./VideoPlayer";
 import VideoControls from "./VideoControls";
@@ -75,6 +75,9 @@ export default function DialogVideoSection({
 
           <DialogActionButtons
             title={data.title ?? data.name ?? data.originalName ?? ""}
+            contentId={data.id?.toString() || ""}
+            contentType={data.contentType || "MOVIE"}
+            onClose={onClose}
           />
 
           {/* Volume Control - Only show when video is playing */}

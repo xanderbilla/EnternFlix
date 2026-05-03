@@ -4,11 +4,6 @@ interface UseDropdownReturn {
   dropdownRef: React.RefObject<HTMLDivElement | null>;
 }
 
-/**
- * Hook that provides a ref and handles click-outside-to-close behavior
- * @param isOpen - Current open state from parent component
- * @param onClose - Callback to close the dropdown
- */
 export function useDropdown(
   isOpen: boolean,
   onClose: () => void,

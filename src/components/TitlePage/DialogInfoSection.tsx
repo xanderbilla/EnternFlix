@@ -18,7 +18,6 @@ function DialogInfoSection({
   contentRating,
   movieData,
 }: DialogInfoSectionProps) {
-  // Use centralized content rating utility
   const rating = movieData
     ? getContentRating(movieData)
     : contentRating === "18_PLUS"
@@ -27,10 +26,8 @@ function DialogInfoSection({
         ? "A 21+"
         : "U/A 16+";
 
-  // Use centralized quality utility
   const quality = movieData ? getQuality(movieData) : "HD";
 
-  // Use centralized duration utility
   const duration = movieData ? getDuration(movieData) : "2h 30m";
 
   return (

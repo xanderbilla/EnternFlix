@@ -23,14 +23,11 @@ export default function TitleDialog({
   const { data, error } = useTitle(titleId, shouldFetchData);
   const { data: trendingData } = useTrending();
 
-  // Use explore navigation hook for handling explore clicks
   const handleExploreClick = useCallback(
     (idOrName: string, title: string, isCast?: boolean) => {
       if (isCast && onOpenCastDialog) {
-        // Open cast dialog with cast ID
         onOpenCastDialog(idOrName, title, undefined, 10001);
       } else if (onOpenDiscoverDialog) {
-        // Open discover dialog with attribute ID
         onOpenDiscoverDialog(idOrName, title, 10001);
       }
     },
@@ -43,18 +40,22 @@ export default function TitleDialog({
 
   useEffect(() => {
     if (isOpen) {
-      // Start fetching data after dialog animation completes (500ms)
+      // Debounced fetch gating: only enable the network request 500ms after
+      // the dialog opens (avoids fetch-on-flicker when users brush past).
+      // Resetting on close is required so a subsequent open re-arms the timer.
+      // This is a synchronization with an external system (the data layer)
+      // and cannot be expressed as a pure derivation.
       const fetchTimer = setTimeout(() => {
         setShouldFetchData(true);
       }, 500);
 
       return () => clearTimeout(fetchTimer);
     } else {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setShouldFetchData(false);
     }
   }, [isOpen]);
 
-  // Handle escape key press
   useEffect(() => {
     const handleEscapeKey = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isOpen) {
@@ -89,7 +90,6 @@ export default function TitleDialog({
       return null;
     }
 
-    // Type assertion to help TypeScript understand the data structure
     const titleData = data as TitleData;
 
     return (
@@ -105,10 +105,8 @@ export default function TitleDialog({
   };
 
   return (
-    <>
-      <InfoDialog isOpen={isOpen} onClose={onClose} zIndex={9999}>
-        {renderContent()}
-      </InfoDialog>
-    </>
+    <InfoDialog isOpen={isOpen} onClose={onClose} zIndex={9999}>
+      {renderContent()}
+    </InfoDialog>
   );
 }

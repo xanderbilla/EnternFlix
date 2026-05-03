@@ -30,6 +30,11 @@ export function useTabScroll({ numberOfSeasons }: UseTabScrollProps) {
   };
 
   useEffect(() => {
+    // Initial measurement must happen post-mount so we can read DOM
+    // dimensions (scrollWidth/clientWidth). React Compiler flags this as
+    // set-state-in-effect, but it is the canonical pattern for layout
+    // measurement and there is no event/derivation that can replace it.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkScrollButtons();
     window.addEventListener("resize", checkScrollButtons);
     return () => window.removeEventListener("resize", checkScrollButtons);

@@ -39,18 +39,15 @@ function MovieGrid({
     }[columns] ||
     "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5";
 
-  // Memoize the static style to prevent re-renders
   const staticStyle = useMemo(
     () => ({ opacity: 1, transform: "scale(1)" }),
     [],
   );
 
-  // MovieCard component
   const MovieCardItem = ({ movie, index }: { movie: Movie; index: number }) => {
     const backdropUrl = getImageUrl(movie?.backdropPath, "w780");
     const positionClass = getCardPositionClass(index, columns);
 
-    // Calculate animation style once per item
     const animationStyle = disableAnimation
       ? staticStyle
       : {
@@ -97,7 +94,8 @@ function MovieGrid({
             handleKeyPress={handleKeyPress}
           >
             <MovieCardActionButtons
-              onPlayClick={() => {}}
+              contentId={movie.id?.toString() || ""}
+              contentType={movie.contentType || "MOVIE"}
               onAddClick={() => {}}
               onLikeClick={() => {}}
               onInfoClick={() => onMovieClick(movie.id)}
@@ -136,5 +134,4 @@ function MovieGrid({
   );
 }
 
-// Memoize the component to prevent unnecessary re-renders
 export default memo(MovieGrid);

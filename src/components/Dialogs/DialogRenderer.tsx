@@ -20,7 +20,6 @@ export default function DialogRenderer({
   onOpenCastDialog,
   onOpenDiscoverDialog,
 }: DialogRendererProps) {
-  // Render all dialogs in the stack (for collapse animations)
   return (
     <>
       {dialogStack.map((dialog, index) => {

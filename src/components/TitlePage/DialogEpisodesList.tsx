@@ -25,7 +25,6 @@ function DialogEpisodesList({
     setShowAllEpisodes((prev) => !prev);
   }, []);
 
-  // Reset to collapsed state when season changes
   const handleSeasonChange = useCallback(
     (season: number) => {
       setShowAllEpisodes(false);

@@ -2,7 +2,7 @@
 
 import type { CastDialogHeaderProps } from "@/types/components";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 export default function CastDialogHeader({
   title,
@@ -15,21 +15,14 @@ export default function CastDialogHeader({
   gender,
 }: CastDialogHeaderProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
-  const [showImage, setShowImage] = useState(false);
-
-  // Reset image loaded state when backdropUrl changes
-  useEffect(() => {
-    if (backdropUrl) {
-      setImageLoaded(false);
-      setShowImage(true);
-    }
-  }, [backdropUrl]);
 
   return (
     <div className="relative h-[36rem] overflow-hidden bg-transparent">
-      {/* Backdrop Image - Only render if we have a URL and should show */}
-      {backdropUrl && showImage && (
+      {/* Backdrop Image. Keying on backdropUrl remounts this subtree when the
+          URL changes, which naturally resets `imageLoaded` without an effect. */}
+      {backdropUrl && (
         <div
+          key={backdropUrl}
           className={`absolute inset-0 transition-opacity duration-700 ${imageLoaded ? "opacity-100" : "opacity-0"}`}
         >
           <Image

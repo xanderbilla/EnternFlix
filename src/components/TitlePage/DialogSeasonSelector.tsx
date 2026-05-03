@@ -12,7 +12,6 @@ function DialogSeasonSelector({
   const [showSeasonDropdown, setShowSeasonDropdown] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -32,7 +31,6 @@ function DialogSeasonSelector({
     };
   }, [showSeasonDropdown]);
 
-  // If only one season, show static text without dropdown
   if (numberOfSeasons === 1) {
     return (
       <div className="relative">

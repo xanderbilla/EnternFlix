@@ -20,7 +20,6 @@ export default function DialogAboutSection({
   onExploreClick,
   movieData,
 }: DialogAboutSectionProps) {
-  // Use centralized content rating utility if movieData is available
   const rating = movieData
     ? getContentRating(movieData)
     : contentRating === "18_PLUS"
@@ -29,12 +28,10 @@ export default function DialogAboutSection({
         ? "A 21+"
         : "U/A 16+";
 
-  // Format release date to "March 05, 2026"
   const formatReleaseDate = (date?: string) => {
     if (!date) return null;
 
     const dateObj = new Date(date);
-    // Check if date is valid
     if (isNaN(dateObj.getTime())) return null;
 
     const options: Intl.DateTimeFormatOptions = {
@@ -45,7 +42,6 @@ export default function DialogAboutSection({
     return dateObj.toLocaleDateString("en-US", options);
   };
 
-  // Convert ISO 639-1 language code to readable name
   const formatLanguage = (langCode?: string) => {
     if (!langCode) return null;
 
@@ -57,7 +53,6 @@ export default function DialogAboutSection({
     }
   };
 
-  // Convert ISO 3166-1 country codes to readable names
   const formatCountries = (countryCodes?: string[]) => {
     if (!countryCodes || countryCodes.length === 0) return null;
 
@@ -72,7 +67,6 @@ export default function DialogAboutSection({
     }
   };
 
-  // Use release_date from API directly
   const formattedDate = releaseDate ? formatReleaseDate(releaseDate) : null;
   const formattedLanguage = formatLanguage(originalLanguage);
   const formattedCountries = formatCountries(originCountry);

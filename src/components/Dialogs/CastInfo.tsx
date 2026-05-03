@@ -25,7 +25,6 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
     [],
   );
 
-  // Format birth date
   const formatDate = useMemo(
     () => (date?: string) => {
       if (!date) return null;
@@ -40,7 +39,13 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
     [],
   );
 
+  // React Compiler cannot preserve this memoization because the inferred
+  // dep is the broader `personData` while we want fine-grained
+  // `personData?.birthDate`. Manual memo retained — `formatDate` constructs
+  // a Date and a localised string which is wasteful per render, and we want
+  // recompute only when `birthDate` changes, not the whole personData object.
   const formattedBirthDate = useMemo(
+    // eslint-disable-next-line react-hooks/preserve-manual-memoization
     () => (personData?.birthDate ? formatDate(personData.birthDate) : null),
     [personData?.birthDate, formatDate],
   );
@@ -265,5 +270,4 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
   );
 }
 
-// Memoize the component to prevent unnecessary re-renders
 export default memo(CastInfo);

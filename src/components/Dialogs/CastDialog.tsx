@@ -21,10 +21,12 @@ export default function CastDialog({
   const { data: personData } = usePerson(castId, isOpen);
   const { data: personMovies } = usePersonMovies(castId, "all", isOpen);
 
-  // Memoize movies array to prevent reference changes
   const movies = useMemo(() => personMovies || [], [personMovies]);
 
-  // Use person backdrop from API if available, otherwise fallback to passed backdrop
+  // React Compiler cannot preserve this memoization due to the optional
+  // chain on a server-fetched object; the manual useMemo is retained so
+  // `getImageUrl` (a string-builder) is not recomputed on every render.
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const displayBackdrop = useMemo(() => {
     return personData?.backdropPath
       ? getImageUrl(personData.backdropPath, "original")

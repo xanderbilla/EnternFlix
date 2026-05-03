@@ -15,7 +15,6 @@ export default function DialogHeader({
   verified,
   gender,
 }: DialogHeaderProps) {
-  // Cast variant with backdrop banner
   if (variant === "cast") {
     return (
       <DialogHeaderCast
@@ -31,12 +30,10 @@ export default function DialogHeader({
     );
   }
 
-  // Info variant (no back button, different styling)
   if (variant === "info") {
     return <SimpleDialogHeader title={title} onClose={onClose} />;
   }
 
-  // Default variant for explore/detail dialogs
   return (
     <div className="flex items-center justify-center py-32 px-6 sticky top-0 bg-zinc-900 z-10">
       {/* Back Button */}

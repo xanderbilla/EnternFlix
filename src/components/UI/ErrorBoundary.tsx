@@ -5,6 +5,7 @@ import type {
   ErrorBoundaryState,
 } from "@/types/components";
 import { Component } from "react";
+import { logger } from "@/lib/logger/logger";
 
 export class ErrorBoundary extends Component<
   ErrorBoundaryProps,
@@ -20,23 +21,16 @@ export class ErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    // Log error to console in development
-    if (process.env.NODE_ENV === "development") {
-      console.error("ErrorBoundary caught an error:", error, errorInfo);
-    }
-
-    // Call optional error handler
+    logger.error("ErrorBoundary caught an error:", error, errorInfo);
     this.props.onError?.(error, errorInfo);
   }
 
   render() {
     if (this.state.hasError) {
-      // Custom fallback UI
       if (this.props.fallback) {
         return this.props.fallback;
       }
 
-      // Default error UI
       return (
         <div className="flex flex-col items-center justify-center min-h-[200px] p-8 text-center">
           <div className="text-red-500 mb-4">

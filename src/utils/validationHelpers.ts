@@ -2,16 +2,9 @@ import type { Movie } from "@/types/movie";
 import type { ValidationResult, ValidationError } from "@/types/validation";
 import type { ApiResponse } from "@/types/api";
 
-/**
- * Validate movie data structure
- * Checks that the data contains required fields and has correct types
- * @param data - Unknown data to validate as Movie
- * @returns Validation result with typed data or errors
- */
 export function validateMovie(data: unknown): ValidationResult<Movie> {
   const errors: ValidationError[] = [];
 
-  // Check if data is an object
   if (!data || typeof data !== "object") {
     errors.push({
       field: "data",
@@ -23,7 +16,6 @@ export function validateMovie(data: unknown): ValidationResult<Movie> {
 
   const movie = data as Record<string, unknown>;
 
-  // Validate required fields
   if (!movie.id && movie.id !== 0) {
     errors.push({
       field: "id",
@@ -99,20 +91,12 @@ export function validateMovie(data: unknown): ValidationResult<Movie> {
   };
 }
 
-/**
- * Validate API response format
- * Checks that the response has the expected structure and validates the data payload
- * @param response - API response to validate
- * @param dataValidator - Function to validate the data payload
- * @returns Validation result with typed response or errors
- */
 export function validateApiResponse<T>(
   response: unknown,
   dataValidator: (data: unknown) => ValidationResult<T>,
 ): ValidationResult<ApiResponse<T>> {
   const errors: ValidationError[] = [];
 
-  // Check if response is an object
   if (!response || typeof response !== "object") {
     errors.push({
       field: "response",
@@ -124,7 +108,6 @@ export function validateApiResponse<T>(
 
   const apiResponse = response as Record<string, unknown>;
 
-  // Validate response structure
   if (typeof apiResponse.status !== "number") {
     errors.push({
       field: "status",
@@ -153,7 +136,6 @@ export function validateApiResponse<T>(
     return { isValid: false, errors };
   }
 
-  // Validate the data payload
   const dataValidation = dataValidator(apiResponse.data);
   if (!dataValidation.isValid) {
     return {
@@ -176,23 +158,11 @@ export function validateApiResponse<T>(
   };
 }
 
-/**
- * Type guard for Movie type
- * Checks if the provided data is a valid Movie object
- * @param data - Data to check
- * @returns True if data is a valid Movie
- */
 export function isMovie(data: unknown): data is Movie {
   const result = validateMovie(data);
   return result.isValid;
 }
 
-/**
- * Type guard for non-empty string
- * Checks if the value is a string with at least one character
- * @param value - Value to check
- * @returns True if value is a non-empty string
- */
 export function isNonEmptyString(value: unknown): value is string {
   return typeof value === "string" && value.length > 0;
 }

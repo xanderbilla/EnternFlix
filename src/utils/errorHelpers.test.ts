@@ -3,23 +3,13 @@ import fc from "fast-check";
 import { formatErrorMessage, createError, logError } from "./errorHelpers";
 import type { ValidationError, AppError } from "@/types/validation";
 
-/**
- * Feature: code-refactoring-and-optimization
- * Property 3: Error Message User-Friendliness
- * **Validates: Requirements 9.3**
- *
- * For any error that reaches the user interface, the displayed error message
- * should be non-empty, contain no stack traces, and contain no technical jargon.
- */
 describe("Property 3: Error Message User-Friendliness", () => {
-  // Arbitrary for generating ValidationError objects
   const validationErrorArbitrary = fc.record({
     field: fc.string({ minLength: 1 }),
     message: fc.string({ minLength: 1 }),
     code: fc.string({ minLength: 1 }),
   }) as fc.Arbitrary<ValidationError>;
 
-  // Arbitrary for generating AppError objects
   const appErrorArbitrary = fc.record({
     message: fc.string({ minLength: 1 }),
     code: fc.string({ minLength: 1 }),
@@ -31,15 +21,12 @@ describe("Property 3: Error Message User-Friendliness", () => {
     }),
   }) as fc.Arbitrary<AppError>;
 
-  // Arbitrary for generating standard Error objects
   const standardErrorArbitrary = fc
     .string({ minLength: 1 })
     .map((msg) => new Error(msg));
 
-  // Arbitrary for generating string errors
   const stringErrorArbitrary = fc.string({ minLength: 1 });
 
-  // Arbitrary for generating various error types
   const anyErrorArbitrary = fc.oneof(
     validationErrorArbitrary,
     appErrorArbitrary,
@@ -61,14 +48,13 @@ describe("Property 3: Error Message User-Friendliness", () => {
     fc.assert(
       fc.property(anyErrorArbitrary, (error) => {
         const result = formatErrorMessage(error);
-        // Check for common stack trace indicators
         const hasStackTrace =
           result.includes("at ") ||
           result.includes("stack:") ||
           result.includes("Stack:") ||
           result.includes("\n    at ") ||
-          /at\s+\w+\s+\(/.test(result) || // "at functionName ("
-          /at\s+[A-Z]/.test(result); // "at ClassName"
+          /at\s+\w+\s+\(/.test(result) ||
+          /at\s+[A-Z]/.test(result);
         return !hasStackTrace;
       }),
       { numRuns: 100 },
@@ -79,7 +65,6 @@ describe("Property 3: Error Message User-Friendliness", () => {
     fc.assert(
       fc.property(anyErrorArbitrary, (error) => {
         const result = formatErrorMessage(error);
-        // Check for common technical jargon patterns
         const hasTechnicalJargon =
           result.includes("API_ERROR") ||
           result.includes("VALIDATION_ERROR") ||
@@ -97,7 +82,6 @@ describe("Property 3: Error Message User-Friendliness", () => {
     fc.assert(
       fc.property(validationErrorArbitrary, (error) => {
         const result = formatErrorMessage(error);
-        // Should return the message field
         return result === error.message && result.length > 0;
       }),
       { numRuns: 100 },
@@ -108,7 +92,6 @@ describe("Property 3: Error Message User-Friendliness", () => {
     fc.assert(
       fc.property(appErrorArbitrary, (error) => {
         const result = formatErrorMessage(error);
-        // Should return the message field
         return result === error.message && result.length > 0;
       }),
       { numRuns: 100 },
@@ -119,7 +102,6 @@ describe("Property 3: Error Message User-Friendliness", () => {
     fc.assert(
       fc.property(standardErrorArbitrary, (error) => {
         const result = formatErrorMessage(error);
-        // Should return the error message
         return result === error.message && result.length > 0;
       }),
       { numRuns: 100 },
@@ -130,7 +112,6 @@ describe("Property 3: Error Message User-Friendliness", () => {
     fc.assert(
       fc.property(stringErrorArbitrary, (error) => {
         const result = formatErrorMessage(error);
-        // Should return the string itself
         return result === error && result.length > 0;
       }),
       { numRuns: 100 },
@@ -149,7 +130,6 @@ describe("Property 3: Error Message User-Friendliness", () => {
         ),
         (error) => {
           const result = formatErrorMessage(error);
-          // Should return a non-empty fallback message
           return (
             result.length > 0 &&
             result === "An unexpected error occurred. Please try again."
@@ -165,7 +145,6 @@ describe("Property 3: Error Message User-Friendliness", () => {
       fc.property(anyErrorArbitrary, (error) => {
         const result1 = formatErrorMessage(error);
         const result2 = formatErrorMessage(error);
-        // Should be deterministic
         return result1 === result2;
       }),
       { numRuns: 100 },
@@ -173,33 +152,20 @@ describe("Property 3: Error Message User-Friendliness", () => {
   });
 });
 
-/**
- * Feature: code-refactoring-and-optimization
- * Property 4: Error Logging Context
- * **Validates: Requirements 9.4**
- *
- * For any error that is logged, the log entry should contain sufficient context
- * for debugging (message, code, timestamp, and optional context data).
- */
 describe("Property 4: Error Logging Context", () => {
   let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
   const originalNodeEnv = process.env.NODE_ENV;
 
   beforeEach(() => {
-    // Set NODE_ENV to development to enable logging
     (process.env as any).NODE_ENV = "development";
-    // Spy on console.error to capture log output
     consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
-    // Restore original NODE_ENV
     (process.env as any).NODE_ENV = originalNodeEnv;
-    // Restore console.error
     consoleErrorSpy.mockRestore();
   });
 
-  // Arbitrary for generating AppError objects with various context data
   const appErrorArbitrary = fc.record({
     message: fc.string({ minLength: 1 }),
     code: fc.string({ minLength: 1 }),
@@ -229,34 +195,26 @@ describe("Property 4: Error Logging Context", () => {
   it("should log all required fields for any AppError", () => {
     fc.assert(
       fc.property(appErrorArbitrary, (error) => {
-        // Clear previous calls
         consoleErrorSpy.mockClear();
 
-        // Log the error
         logError(error);
 
-        // Verify console.error was called
         expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
 
-        // Get the logged data
         const loggedArgs = consoleErrorSpy.mock.calls[0];
         expect(loggedArgs).toBeDefined();
         expect(loggedArgs.length).toBe(2);
 
-        // First argument should be the label
         expect(loggedArgs[0]).toBe("[Error]");
 
-        // Second argument should be the error object with all required fields
         const loggedError = loggedArgs[1] as Record<string, unknown>;
         expect(loggedError).toBeDefined();
 
-        // Verify all required fields are present
         expect(loggedError).toHaveProperty("message");
         expect(loggedError).toHaveProperty("code");
         expect(loggedError).toHaveProperty("timestamp");
         expect(loggedError).toHaveProperty("context");
 
-        // Verify field values match the original error
         expect(loggedError.message).toBe(error.message);
         expect(loggedError.code).toBe(error.code);
         expect(loggedError.timestamp).toBe(error.timestamp);
@@ -279,7 +237,6 @@ describe("Property 4: Error Logging Context", () => {
           unknown
         >;
 
-        // Message must be a non-empty string
         expect(typeof loggedError.message).toBe("string");
         expect((loggedError.message as string).length).toBeGreaterThan(0);
 
@@ -300,7 +257,6 @@ describe("Property 4: Error Logging Context", () => {
           unknown
         >;
 
-        // Code must be a non-empty string
         expect(typeof loggedError.code).toBe("string");
         expect((loggedError.code as string).length).toBeGreaterThan(0);
 
@@ -321,10 +277,8 @@ describe("Property 4: Error Logging Context", () => {
           unknown
         >;
 
-        // Timestamp must be a string
         expect(typeof loggedError.timestamp).toBe("string");
 
-        // Timestamp should be a valid ISO date string
         const timestamp = loggedError.timestamp as string;
         const parsedDate = new Date(timestamp);
         expect(parsedDate.toISOString()).toBe(timestamp);
@@ -348,7 +302,6 @@ describe("Property 4: Error Logging Context", () => {
             unknown
           >;
 
-          // Context should be present and match the original
           expect(loggedError.context).toBeDefined();
           expect(loggedError.context).toEqual(error.context);
 
@@ -372,7 +325,6 @@ describe("Property 4: Error Logging Context", () => {
             unknown
           >;
 
-          // Context should be undefined
           expect(loggedError.context).toBeUndefined();
 
           return true;
@@ -410,7 +362,6 @@ describe("Property 4: Error Logging Context", () => {
             unknown
           >;
 
-          // Complex context should be preserved exactly
           expect(loggedError.context).toEqual(error.context);
 
           return true;
@@ -420,20 +371,17 @@ describe("Property 4: Error Logging Context", () => {
     );
   });
 
-  it("should not log in production environment", () => {
+  it("should always log errors regardless of environment", () => {
     fc.assert(
       fc.property(appErrorArbitrary, (error) => {
-        // Set NODE_ENV to production
-        (process.env as any).NODE_ENV = "production";
+        (process.env as Record<string, string>).NODE_ENV = "production";
         consoleErrorSpy.mockClear();
 
         logError(error);
 
-        // console.error should not be called in production
-        expect(consoleErrorSpy).not.toHaveBeenCalled();
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
 
-        // Reset to development for other tests
-        (process.env as any).NODE_ENV = "development";
+        (process.env as Record<string, string>).NODE_ENV = "development";
 
         return true;
       }),
@@ -452,13 +400,10 @@ describe("Property 4: Error Logging Context", () => {
         (message, code, context) => {
           consoleErrorSpy.mockClear();
 
-          // Create error using createError utility
           const error = createError(message, code, context);
 
-          // Log the error
           logError(error);
 
-          // Verify all fields are logged
           const loggedError = consoleErrorSpy.mock.calls[0][1] as Record<
             string,
             unknown

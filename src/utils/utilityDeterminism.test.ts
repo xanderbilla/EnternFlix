@@ -13,18 +13,7 @@ import { getCardPositionClass, getPositionClass } from "./layoutHelpers";
 import { cn } from "./cn";
 import type { Movie } from "@/types/movie";
 
-/**
- * Feature: code-refactoring-and-optimization
- * Property 1: Utility Function Determinism
- *
- * **Validates: Requirements 1.4, 1.5, 1.6, 8.6**
- *
- * For any utility function in the utils folder and any valid input, calling
- * the function multiple times with the same input should produce identical
- * output without side effects.
- */
 describe("Property 1: Utility Function Determinism", () => {
-  // Arbitrary for generating Movie objects
   const movieArbitrary = fc.record({
     id: fc.oneof(fc.integer({ min: 1 }), fc.string({ minLength: 1 })),
     title: fc.option(fc.string(), { nil: undefined }),
@@ -73,7 +62,6 @@ describe("Property 1: Utility Function Determinism", () => {
             const result2 = getImageUrl(path, size);
             const result3 = getImageUrl(path, size);
 
-            // All results should be identical
             expect(result1).toBe(result2);
             expect(result2).toBe(result3);
 
@@ -91,7 +79,6 @@ describe("Property 1: Utility Function Determinism", () => {
           const result2 = getReleaseYear(movie);
           const result3 = getReleaseYear(movie);
 
-          // All results should be identical
           expect(result1).toBe(result2);
           expect(result2).toBe(result3);
 
@@ -108,7 +95,6 @@ describe("Property 1: Utility Function Determinism", () => {
           const result2 = getContentType(movie);
           const result3 = getContentType(movie);
 
-          // All results should be identical
           expect(result1).toBe(result2);
           expect(result2).toBe(result3);
 
@@ -128,7 +114,6 @@ describe("Property 1: Utility Function Determinism", () => {
             const result2 = getTruncatedTitle(movie, maxLength);
             const result3 = getTruncatedTitle(movie, maxLength);
 
-            // All results should be identical
             expect(result1).toBe(result2);
             expect(result2).toBe(result3);
 
@@ -146,7 +131,6 @@ describe("Property 1: Utility Function Determinism", () => {
           const result2 = getGenres(movie);
           const result3 = getGenres(movie);
 
-          // All results should be identical
           expect(result1).toBe(result2);
           expect(result2).toBe(result3);
 
@@ -163,7 +147,6 @@ describe("Property 1: Utility Function Determinism", () => {
           const result2 = getDuration(movie);
           const result3 = getDuration(movie);
 
-          // All results should be identical
           expect(result1).toBe(result2);
           expect(result2).toBe(result3);
 
@@ -182,7 +165,6 @@ describe("Property 1: Utility Function Determinism", () => {
           const result2 = getContentRating(movie);
           const result3 = getContentRating(movie);
 
-          // All results should be identical
           expect(result1).toBe(result2);
           expect(result2).toBe(result3);
 
@@ -199,7 +181,6 @@ describe("Property 1: Utility Function Determinism", () => {
           const result2 = getQuality(movie);
           const result3 = getQuality(movie);
 
-          // All results should be identical
           expect(result1).toBe(result2);
           expect(result2).toBe(result3);
 
@@ -219,7 +200,6 @@ describe("Property 1: Utility Function Determinism", () => {
             const result2 = truncateText(text, maxLength);
             const result3 = truncateText(text, maxLength);
 
-            // All results should be identical
             expect(result1).toBe(result2);
             expect(result2).toBe(result3);
 
@@ -242,7 +222,6 @@ describe("Property 1: Utility Function Determinism", () => {
             const result2 = getCardPositionClass(index, itemsPerRow);
             const result3 = getCardPositionClass(index, itemsPerRow);
 
-            // All results should be identical
             expect(result1).toBe(result2);
             expect(result2).toBe(result3);
 
@@ -260,7 +239,6 @@ describe("Property 1: Utility Function Determinism", () => {
           const result2 = getPositionClass(isFirst, isLast);
           const result3 = getPositionClass(isFirst, isLast);
 
-          // All results should be identical
           expect(result1).toBe(result2);
           expect(result2).toBe(result3);
 
@@ -289,7 +267,6 @@ describe("Property 1: Utility Function Determinism", () => {
             const result2 = cn(...inputs);
             const result3 = cn(...inputs);
 
-            // All results should be identical
             expect(result1).toBe(result2);
             expect(result2).toBe(result3);
 
@@ -305,7 +282,6 @@ describe("Property 1: Utility Function Determinism", () => {
     it("all utility functions maintain determinism when called in sequence", () => {
       fc.assert(
         fc.property(movieArbitrary, (movie) => {
-          // Call all functions in sequence multiple times
           const sequence1 = {
             imageUrl: getImageUrl(movie.posterPath, "w500"),
             releaseYear: getReleaseYear(movie),
@@ -333,7 +309,6 @@ describe("Property 1: Utility Function Determinism", () => {
             truncatedText: truncateText(movie.overview, 100),
           };
 
-          // All sequences should produce identical results
           expect(sequence1).toEqual(sequence2);
           expect(sequence2).toEqual(sequence3);
 
@@ -349,10 +324,8 @@ describe("Property 1: Utility Function Determinism", () => {
     it("utility functions do not modify input data", () => {
       fc.assert(
         fc.property(movieArbitrary, (movie) => {
-          // Create a deep copy of the movie object using structuredClone
           const originalMovie = structuredClone(movie);
 
-          // Call all utility functions
           getImageUrl(movie.posterPath, "w500");
           getReleaseYear(movie);
           getContentType(movie);
@@ -363,7 +336,6 @@ describe("Property 1: Utility Function Determinism", () => {
           getGenres(movie);
           getDuration(movie);
 
-          // Movie object should remain unchanged
           expect(movie).toEqual(originalMovie);
 
           return true;

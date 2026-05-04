@@ -100,6 +100,22 @@
   .animate-fadeInScale {
     animation: fadeInScale 0.4s ease-out;
   }
+
+  /* Scale in animation for video player dialog */
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-scaleIn {
+    animation: scaleIn 0.3s ease-out;
+  }
 }
 
 * {

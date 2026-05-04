@@ -1,13 +1,9 @@
 import { memo } from "react";
 import { Movie } from "@/types/movie";
 import { DynamicMovieCard as MovieCard } from "@/utils/dynamicImports";
-import { MovieListScrollGridProps } from "@/types/components";
+import { MovieListRowProps } from "@/types/components";
 
-function MovieGrid({
-  movies,
-  scrollRef,
-  onMovieClick,
-}: MovieListScrollGridProps) {
+function MovieListRow({ movies, scrollRef, onMovieClick }: MovieListRowProps) {
   return (
     <div
       id="movie-list"
@@ -34,4 +30,4 @@ function MovieGrid({
   );
 }
 
-export default memo(MovieGrid);
+export default memo(MovieListRow);

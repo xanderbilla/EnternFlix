@@ -1,12 +1,13 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import QueryProvider from "@/providers/QueryProvider";
+import QueryProvider from "@/lib/query/QueryProvider";
 import { VideoProvider } from "@/contexts/VideoContext";
+import { TransitionProvider } from "@/contexts/TransitionContext";
 
 const inter = Inter({
   subsets: ["latin"],
-  display: "swap", // Optimize font loading and reduce CLS
+  display: "swap",
   variable: "--font-inter",
 });
 
@@ -65,7 +66,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} text-white`}>
         <QueryProvider>
-          <VideoProvider>{children}</VideoProvider>
+          <VideoProvider>
+            <TransitionProvider>{children}</TransitionProvider>
+          </VideoProvider>
         </QueryProvider>
       </body>
     </html>

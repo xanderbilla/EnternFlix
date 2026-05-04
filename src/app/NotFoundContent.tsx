@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useMemo } from "react";
 import Icon from "@/components/Icon/Icon";
 import Button from "@/components/Button/Button";
 import { useTrending } from "@/hooks/api/useMovies";
@@ -10,12 +11,19 @@ import { getImageUrl } from "@/utils/movieHelpers";
 export default function NotFoundContent() {
   const { data: trendingData } = useTrending();
 
-  // Get random backdrop from trending data
-  const backdrop = trendingData?.results?.length
-    ? trendingData.results[
-        Math.floor(Math.random() * trendingData.results.length)
-      ].backdropPath
-    : null;
+  // Pick a backdrop once per trending payload so it stays stable across renders.
+  // Random selection is intentional UX (different backdrop on each visit) and is
+  // safely confined to a useMemo keyed on the data identity.
+  const backdrop = useMemo<string | null>(() => {
+    const results = trendingData?.results;
+    if (!results?.length) return null;
+    // Intentional UX randomness: pick a random backdrop per trending payload.
+    // Confined inside useMemo keyed on `trendingData` so it is stable across
+    // re-renders and only changes when the data identity changes.
+    // eslint-disable-next-line react-hooks/purity
+    const index = Math.floor(Math.random() * results.length);
+    return results[index].backdropPath ?? null;
+  }, [trendingData]);
 
   return (
     <div className="relative h-screen w-full">

@@ -12,12 +12,13 @@ import {
 import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText, getContentRating } from "@/utils/contentHelpers";
+import { config } from "@/lib/env/env";
 import { useBanner } from "@/hooks/api/useMovies";
+import { usePlayback } from "@/hooks/api/usePlayback";
 import { DynamicBannerContent as BannerContent } from "@/utils/dynamicImports";
 import { DynamicDialogRenderer as DialogRenderer } from "@/utils/dynamicImports";
 import { useDialogManager } from "@/hooks/ui/useDialogManager";
 import FavoritesBanner from "./FavoritesBanner";
-import type { Asset, AssetType } from "@/types/movie";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
 
@@ -43,47 +44,28 @@ const Banner = () => {
 
   const isFavoritesPage = pathname.includes("/favorites");
 
-  // Use banner endpoint for home page (all content types)
   const { data: movie, error } = useBanner("all");
 
-  // Get video URL based on priority
-  const getVideoUrl = useCallback((assets?: Asset[]): string | null => {
-    if (!assets || assets.length === 0) return null;
+  const contentType = movie?.contentType === "TV" ? "tv" : "movie";
+  const { data: playback } = usePlayback(
+    contentType as "movie" | "tv",
+    movie?.id ? String(movie.id) : "",
+    !!movie?.id,
+  );
 
-    const priority: AssetType[] = ["TRAILER", "TEASER", "CLIP", "PROMO", "BTS"];
-
-    for (const assetType of priority) {
-      const asset = assets.find((a) => a.asset === assetType);
-      if (asset && asset.key.length > 0) {
-        // Pick a random video from the available keys
-        const randomIndex = Math.floor(Math.random() * asset.key.length);
-        let videoPath = asset.key[randomIndex];
-
-        // Remove leading slash from videoPath if it exists
-        if (videoPath.startsWith("/")) {
-          videoPath = videoPath.substring(1);
-        }
-
-        // Construct full URL using image base URL + video path
-        const baseUrl = process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL || "";
-        return `${baseUrl}${videoPath}`;
-      }
-    }
-
-    return null;
-  }, []);
-
-  // Handle banner load sequence
   useEffect(() => {
     if (!movie) return;
 
-    // Step 1: After 1 second, show content rating
     const contentRatingTimer = setTimeout(() => {
       setShowContentRating(true);
     }, 1000);
 
-    // Step 2: After 3 seconds total (1s + 2s), start video
-    const videoSrc = getVideoUrl(movie.assets);
+    const rawVideoPath = playback?.playback?.preview?.video ?? null;
+    const videoSrc = rawVideoPath
+      ? rawVideoPath.startsWith("http")
+        ? rawVideoPath
+        : `${config.customApi.imageBaseUrl}${rawVideoPath.startsWith("/") ? rawVideoPath.slice(1) : rawVideoPath}`
+      : null;
     if (videoSrc) {
       const videoTimer = setTimeout(() => {
         setVideoUrl(videoSrc);
@@ -97,15 +79,19 @@ const Banner = () => {
     }
 
     return () => clearTimeout(contentRatingTimer);
-  }, [movie, getVideoUrl]);
+  }, [movie, playback]);
 
-  // Handle video mute state
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = isMuted;
     }
   }, [isMuted]);
 
+  // React Compiler cannot preserve these memoizations because `openInfoDialog`
+  // is sourced from context (compiler bails on context-derived callables).
+  // The manual useCallbacks are intentional — both handlers are forwarded as
+  // props to memoised children where referential stability matters.
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleMoreInfo = useCallback(() => {
     if (movie?.id) {
       openInfoDialog(movie.id.toString(), 9999);
@@ -182,8 +168,10 @@ const Banner = () => {
         title={movieTitle}
         description={movieDescription}
         movieId={movie.id}
+        contentType={movie.contentType || "MOVIE"}
         contentRating={contentRating}
         onMoreInfoClick={handleMoreInfo}
+        showDescription={videoEnded}
       />
 
       {/* Audio Toggle and Content Rating - Bottom Right */}
@@ -199,7 +187,6 @@ const Banner = () => {
               onClick={toggleMute}
             >
               {isMuted ? (
-                // Muted Icon (Volume Off)
                 <svg
                   viewBox="0 0 24 24"
                   className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5 text-white"
@@ -214,7 +201,6 @@ const Banner = () => {
                   />
                 </svg>
               ) : (
-                // Unmuted Icon (Volume High)
                 <svg
                   viewBox="0 0 24 24"
                   className="w-4 h-4 sm:w-5 sm:h-5 md:w-5 md:h-5 text-white"

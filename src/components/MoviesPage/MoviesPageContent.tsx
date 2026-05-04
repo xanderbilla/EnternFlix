@@ -13,7 +13,6 @@ interface MoviesPageContentProps {
 export default function MoviesPageContent({
   movieLists,
 }: MoviesPageContentProps) {
-  // Fetch banner for movies page (movie content type)
   const { data: bannerMovie } = useBanner("movie");
 
   const backdropUrl = bannerMovie?.backdropPath

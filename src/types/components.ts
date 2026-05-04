@@ -43,6 +43,39 @@ export interface IconProps {
   "aria-label"?: string;
 }
 
+export interface WatchPageContentProps {
+  contentId: string;
+  contentType: "movie" | "tv";
+}
+
+export interface MoviesPageContentProps {
+  category?: string;
+}
+
+export interface CastInfoProps {
+  castId: string;
+  castName: string;
+  movies: Movie[];
+  onMovieClick: (movieId: number | string) => void;
+}
+
+export interface NetflixButtonProps {
+  onClick?: () => void;
+  variant?: "primary" | "secondary" | "danger";
+  size?: "sm" | "md" | "lg";
+  disabled?: boolean;
+  children: ReactNode;
+  className?: string;
+}
+
+export interface IconButtonVariant {
+  icon: ReactNode;
+  onClick?: () => void;
+  ariaLabel: string;
+  size?: "sm" | "md" | "lg";
+  className?: string;
+}
+
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?:
     | "primary"
@@ -68,7 +101,8 @@ export interface MovieCardHoverOverlayProps {
 }
 
 export interface MovieCardActionButtonsProps {
-  onPlayClick: () => void;
+  contentId: string;
+  contentType?: "MOVIE" | "TV" | "PERSON";
   onAddClick: () => void;
   onLikeClick: () => void;
   onInfoClick: () => void;
@@ -84,18 +118,6 @@ export interface MovieCardMetadataProps {
   onTitleClick: () => void;
   handleKeyPress: (event: React.KeyboardEvent, action: () => void) => void;
   data?: Movie;
-}
-
-export interface MovieCardVideoPlayerProps {
-  sampleVideoUrl: string;
-  isMuted: boolean;
-  onEnded: () => void;
-  onVideoLoaded?: () => void;
-}
-
-export interface VolumeControlProps {
-  isMuted: boolean;
-  onToggleMute: (e: React.MouseEvent) => void;
 }
 
 export interface BannerVideoProps {
@@ -121,8 +143,10 @@ export interface BannerContentProps {
   title: string;
   description: string;
   movieId: number | string;
+  contentType?: "MOVIE" | "TV" | "PERSON";
   contentRating?: string;
   onMoreInfoClick: () => void;
+  showDescription?: boolean;
 }
 
 export interface ExploreDialogProps {
@@ -153,7 +177,7 @@ export interface ScrollButtonProps {
   show: boolean;
 }
 
-export interface MovieListScrollGridProps {
+export interface MovieListRowProps {
   movies: Movie[];
   scrollRef: React.RefObject<HTMLDivElement | null>;
   onMovieClick?: (movieId: number | string) => void;
@@ -167,15 +191,6 @@ export interface ToggleProps {
   id?: string;
   name?: string;
   ariaLabel?: string;
-}
-
-export interface InputProps {
-  id: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value: string;
-  label: string;
-  type: string;
-  className: string;
 }
 
 export interface MobileMenuProps {
@@ -209,7 +224,6 @@ export interface CategoryPageContentProps {
   movieLists: MovieListItem[];
 }
 
-// Navbar sub-component interfaces
 export interface GenresDropdownProps {
   genres: import("./navbar").NavbarGenre[];
   isOpen: boolean;
@@ -227,7 +241,6 @@ export interface ViewModeToggleProps {
   sortOptions: string[];
 }
 
-// Account component interfaces (moved to types/account.ts)
 export interface PageTitleProps {
   title: string;
   subtitle?: string;
@@ -305,19 +318,6 @@ export interface TitleDialogProps {
   ) => void;
 }
 
-export interface ExploreDialogGridProps {
-  movies: Movie[];
-  onMovieClick: (movieId: number | string) => void;
-}
-
-export interface ExploreDialogHeaderProps {
-  title: string;
-  onClose: () => void;
-  showBackButton?: boolean;
-  backdropUrl?: string;
-  isCastDialog?: boolean;
-}
-
 export interface SettingRowProps {
   label: string;
   description?: string;
@@ -354,12 +354,10 @@ export interface DialogRendererProps {
   ) => void;
 }
 
-// Banner component props
 export interface FavoritesBannerProps {
   movie: Movie | null;
 }
 
-// Title page component props
 export interface ShowMoreButtonProps {
   showAll: boolean;
   onClick: () => void;
@@ -372,7 +370,6 @@ export interface EpisodeItemProps {
   hasBorder: boolean;
 }
 
-// Dialog component props
 export interface CastDialogProps {
   isOpen: boolean;
   castId: string;
@@ -401,7 +398,6 @@ export interface DiscoverDialogProps {
   zIndex?: number;
 }
 
-// UI component props
 export interface BaseDialogProps {
   isOpen: boolean;
   onClose: () => void;
@@ -414,6 +410,10 @@ export interface BaseDialogProps {
       }) => ReactNode);
   zIndex?: number;
   className?: string;
+  /** Accessible name for the dialog (used as aria-label). */
+  ariaLabel?: string;
+  /** ID of the element that labels the dialog (used as aria-labelledby). */
+  ariaLabelledBy?: string;
 }
 
 export interface DialogHeaderProps {
@@ -456,7 +456,6 @@ export interface ErrorBoundaryState {
   error: Error | null;
 }
 
-// Icon type alias
 export type IconName =
   | keyof typeof import("@/constants/iconMap").iconMap
   | keyof typeof import("@/constants/customIcons").customIcons;

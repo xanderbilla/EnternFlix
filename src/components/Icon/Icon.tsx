@@ -3,6 +3,7 @@ import React from "react";
 import { memo } from "react";
 import { iconMap } from "@/constants/iconMap";
 import { customIcons } from "@/constants/customIcons";
+import { logger } from "@/lib/logger/logger";
 
 const Icon: React.FC<IconProps> = ({
   name,
@@ -13,7 +14,6 @@ const Icon: React.FC<IconProps> = ({
   "aria-label": ariaLabel,
   ...props
 }) => {
-  // Check if it's a react-icon
   if (name in iconMap) {
     const IconComponent = iconMap[name as keyof typeof iconMap];
     return (
@@ -28,7 +28,6 @@ const Icon: React.FC<IconProps> = ({
     );
   }
 
-  // Check if it's a custom SVG icon
   if (name in customIcons) {
     const CustomIcon = customIcons[name as keyof typeof customIcons];
     return (
@@ -44,10 +43,7 @@ const Icon: React.FC<IconProps> = ({
     );
   }
 
-  // Fallback for unknown icons
-  if (process.env.NODE_ENV === "development") {
-    console.warn(`Icon "${name}" not found`);
-  }
+  logger.warn(`Icon "${name}" not found`);
   return null;
 };
 

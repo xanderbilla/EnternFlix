@@ -26,7 +26,6 @@ function PageLayoutContent({
 
         {/* Content based on view mode */}
         {viewMode === "list" ? (
-          /* List view: banner + movie lists */
           <div
             className={
               showBanner
@@ -37,7 +36,6 @@ function PageLayoutContent({
             {children}
           </div>
         ) : (
-          /* Grid view: only cards, no banner */
           <div className="pt-24 pb-4">{gridContent || children}</div>
         )}
       </div>

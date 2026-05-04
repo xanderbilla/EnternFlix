@@ -22,13 +22,6 @@ interface UseExploreNavigationProps {
   ) => void;
 }
 
-/**
- * Custom hook to handle explore navigation logic
- * Manages data source selection and dialog opening for explore actions
- *
- * @param props - Configuration including data sources and dialog handlers
- * @returns Explore click handler
- */
 export function useExploreNavigation({
   data,
   trendingData,
@@ -37,18 +30,14 @@ export function useExploreNavigation({
 }: UseExploreNavigationProps) {
   const handleExploreClick = useCallback(
     (query: string, title: string, isCast: boolean = false) => {
-      // Use different data sources based on context
       let moviesToShow: Movie[] = [];
 
       if (isCast) {
-        // For cast dialogs, use trending content
         moviesToShow = trendingData?.results?.slice(0, 20) || [];
       } else {
-        // For genre/detail dialogs, use trending content
         moviesToShow = trendingData?.results?.slice(0, 20) || [];
       }
 
-      // Fallback if no data is available
       if (moviesToShow.length === 0) {
         moviesToShow = Array.from({ length: 8 }, (_, i) => ({
           id: i + 1,

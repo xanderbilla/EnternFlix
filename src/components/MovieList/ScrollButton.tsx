@@ -23,7 +23,7 @@ export default function ScrollButton({
     >
       <CircularButton
         onClick={(e) => {
-          e.stopPropagation(); // Prevent double-click
+          e.stopPropagation();
           onClick();
         }}
         variant="muted"

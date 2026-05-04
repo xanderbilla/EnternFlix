@@ -1,23 +1,21 @@
 export interface Genre {
-  id: string | number;
+  id: string;
   name: string;
 }
 
 export interface Cast {
-  id: string | number;
+  id: string;
   name: string;
-  coverPicture?: string;
 }
 
 export interface Tag {
-  id: string | number;
+  id: string;
   name: string;
 }
 
 export interface Studio {
-  id: string | number;
+  id: string;
   name: string;
-  coverPicture?: string;
 }
 
 export interface Audit {
@@ -29,18 +27,19 @@ export interface Audit {
 export type AssetType = "TRAILER" | "TEASER" | "CLIP" | "PROMO" | "BTS";
 
 export interface Asset {
-  asset: AssetType;
-  key: string[];
+  type: AssetType;
+  keys: string[];
 }
 
 export interface Movie {
-  id: string | number;
+  id: string;
   title?: string;
   overview?: string;
   backdropPath: string | null;
   posterPath: string | null;
   releaseDate?: string;
   firstAirDate?: string;
+  adult?: boolean;
   contentRating?: "18_PLUS" | "21_PLUS";
   originalLanguage?: string;
   genres?: Genre[];
@@ -51,26 +50,21 @@ export interface Movie {
   moodTags?: Tag[];
   assets?: Asset[];
 
-  // TV Show specific
   numberOfSeasons?: number;
   numberOfEpisodes?: number;
   lastAirDate?: string;
 
-  // Movie specific
   runtime?: number;
 
-  // Extended details
   status?: string;
   tagline?: string;
   studios?: Studio[];
 
-  // Audit info
   audit?: Audit;
 }
 
-// Person type for cast/crew details
 export interface Person {
-  id: string | number;
+  id: string;
   contentType: "PERSON";
   name: string;
   roles: string[];
@@ -101,21 +95,6 @@ export interface Person {
   specialties?: Tag[];
 }
 
-// API Response types
-export interface MoviesResponse {
-  status: number;
-  message: string;
-  data: Movie[];
-}
-
-export interface MovieResponse {
-  status: number;
-  message: string;
-  data: Movie;
-}
-
-export interface PersonResponse {
-  status: number;
-  message: string;
-  data: Person;
-}
+export type MoviesResponse = import("@/types/api").ApiResponse<Movie[]>;
+export type MovieResponse = import("@/types/api").ApiResponse<Movie>;
+export type PersonResponse = import("@/types/api").ApiResponse<Person>;

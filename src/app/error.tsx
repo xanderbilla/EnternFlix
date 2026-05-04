@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import Button from "@/components/Button/Button";
+import { logger } from "@/lib/logger/logger";
 
 export default function Error({
   error,
@@ -12,10 +13,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // Log error to error reporting service
-    if (process.env.NODE_ENV === "development") {
-      console.error("Global error:", error);
-    }
+    logger.error("Global error:", error);
   }, [error]);
 
   return (

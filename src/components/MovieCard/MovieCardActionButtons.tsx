@@ -2,17 +2,22 @@ import { memo } from "react";
 import IconButton from "@/components/Button/IconButton";
 import Icon from "@/components/Icon/Icon";
 import { MovieCardActionButtonsProps } from "@/types/components";
+import { useTransition } from "@/contexts/TransitionContext";
 
 export default function MovieCardActionButtons({
-  onPlayClick,
+  contentId,
+  contentType,
   onAddClick,
   onLikeClick,
   onInfoClick,
   handleKeyPress,
 }: MovieCardActionButtonsProps) {
+  const { navigateWithTransition } = useTransition();
+
   const handlePlayClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onPlayClick();
+    const type = contentType === "TV" ? "tv" : "movie";
+    navigateWithTransition(`/watch?id=${contentId}&type=${type}`);
   };
 
   const handleAddClick = (e: React.MouseEvent) => {
@@ -31,19 +36,19 @@ export default function MovieCardActionButtons({
         className="w-8 h-8 bg-white rounded-full 
         flex justify-center items-center transition hover:bg-neutral-300"
         onClick={handlePlayClick}
-        onKeyDown={(e) => handleKeyPress(e, onPlayClick)}
+        onKeyDown={(e) => handleKeyPress(e, () => handlePlayClick(e as any))}
         aria-label="Play"
       >
         <Icon name="playFillLarge" size={22} color="black" />
       </button>
       <IconButton
         variant="add"
-        onClick={handleAddClick}
+        onClick={() => onAddClick()}
         className="!w-8 !h-8 !p-1 !bg-white !border-0 hover:!bg-neutral-300 !text-black"
       />
       <IconButton
         variant="like"
-        onClick={handleLikeClick}
+        onClick={() => onLikeClick()}
         className="!w-8 !h-8 !p-1 !bg-white !border-0 hover:!bg-neutral-300 !text-black"
       />
     </div>

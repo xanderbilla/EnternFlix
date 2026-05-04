@@ -1,4 +1,3 @@
-// Static data for navbar
 export const NAVBAR_ITEMS = [
   { label: "Trending", path: "/trending" },
   { label: "Anime", path: "/anime" },
@@ -7,7 +6,6 @@ export const NAVBAR_ITEMS = [
   { label: "Favorites", path: "/favorites" },
 ] as const;
 
-// Image sizes
 export const IMAGE_SIZES = {
   avatar: { width: 48, height: 48 },
   profile: { width: 100, height: 100 },
@@ -15,7 +13,6 @@ export const IMAGE_SIZES = {
   poster: { width: 280, height: 420 },
 } as const;
 
-// Timing constants
 export const TIMING = {
   videoAutoPlayDelay: 1000,
   hoverDelay: 300,

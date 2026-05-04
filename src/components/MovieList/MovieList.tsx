@@ -5,7 +5,7 @@ import { MovieListProps } from "@/types/components";
 import { HOOK_MAP } from "@/constants/hookMap";
 import {
   DynamicScrollButton as ScrollButton,
-  DynamicMovieGrid as MovieGrid,
+  DynamicMovieListRow as MovieListRow,
   DynamicMovieListHeader as MovieListHeader,
   DynamicDialogRenderer as DialogRenderer,
 } from "@/utils/dynamicImports";
@@ -37,19 +37,16 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
 
   const movies = useMemo(() => response?.results || [], [response?.results]);
 
-  // Use body overflow hook for managing horizontal overflow
   const { setOverflowVisible, setOverflowHidden } = useBodyOverflow(
     dialogState.isOpen,
   );
 
-  // Use hover state hook for managing button visibility
   const {
     isHovered: showButtons,
     handleMouseEnter,
     handleMouseLeave,
   } = useHoverState(setOverflowVisible, setOverflowHidden);
 
-  // Only show scroll buttons if there are more than 7 movies
   const shouldShowScrollButtons = useMemo(
     () => movies.length > 7,
     [movies.length],
@@ -67,7 +64,6 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
 
   useDialogBodyScroll(dialogState.isOpen);
 
-  // Handle explore button visibility with smooth transitions
   const handleTitleHoverEnter = useCallback(() => {
     setShowExploreButton(true);
   }, []);
@@ -154,7 +150,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
             }
           />
 
-          <MovieGrid
+          <MovieListRow
             movies={movies}
             scrollRef={scrollRef}
             onMovieClick={handleMovieClick}

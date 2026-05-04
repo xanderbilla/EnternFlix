@@ -37,7 +37,9 @@ export default function SearchResults({
   if (searchRes.length === 0) {
     return (
       <div className="text-center text-gray-400 py-12">
-        <p className="text-xl">No results found for "{debouncedQuery}"</p>
+        <p className="text-xl">
+          No results found for &ldquo;{debouncedQuery}&rdquo;
+        </p>
         <p className="text-sm mt-2">Try searching with different keywords</p>
       </div>
     );
@@ -47,7 +49,7 @@ export default function SearchResults({
     <>
       <div className="mb-6">
         <h2 className="text-white text-2xl font-semibold">
-          Search Results for "{debouncedQuery}"
+          Search Results for &ldquo;{debouncedQuery}&rdquo;
         </h2>
         <p className="text-gray-400 mt-1">{searchRes.length} results found</p>
       </div>
@@ -68,8 +70,17 @@ export default function SearchResults({
 
       {/* Load More Trigger */}
       {hasNextPage && (
-        <div ref={loadMoreRef} className="py-8 text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+        <div
+          ref={loadMoreRef}
+          className="py-8 text-center"
+          role="status"
+          aria-live="polite"
+          aria-label="Loading more results"
+        >
+          <div
+            className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"
+            aria-hidden="true"
+          ></div>
         </div>
       )}
 

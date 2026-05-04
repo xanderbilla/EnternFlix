@@ -36,20 +36,17 @@ const MovieCard: React.FC<MovieCardProps> = ({
   >("center");
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Use consolidated hooks
   const movieData = useMovieData(data);
   const handleKeyPress = useKeyboardHandler();
 
-  // Check card position relative to viewport
   const checkViewportPosition = useCallback(() => {
     if (!cardRef.current) return;
 
     const rect = cardRef.current.getBoundingClientRect();
     const viewportWidth = window.innerWidth;
 
-    // More aggressive thresholds for edge detection
-    const leftThreshold = 350; // If card is within 350px of left edge
-    const rightThreshold = viewportWidth - 350; // If card is within 350px of right edge
+    const leftThreshold = 350;
+    const rightThreshold = viewportWidth - 350;
 
     if (rect.left <= leftThreshold) {
       setViewportPosition("left");
@@ -60,8 +57,12 @@ const MovieCard: React.FC<MovieCardProps> = ({
     }
   }, []);
 
-  // Check position on mount and scroll
   useEffect(() => {
+    // Initial viewport-position measurement must run post-mount because it
+    // reads DOM rects (`getBoundingClientRect`). Subsequent updates are
+    // driven by the scroll listener below; this initial call is the canonical
+    // layout-measurement pattern with no event/derivation alternative.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     checkViewportPosition();
 
     const handleScroll = () => {
@@ -75,6 +76,10 @@ const MovieCard: React.FC<MovieCardProps> = ({
     }
   }, [checkViewportPosition]);
 
+  // React Compiler cannot preserve this memoization because `data?.id` is
+  // an optional access. Manual useCallback retained — this handler is
+  // attached to the card click target which re-mounts heavy children.
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleTitleDialog = useCallback(() => {
     if (onMovieClick && data?.id) {
       onMovieClick(data.id);
@@ -88,10 +93,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
     setCurrentMovieId(newMovieId);
   }, []);
 
-  // Determine position class based on viewport position or original logic
   const getEffectivePositionClass = () => {
-    if (viewportPosition === "left") return "left-0 -translate-x-8"; // More left
-    if (viewportPosition === "right") return "right-0 translate-x-8"; // More right
+    if (viewportPosition === "left") return "left-0 -translate-x-8";
+    if (viewportPosition === "right") return "right-0 translate-x-8";
     return getPositionClass(isFirst || false, isLast || false);
   };
 
@@ -138,7 +142,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
         handleKeyPress={handleKeyPress}
       >
         <MovieCardActionButtons
-          onPlayClick={() => {}}
+          contentId={data?.id?.toString() || ""}
+          contentType={data?.contentType || "MOVIE"}
           onAddClick={() => {}}
           onLikeClick={() => {}}
           onInfoClick={handleTitleDialog}

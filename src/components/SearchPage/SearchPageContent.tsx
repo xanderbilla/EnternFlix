@@ -9,7 +9,6 @@ import {
 } from "@/utils/dynamicImports";
 import { getImageUrl } from "@/utils/movieHelpers";
 
-// Native debounce implementation
 function debounce<T extends (...args: any[]) => any>(
   func: T,
   wait: number,
@@ -26,7 +25,6 @@ export default function SearchPageContent() {
   const [debouncedQuery, setDebouncedQuery] = useState<string>("");
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  // Use React Query hooks
   const { data: trendingData } = useTrending();
   const {
     data: searchData,
@@ -35,23 +33,24 @@ export default function SearchPageContent() {
     isFetchingNextPage,
   } = useSearch(debouncedQuery);
 
-  // Memoize random movie selection to prevent it from changing on every render
   const movie = useMemo(() => {
     if (trendingData?.results?.length) {
+      // Intentional UX randomness: surface a different trending title per
+      // search session. Confined inside useMemo keyed on `trendingData` so the
+      // pick is stable across re-renders and only changes with the data.
       return trendingData.results[
+        // eslint-disable-next-line react-hooks/purity
         Math.floor(Math.random() * trendingData.results.length)
       ];
     }
     return null;
   }, [trendingData]);
 
-  // Flatten all pages into a single array
   const searchRes = useMemo(() => {
     if (!searchData?.pages) return [];
     return searchData.pages.flatMap((page) => page.results || []);
   }, [searchData]);
 
-  // Debounced search function
   const debouncedSearch = useMemo(
     () =>
       debounce((query: string) => {
@@ -69,7 +68,6 @@ export default function SearchPageContent() {
     [debouncedSearch],
   );
 
-  // Infinite scroll effect
   useEffect(() => {
     const element = loadMoreRef.current;
     if (!element || !hasNextPage || isFetchingNextPage) return;

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks -- map of hook callers; consumers invoke values as hooks */
 import {
   useTrending,
   useCustomMovies,
@@ -13,12 +14,12 @@ export const HOOK_MAP: Record<
     | ReturnType<typeof useCustomContent>
     | ReturnType<typeof useDiscover>
 > = {
-  trending: () => useCustomContent("all"), // Homepage - recently added all content
-  latestRelease: () => useDiscover("latest", "all"), // Latest release - all content
-  allMovies: useCustomMovies, // Movies page - only movies
-  recentlyAdded: useCustomMovies, // Recently added movies - movie content only
-  latestMovies: () => useDiscover("latest", "movie"), // Latest movies
-  popularMovies: () => useDiscover("popular", "movie"), // Popular movies
-  trendingMovies: () => useDiscover("trending", "movie"), // Trending movies
+  trending: () => useCustomContent("all"),
+  latestRelease: () => useDiscover("latest", "all"),
+  allMovies: useCustomMovies,
+  recentlyAdded: useCustomMovies,
+  latestMovies: () => useDiscover("latest", "movie"),
+  popularMovies: () => useDiscover("popular", "movie"),
+  trendingMovies: () => useDiscover("trending", "movie"),
   allContent: () => useCustomContent("all"), // All content types
 };

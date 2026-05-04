@@ -10,13 +10,6 @@ import {
 } from "@/utils/movieHelpers";
 import { getContentRating, getQuality } from "@/utils/contentHelpers";
 
-/**
- * Custom hook to compute and memoize all movie-related data
- * Consolidates multiple utility function calls into a single memoized object
- *
- * @param data - Movie data from API
- * @returns Memoized object with all computed movie properties
- */
 export const useMovieData = (data: Movie | undefined) => {
   return useMemo(() => {
     if (!data) {

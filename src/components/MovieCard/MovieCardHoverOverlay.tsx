@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { MovieCardHoverOverlayProps } from "@/types/components";
 import type { Asset, AssetType } from "@/types/movie";
+import { config } from "@/lib/env/env";
 
 export default function MovieCardHoverOverlay({
   backdropUrl,
@@ -22,49 +23,45 @@ export default function MovieCardHoverOverlay({
   const videoRef = useRef<HTMLVideoElement>(null);
   const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Get video URL based on priority
   const getVideoUrl = useCallback((assets?: Asset[]): string | null => {
     if (!assets || assets.length === 0) return null;
 
     const priority: AssetType[] = ["TRAILER", "TEASER", "CLIP", "PROMO", "BTS"];
 
     for (const assetType of priority) {
-      const asset = assets.find((a) => a.asset === assetType);
-      if (asset && asset.key.length > 0) {
-        // Pick a random video from the available keys
-        const randomIndex = Math.floor(Math.random() * asset.key.length);
-        let videoPath = asset.key[randomIndex];
+      const asset = assets.find((a) => a.type === assetType);
+      if (asset && asset.keys.length > 0) {
+        const randomIndex = Math.floor(Math.random() * asset.keys.length);
+        let videoPath = asset.keys[randomIndex];
 
-        // Remove leading slash from videoPath if it exists
         if (videoPath.startsWith("/")) {
           videoPath = videoPath.substring(1);
         }
 
-        // Construct full URL using image base URL + video path
-        const baseUrl = process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL || "";
-        return `${baseUrl}${videoPath}`;
+        return `${config.customApi.imageBaseUrl}${videoPath}`;
       }
     }
 
     return null;
   }, []);
 
-  // Handle hover state and video playback
   useEffect(() => {
     if (isHovered && data) {
       const videoSrc = getVideoUrl(data.assets);
       if (videoSrc) {
-        // Start video after 1 second of hover
         hoverTimerRef.current = setTimeout(() => {
           setVideoUrl(videoSrc);
           setIsVideoPlaying(true);
         }, 1000);
       }
     } else {
-      // Reset when hover ends
       if (hoverTimerRef.current) {
         clearTimeout(hoverTimerRef.current);
       }
+      // Hover-end teardown: synchronize the <video> external resource with
+      // React state. Clearing url + playback flags here is required to stop
+      // the underlying media element; it is not derivable from props.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setVideoUrl(null);
       setIsVideoPlaying(false);
       setVideoEnded(false);
@@ -77,7 +74,6 @@ export default function MovieCardHoverOverlay({
     };
   }, [isHovered, data, getVideoUrl]);
 
-  // Handle video mute state
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = isMuted;
@@ -104,7 +100,6 @@ export default function MovieCardHoverOverlay({
     setIsMuted((prev) => !prev);
   }, []);
 
-  // Get directional transform classes based on viewport position
   const getDirectionalTransforms = () => {
     switch (viewportPosition) {
       case "left":

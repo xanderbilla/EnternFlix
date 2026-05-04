@@ -17,7 +17,6 @@ export default function MovieCardMetadata({
   const rating = getContentRating(data);
   const quality = getQuality(data);
 
-  // Get at most 2 tags from API response
   const displayTags = data.tags?.slice(0, 2) || [];
 
   return (

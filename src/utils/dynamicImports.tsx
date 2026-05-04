@@ -2,7 +2,6 @@
 
 import dynamic from "next/dynamic";
 
-// Layout components
 export const DynamicNavbar = dynamic(
   () => import("@/components/Navbar/Navbar"),
   { ssr: false },
@@ -18,12 +17,10 @@ export const DynamicBanner = dynamic(
   { ssr: false },
 );
 
-// Page components
 export const DynamicHome = dynamic(() => import("@/components/Home/Home"), {
   ssr: false,
 });
 
-// Movie components
 export const DynamicMovieList = dynamic(
   () => import("@/components/MovieList/MovieList"),
   { ssr: false },
@@ -34,12 +31,11 @@ export const DynamicMovieCard = dynamic(
   { ssr: false },
 );
 
-export const DynamicMovieGrid = dynamic(
-  () => import("@/components/MovieList/MovieGrid"),
+export const DynamicMovieListRow = dynamic(
+  () => import("@/components/MovieList/MovieListRow"),
   { ssr: false },
 );
 
-// UI components
 export const DynamicIcon = dynamic(() => import("@/components/Icon/Icon"), {
   ssr: false,
 });
@@ -64,7 +60,6 @@ export const DynamicDialogHeader = dynamic(
   { ssr: false },
 );
 
-// Dialog components
 export const DynamicInfoDialog = dynamic(
   () => import("@/components/Dialogs/InfoDialog"),
   { ssr: false },
@@ -85,13 +80,11 @@ export const DynamicDialogRenderer = dynamic(
   { ssr: false },
 );
 
-// Banner components
 export const DynamicBannerContent = dynamic(
   () => import("@/components/Banner/BannerContent"),
   { ssr: false },
 );
 
-// MovieCard components
 export const DynamicMovieCardHoverOverlay = dynamic(
   () => import("@/components/MovieCard/MovieCardHoverOverlay"),
   { ssr: false },
@@ -107,7 +100,6 @@ export const DynamicMovieCardMetadata = dynamic(
   { ssr: false },
 );
 
-// MovieList components
 export const DynamicScrollButton = dynamic(
   () => import("@/components/MovieList/ScrollButton"),
   { ssr: false },
@@ -118,7 +110,6 @@ export const DynamicMovieListHeader = dynamic(
   { ssr: false },
 );
 
-// Search components
 export const DynamicSearchResults = dynamic(
   () => import("@/components/SearchPage/SearchResults"),
   { ssr: false },

@@ -36,12 +36,10 @@ export interface Creator {
   profile_path: string;
 }
 
-// TitleData should not redefine Movie fields - use composition instead
-// This is a transitional type that will be removed in future refactoring
 export interface TitleData {
-  id: number | string;
-  backdropPath: string; // Made non-null for title pages (always expected)
-  posterPath: string; // Made non-null for title pages (always expected)
+  id: string;
+  backdropPath: string;
+  posterPath: string;
   title?: string;
   name?: string;
   originalName?: string;
@@ -51,10 +49,10 @@ export interface TitleData {
   releaseDate?: string;
   numberOfSeasons?: number;
   numberOfEpisodes?: number;
-  genres?: Array<{ id: string | number; name: string }>;
-  casts?: Array<{ id: string | number; name: string; coverPicture?: string }>;
-  tags?: Array<{ id: string | number; name: string }>;
-  moodTags?: Array<{ id: string | number; name: string }>;
+  genres?: Array<{ id: string; name: string }>;
+  casts?: Array<{ id: string; name: string }>;
+  tags?: Array<{ id: string; name: string }>;
+  moodTags?: Array<{ id: string; name: string }>;
   contentType?: "MOVIE" | "TV" | "PERSON";
   runtime?: number;
   status?: string;
@@ -65,21 +63,21 @@ export interface TitleData {
   originCountry?: string[];
   originalLanguage?: string;
   studios?: Array<{
-    id: string | number;
+    id: string;
     name: string;
-    coverPicture?: string;
-    logo_path?: string;
   }>;
   production_companies?: Array<{
-    id: string | number;
+    id: string;
     name: string;
-    coverPicture?: string;
-    logo_path?: string;
   }>;
   audit?: {
     createdAt: string;
     isDeleted: boolean;
   };
+  assets?: Array<{
+    type: "TRAILER" | "TEASER" | "CLIP" | "PROMO" | "BTS";
+    keys: string[];
+  }>;
 }
 
 export interface DialogBannerProps {
@@ -111,11 +109,11 @@ export interface DialogEpisode {
 
 export interface DialogAboutSectionProps {
   title: string;
-  casts: Array<{ id: string | number; name: string }>;
-  genres: Array<{ id: string | number; name: string }>;
-  tags: Array<{ id: string | number; name: string }>;
-  moodTags: Array<{ id: string | number; name: string }>;
-  productionCompanies: Array<{ id: string | number; name: string }>;
+  casts: Array<{ id: string; name: string }>;
+  genres: Array<{ id: string; name: string }>;
+  tags: Array<{ id: string; name: string }>;
+  moodTags: Array<{ id: string; name: string }>;
+  productionCompanies: Array<{ id: string; name: string }>;
   contentRating?: "18_PLUS" | "21_PLUS";
   releaseDate?: string;
   auditDate?: string;
@@ -143,7 +141,9 @@ export interface VideoControlsProps {
 
 export interface DialogActionButtonsProps {
   title: string;
-  onPlayClick?: () => void;
+  contentId?: string;
+  contentType?: "MOVIE" | "TV" | "PERSON";
+  onClose?: () => void;
   onAddToListClick?: () => void;
   onLikeClick?: () => void;
 }

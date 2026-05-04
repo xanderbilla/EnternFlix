@@ -1,6 +1,5 @@
 "use client";
 
-// Shared Intersection Observer instance for better performance
 class LazyLoadManager {
   private static instance: LazyLoadManager;
   private observer: IntersectionObserver | null = null;
@@ -21,7 +20,7 @@ class LazyLoadManager {
           });
         },
         {
-          rootMargin: "300px", // Load 300px before viewport
+          rootMargin: "300px",
           threshold: 0,
         },
       );

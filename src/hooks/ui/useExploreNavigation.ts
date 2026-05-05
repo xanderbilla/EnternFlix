@@ -40,17 +40,14 @@ export function useExploreNavigation({
 
       if (moviesToShow.length === 0) {
         moviesToShow = Array.from({ length: 8 }, (_, i) => ({
-          id: i + 1,
+          id: `sample-${i + 1}`,
           title: `${query} Content ${i + 1}`,
           backdropPath: "/sample-backdrop.jpg",
           posterPath: "/sample-poster.jpg",
           overview: `Content related to ${query}`,
           releaseDate: "2023-01-01",
-          voteAverage: 7.5,
-          voteCount: 1000,
-          popularity: 100.5,
           originalLanguage: "en",
-          genre_ids: [28, 12],
+          genres: [{ id: "28", name: "Action" }],
         }));
       }
 

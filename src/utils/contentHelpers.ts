@@ -13,9 +13,9 @@ export const getContentRating = (data: Movie): string => {
 
   if (year && year < 2000) return "U/A 18+";
 
-  const genreIds = data?.genres?.map((g) => g.id) || [];
-  if (genreIds.includes(27) || genreIds.includes(53)) return "U/A 16+";
-  if (genreIds.includes(28) || genreIds.includes(80)) return "U/A 13+";
+  const genreIds = data?.genres?.map((g) => String(g.id)) || [];
+  if (genreIds.includes("27") || genreIds.includes("53")) return "U/A 16+";
+  if (genreIds.includes("28") || genreIds.includes("80")) return "U/A 13+";
   return "U/A 7+";
 };
 

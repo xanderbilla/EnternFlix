@@ -124,6 +124,46 @@ export function validateApiResponse<T>(
     });
   }
 
+  if (typeof apiResponse.success !== "boolean") {
+    errors.push({
+      field: "success",
+      message: "Response success must be a boolean",
+      code: "INVALID_TYPE",
+    });
+  }
+
+  if (typeof apiResponse.code !== "string") {
+    errors.push({
+      field: "code",
+      message: "Response code must be a string",
+      code: "INVALID_TYPE",
+    });
+  }
+
+  if (typeof apiResponse.path !== "string") {
+    errors.push({
+      field: "path",
+      message: "Response path must be a string",
+      code: "INVALID_TYPE",
+    });
+  }
+
+  if (typeof apiResponse.request_id !== "string") {
+    errors.push({
+      field: "request_id",
+      message: "Response request_id must be a string",
+      code: "INVALID_TYPE",
+    });
+  }
+
+  if (typeof apiResponse.timestamp !== "string") {
+    errors.push({
+      field: "timestamp",
+      message: "Response timestamp must be a string",
+      code: "INVALID_TYPE",
+    });
+  }
+
   if (!("data" in apiResponse)) {
     errors.push({
       field: "data",
@@ -150,9 +190,14 @@ export function validateApiResponse<T>(
   return {
     isValid: true,
     data: {
+      success: apiResponse.success as boolean,
       status: apiResponse.status as number,
+      code: apiResponse.code as string,
       message: apiResponse.message as string,
       data: dataValidation.data!,
+      path: apiResponse.path as string,
+      request_id: apiResponse.request_id as string,
+      timestamp: apiResponse.timestamp as string,
     },
     errors: [],
   };

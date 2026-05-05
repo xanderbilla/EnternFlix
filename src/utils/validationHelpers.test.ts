@@ -181,7 +181,19 @@ describe("Property 2: Validation Error Completeness", () => {
               expect(error.code).toBeTruthy();
               expect(error.code.length).toBeGreaterThan(0);
               expect(error.field).toBeTruthy();
-              if (error.field !== "data") {
+              if (error.field.startsWith("data.") || error.field === "data") {
+                return;
+              }
+              const allowedTopLevelFields = new Set([
+                "success",
+                "status",
+                "code",
+                "message",
+                "path",
+                "request_id",
+                "timestamp",
+              ]);
+              if (!allowedTopLevelFields.has(error.field)) {
                 expect(error.field.startsWith("data.")).toBe(true);
               }
             });

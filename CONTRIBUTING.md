@@ -20,15 +20,15 @@ Thanks for taking the time to contribute! These rules keep the codebase consiste
 - TypeScript `strict` — no `any` without an inline `// eslint-disable` + reason.
 - Functional components only. Hooks for state and side-effects.
 - Server state → **React Query**. UI state → component or context.
-- Read env via `@/config/env`. Log via `@/utils/logger`. Never call `process.env.*` or `console.*` directly in app code.
-- Query keys come from `@/constants/queryKeys` — keep them centralized and typed.
+- Read env via `@/lib/env/env`. Log via `@/lib/logger/logger`. Never call `process.env.*` or `console.*` directly in app code.
+- Query keys come from `@/lib/query/queryKeys` — keep them centralized and typed.
 - Components stay small; extract hooks when logic grows.
 
 ## Commit Messages
 
 Conventional Commits style:
 
-```
+```text
 feat(banner): pause autoplay when dialog is open
 fix(api): retry only on 5xx
 refactor(hooks): split useMovieScroll
@@ -42,13 +42,13 @@ refactor(hooks): split useMovieScroll
 
 ## Adding a new API endpoint
 
-1. Add the URL builder to `src/helper/request.ts`.
-2. Add a query key to `src/constants/queryKeys.ts`.
+1. Add the URL builder to `src/lib/api/request.ts`.
+2. Add a query key to `src/lib/query/queryKeys.ts`.
 3. Create a hook in `src/hooks/api/` that returns the React Query result.
 4. Consume the hook from your component — never call axios directly inside a component.
 
 ## Adding a new env var
 
 1. Add it to `.env.example` with a description.
-2. Add a typed accessor to `src/config/env.ts`.
+2. Add a typed accessor to `src/lib/env/env.ts`.
 3. Document it in the README env table.

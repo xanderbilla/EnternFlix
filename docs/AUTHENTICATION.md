@@ -1,42 +1,97 @@
 # Authentication
 
-## Current Status
+**Status: not implemented.** EnternFlix is currently a public, read-only catalog. Every backend call is anonymous. This document describes what exists, what is intentionally missing, and how to add auth without rewriting the data layer.
 
-Authentication is not fully implemented in the current codebase.
+## Current State
 
-What exists:
+| Concern               | Status                                                           |
+| --------------------- | ---------------------------------------------------------------- |
+| Sign in / sign up UI  | Not implemented                                                  |
+| Session storage       | None (no cookies, no localStorage tokens)                        |
+| Authorization headers | Not attached to outbound requests                                |
+| Protected routes      | None — everything under `/browse`, `/search`, `/watch` is public |
+| 401 / 403 handling    | Logged as warnings via `src/lib/api/axiosInterceptors.ts`        |
+| Server middleware     | No `middleware.ts` file present                                  |
 
-- Axios interceptor logs auth-related HTTP errors (401/403).
-- Some UI labels reference auth (for example, sign-in links), but no complete flow is wired.
+## Where Auth Will Plug In
 
-What does not exist yet:
+The HTTP and route layers are already structured so an auth integration only touches a few files.
 
-- Login/logout routes and pages
-- Token issuance flow
-- Token refresh flow
-- Route protection middleware
-- Session persistence strategy
+```mermaid
+flowchart LR
+    UI["Sign-in UI<br/>(new)"] --> Session["Session store<br/>(httpOnly cookie or<br/>secure storage)"]
+    Session --> Mw["middleware.ts<br/>(new)"]
+    Session --> Interceptor["axios request interceptor<br/>(extend src/lib/api/axiosInterceptors.ts)"]
+    Mw --> Routes["Protected routes"]
+    Interceptor --> Backend["Backend API"]
+    Backend -. 401 / 403 .-> Refresh["Refresh / sign-out flow"]
+```
 
-## Recommended Flow (Target)
+## Recommended Integration Plan
 
-1. User submits credentials to backend auth endpoint.
-2. Backend sets secure HTTP-only cookies (preferred) or returns short-lived token.
-3. Frontend stores only non-sensitive session state locally.
-4. Axios request interceptor includes required auth context.
-5. Response interceptor handles 401 and attempts refresh when valid.
-6. Middleware protects private routes and redirects to login when needed.
+### 1. Choose a Session Mechanism
 
-## Token Storage Guidance
+| Option                              | Pros                                         | Cons                                   |
+| ----------------------------------- | -------------------------------------------- | -------------------------------------- |
+| HttpOnly cookie (server-set)        | Safe from XSS, works with SSR/RSC            | Requires backend to set cookie         |
+| Encrypted JWT in HttpOnly cookie    | Self-contained, easy to verify in middleware | Token rotation complexity              |
+| Token in memory + refresh in cookie | Avoids localStorage XSS exposure             | Lost on full reload until refresh runs |
 
-- Prefer secure HTTP-only cookies for auth/session tokens.
-- Avoid localStorage for sensitive long-lived tokens.
+Avoid storing tokens in `localStorage` / `sessionStorage`. They are reachable from any script that bypasses CSP.
 
-## Protected Routes
+### 2. Attach Token to Requests
 
-- Implement in `middleware.ts` once auth routes are introduced.
-- Define route groups: public, authenticated, admin.
+Extend `configureRequestInterceptor` in `src/lib/api/axiosInterceptors.ts`:
 
-## Action Items
+```ts
+instance.interceptors.request.use((cfg) => {
+  const token = readSessionToken(); // server: from cookies(); client: from a context
+  if (token) cfg.headers.Authorization = `Bearer ${token}`;
+  return cfg;
+});
+```
 
-- Add auth API integration doc updates when endpoints are available.
-- Add auth integration tests (login, expired token, refresh, logout).
+Server components and route handlers should resolve the token from cookies at request time; client hooks should read from a session context that is hydrated after sign-in.
+
+### 3. Handle 401 / 403
+
+Today, the response interceptor warns. Replace the warn with:
+
+- 401: clear session, optionally call refresh endpoint, redirect to sign-in if refresh fails.
+- 403: surface a "no access" error via `errorHelpers.ts`.
+
+### 4. Protected Routes
+
+Add `middleware.ts` at the project root:
+
+```ts
+export const config = { matcher: ["/account/:path*", "/library/:path*"] };
+export default function middleware(req) {
+  if (!req.cookies.get("session")) {
+    return NextResponse.redirect(new URL("/sign-in", req.url));
+  }
+}
+```
+
+Public routes (`/browse`, `/search`, `/watch`) stay unmatched.
+
+### 5. UI
+
+Add `Sign in` / `Sign out` controls in `src/components/Navbar/`. Reuse `BaseDialog` for any modal flows.
+
+### 6. Tests
+
+- Unit-test the request/response interceptor with a fake token in axios mocks.
+- Add a middleware integration test once routes are protected.
+
+## Security Notes
+
+- Never inline tokens behind `NEXT_PUBLIC_*` (it would ship them to the bundle).
+- Cookies must be `Secure`, `HttpOnly`, `SameSite=Lax` (or `Strict` for sensitive flows).
+- Rotate refresh tokens server-side; treat them as bearer credentials.
+- Re-evaluate CSP `connect-src` if the auth provider introduces new origins.
+
+## Related Docs
+
+- [SECURITY.md](SECURITY.md) — headers and CSP, including which directives need updates when an auth provider is added.
+- [API.md](API.md) — where the request interceptor lives.

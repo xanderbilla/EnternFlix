@@ -6,6 +6,8 @@ import VideoPlayer from "./VideoPlayer";
 import VideoControls from "./VideoControls";
 import DialogActionButtons from "./DialogActionButtons";
 import { DialogVideoSectionProps } from "@/types/title";
+import { usePlayback } from "@/hooks/api/usePlayback";
+import { getContentType } from "@/utils/movieHelpers";
 
 export default function DialogVideoSection({
   data,
@@ -15,6 +17,18 @@ export default function DialogVideoSection({
   const [videoEnded, setVideoEnded] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const contentType = data
+    ? getContentType(data) === "TV"
+      ? "tv"
+      : "movie"
+    : "movie";
+
+  const { data: playbackData } = usePlayback(
+    contentType,
+    data?.id?.toString() || "",
+    !!data?.id,
+  );
 
   const handleVideoEnded = () => {
     setIsVideoPlaying(false);
@@ -35,7 +49,7 @@ export default function DialogVideoSection({
   };
 
   return (
-    <div className="relative h-[40vh] md:h-[50vh] lg:h-[55vh] w-full">
+    <div className="relative h-[40vh] md:h-[50vh] lg:h-[55vh] w-full overflow-hidden bg-zinc-900 -mb-px">
       {data && (
         <>
           <VideoPlayer
@@ -44,6 +58,7 @@ export default function DialogVideoSection({
             isMuted={isMuted}
             videoRef={videoRef}
             data={data}
+            previewVideoPath={playbackData?.playback?.preview?.video}
             onVideoEnded={handleVideoEnded}
             onVideoLoaded={handleVideoLoaded}
           />
@@ -74,7 +89,7 @@ export default function DialogVideoSection({
           />
 
           <DialogActionButtons
-            title={data.title ?? data.name ?? data.originalName ?? ""}
+            title={data.title ?? ""}
             contentId={data.id?.toString() || ""}
             contentType={data.contentType || "MOVIE"}
             onClose={onClose}

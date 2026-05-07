@@ -1,19 +1,43 @@
 "use client";
 
-import { DynamicIcon as Icon } from "@/utils/dynamicImports";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { useNavbar } from "@/hooks/ui/useNavbar";
 import { NavbarProps } from "@/types/navbar";
 import Link from "next/link";
+import SearchField from "@/components/UI/SearchField";
+import { useNavbarSearch } from "@/hooks/ui/useNavbarSearch";
 
 const Navbar = ({ classname = "" }: NavbarProps) => {
-  const router = useRouter();
   const pathname = usePathname();
   const { showBackground } = useNavbar();
+  const {
+    searchContainerRef,
+    isSearchOpen,
+    searchValue,
+    selectedScope,
+    handleSearchOpen,
+    handleSearchChange,
+    handleClearSearch,
+    handleScopeChange,
+  } = useNavbarSearch();
 
-  const isMoviesActive = pathname?.startsWith("/movies");
+  const isMoviesActive = pathname?.startsWith("/browse/movies");
+  const isTvShowsActive = pathname?.startsWith("/browse/tv-shows");
+  const isLatestActive = pathname?.startsWith("/browse/latest");
+  const isTransparentRoute =
+    pathname === "/browse" ||
+    pathname === "/movies" ||
+    pathname === "/tv-shows" ||
+    pathname?.startsWith("/browse/movies") ||
+    pathname?.startsWith("/browse/tv-shows");
+
+  const navbarBackgroundClass = isTransparentRoute
+    ? showBackground
+      ? "bg-zinc-900"
+      : "bg-gradient-to-b from-black/70 to-transparent"
+    : "bg-zinc-900";
 
   return (
     <nav
@@ -21,12 +45,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
       className={twMerge("w-full fixed top-0 left-0 z-40", classname)}
     >
       <div
-        className={`px-4 md:px-16 py-4 flex flex-row items-center transition duration-500
-        ${
-          showBackground
-            ? "bg-zinc-900/95"
-            : "bg-gradient-to-b from-black/70 to-transparent"
-        }`}
+        className={`px-4 md:px-16 py-4 flex flex-row items-center transition duration-500 ${navbarBackgroundClass}`}
       >
         {/* Logo */}
         <Link
@@ -48,24 +67,42 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
         {/* Desktop Navigation */}
         <div className="flex-row ml-8 gap-8 hidden md:flex">
           <Link
-            href="/movies"
+            href="/browse/tv-shows"
+            aria-current={isTvShowsActive ? "page" : undefined}
+            className="text-sm text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
+          >
+            TV Shows
+          </Link>
+          <Link
+            href="/browse/movies"
             aria-current={isMoviesActive ? "page" : undefined}
-            className="text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
+            className="text-sm text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
           >
             Movies
+          </Link>
+          <Link
+            href="/browse/latest"
+            aria-current={isLatestActive ? "page" : undefined}
+            className="text-sm text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
+          >
+            Latest
           </Link>
         </div>
 
         {/* Right Side - Search Icon */}
-        <div className="flex flex-row ml-auto gap-2 md:gap-4 items-center">
-          <button
-            type="button"
-            onClick={() => router.push("/search")}
-            className="flex items-center justify-center w-10 h-10 rounded-full hover:bg-white/10 transition"
-            aria-label="Search"
-          >
-            <Icon name="search" size={20} className="text-white" />
-          </button>
+        <div
+          ref={searchContainerRef}
+          className="flex flex-row ml-auto gap-2 md:gap-4 items-center"
+        >
+          <SearchField
+            isOpen={isSearchOpen}
+            value={searchValue}
+            selectedScope={selectedScope}
+            onOpen={handleSearchOpen}
+            onChange={handleSearchChange}
+            onClear={handleClearSearch}
+            onScopeChange={handleScopeChange}
+          />
         </div>
       </div>
     </nav>

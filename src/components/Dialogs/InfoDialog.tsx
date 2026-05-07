@@ -9,12 +9,14 @@ function InfoDialog({
   onClose,
   children,
   zIndex = 9999,
+  ariaLabel = "Title details",
 }: InfoDialogProps) {
   return (
     <BaseDialog
       isOpen={isOpen}
       onClose={onClose}
       zIndex={zIndex}
+      ariaLabel={ariaLabel}
       className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[75vw] max-w-[1000px] relative"
     >
       {children}

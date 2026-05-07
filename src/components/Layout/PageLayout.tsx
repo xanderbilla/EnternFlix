@@ -12,6 +12,8 @@ import { PageLayoutProps } from "@/types/components";
 function PageLayoutContent({
   children,
   showBanner = false,
+  isContentReady = true,
+  reserveTopPaddingWhenNoBanner = true,
   gridContent,
 }: PageLayoutProps) {
   const searchParams = useSearchParams();
@@ -20,7 +22,7 @@ function PageLayoutContent({
   return (
     <div className="flex flex-col min-h-screen">
       <DynamicNavbar />
-      <div className="relative">
+      <main id="main-content" className="relative" tabIndex={-1}>
         {/* Only show banner in list view */}
         {showBanner && viewMode === "list" && <DynamicBanner />}
 
@@ -30,7 +32,11 @@ function PageLayoutContent({
             className={
               showBanner
                 ? "relative -mt-32 md:-mt-40 lg:-mt-48 z-10 pb-4 space-y-6"
-                : "pt-24 pb-4 space-y-6" // Add top padding for secondary navbar when no banner
+                : isContentReady
+                  ? reserveTopPaddingWhenNoBanner
+                    ? "pt-24 pb-4 space-y-6"
+                    : "pb-4 space-y-6"
+                  : "pb-4 space-y-6"
             }
           >
             {children}
@@ -38,7 +44,7 @@ function PageLayoutContent({
         ) : (
           <div className="pt-24 pb-4">{gridContent || children}</div>
         )}
-      </div>
+      </main>
       <DynamicFooter />
     </div>
   );

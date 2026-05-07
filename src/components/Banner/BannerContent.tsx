@@ -52,6 +52,7 @@ export default function BannerContent({
           variant="primary"
           icon="play"
           label="Play"
+          ariaLabel={`Play ${title}`}
           onClick={handlePlayClick}
           className="text-xs sm:text-sm md:text-base lg:text-lg px-4 sm:px-6 md:px-8"
         />
@@ -59,6 +60,7 @@ export default function BannerContent({
           variant="secondary"
           icon="info"
           label="More Info"
+          ariaLabel={`More info about ${title}`}
           onClick={onMoreInfoClick}
           className="text-xs sm:text-sm md:text-base lg:text-lg px-4 sm:px-6 md:px-8"
         />

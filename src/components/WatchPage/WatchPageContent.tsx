@@ -3,14 +3,14 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePlayback } from "@/hooks/api/usePlayback";
-import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
-import { useSubtitles } from "@/hooks/useSubtitles";
-import { useControlFeedback } from "@/hooks/useControlFeedback";
-import { useControlsVisibility } from "@/hooks/useControlsVisibility";
-import { useVideoControls } from "@/hooks/useVideoControls";
+import { useKeyboardShortcuts } from "@/hooks/video/useKeyboardShortcuts";
+import { useSubtitles } from "@/hooks/video/useSubtitles";
+import { useControlFeedback } from "@/hooks/video/useControlFeedback";
+import { useControlsVisibility } from "@/hooks/video/useControlsVisibility";
+import { useVideoControls } from "@/hooks/video/useVideoControls";
 import { logger } from "@/lib/logger/logger";
-import { useHLSPlayer } from "@/hooks/useHLSPlayer";
-import { useFullscreen } from "@/hooks/useFullscreen";
+import { useHLSPlayer } from "@/hooks/video/useHLSPlayer";
+import { useFullscreen } from "@/hooks/video/useFullscreen";
 import HLSVideoPlayer from "./HLSVideoPlayer";
 import VideoHeader from "./VideoHeader";
 import SubtitleDisplay from "./SubtitleDisplay";
@@ -97,6 +97,10 @@ export default function WatchPageContent({
       className="fixed inset-0 z-[9999] bg-black"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
+      onFocus={handleMouseMove}
+      onBlur={handleMouseLeave}
+      role="application"
+      aria-label="Video playback"
     >
       <VideoPlayerStyles />
 

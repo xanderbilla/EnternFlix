@@ -1,29 +1,43 @@
 "use client";
 
 import type { SearchResultsProps } from "@/types/components";
-import { useState, lazy, Suspense } from "react";
-import MovieCard from "@/components/MovieCard/MovieCard";
-
-const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
+import Image from "next/image";
+import MovieGrid from "@/components/UI/MovieGrid";
+import { getImageUrl } from "@/utils/movieHelpers";
+import { useDialogManager } from "@/hooks/ui/useDialogManager";
+import { DynamicDialogRenderer as DialogRenderer } from "@/utils/dynamicImports";
 
 export default function SearchResults({
-  searchQuery,
   debouncedQuery,
   searchRes,
+  peopleRes,
+  contentCount,
+  peopleCount,
+  selectedMode = "content",
   hasNextPage,
   loadMoreRef,
-}: SearchResultsProps) {
-  const [dialogState, setDialogState] = useState({
-    isOpen: false,
-    movieId: "",
-  });
+  onCardHover,
+}: SearchResultsProps & { onCardHover?: () => void }) {
+  const {
+    dialogStack,
+    hasBackNavigation,
+    openInfoDialog,
+    openCastDialog,
+    openDiscoverDialog,
+    goBack,
+    closeDialog,
+  } = useDialogManager();
 
   const handleMovieClick = (movieId: number | string) => {
-    setDialogState({ isOpen: true, movieId: movieId.toString() });
+    openInfoDialog(movieId.toString(), 10000);
   };
 
-  const handleMovieChange = (newMovieId: string) => {
-    setDialogState((prev) => ({ ...prev, movieId: newMovieId }));
+  const handlePersonClick = (castId: string, castName: string) => {
+    openCastDialog(castId, castName, undefined, 10001);
+  };
+
+  const handleMovieChange = (newMovieId: number | string) => {
+    openInfoDialog(newMovieId.toString(), 10000);
   };
 
   if (!debouncedQuery) {
@@ -34,7 +48,13 @@ export default function SearchResults({
     );
   }
 
-  if (searchRes.length === 0) {
+  const showPeople = selectedMode === "people";
+  const showContent = selectedMode === "content";
+
+  const activePeopleRes = showPeople ? peopleRes : [];
+  const activeSearchRes = showContent ? searchRes : [];
+
+  if (activeSearchRes.length === 0 && activePeopleRes.length === 0) {
     return (
       <div className="text-center text-gray-400 py-12">
         <p className="text-xl">
@@ -47,54 +67,87 @@ export default function SearchResults({
 
   return (
     <>
-      <div className="mb-6">
-        <h2 className="text-white text-2xl font-semibold">
-          Search Results for &ldquo;{debouncedQuery}&rdquo;
-        </h2>
-        <p className="text-gray-400 mt-1">{searchRes.length} results found</p>
-      </div>
+      {activePeopleRes.length > 0 && (
+        <section className="mb-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
+            {activePeopleRes.map((person) => {
+              const profileUrl = getImageUrl(
+                person.profilePath ?? null,
+                "w500",
+              );
+              const backdropUrl = getImageUrl(
+                person.backdropPath ?? null,
+                "w780",
+              );
 
-      {/* Grid of 5 columns with MovieCard */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2 pb-10">
-        {searchRes.map((movie, index) => (
-          <div key={`${movie.id}-${index}`} className="group/item">
-            <MovieCard
-              data={movie}
-              isFirst={index === 0}
-              isLast={index === searchRes.length - 1}
-              onMovieClick={handleMovieClick}
-            />
+              return (
+                <article key={person.id} className="rounded-md overflow-hidden">
+                  <button
+                    type="button"
+                    onClick={() => handlePersonClick(person.id, person.name)}
+                    onMouseEnter={onCardHover}
+                    className="relative w-full aspect-[2/3] bg-zinc-700 block"
+                    aria-label={`Open cast details for ${person.name}`}
+                  >
+                    {profileUrl ? (
+                      <Image
+                        src={profileUrl}
+                        alt="Person image"
+                        fill
+                        sizes="(max-width: 768px) 40vw, 16vw"
+                        className="object-cover"
+                      />
+                    ) : backdropUrl ? (
+                      <Image
+                        src={backdropUrl}
+                        alt="Person image"
+                        fill
+                        sizes="(max-width: 768px) 40vw, 16vw"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-sm text-zinc-300 px-3 text-center">
+                        No image
+                      </div>
+                    )}
+                  </button>
+                </article>
+              );
+            })}
           </div>
-        ))}
-      </div>
+        </section>
+      )}
+
+      {/* Static content grid (Explore/Cast dialog style), responsive up to 6 columns */}
+      {activeSearchRes.length > 0 && (
+        <section>
+          <MovieGrid
+            movies={activeSearchRes}
+            onMovieClick={handleMovieClick}
+            columns={6}
+            disableAnimation={true}
+            fullWidth={true}
+            eagerLoadCount={6}
+            onCardHover={onCardHover}
+          />
+        </section>
+      )}
 
       {/* Load More Trigger */}
       {hasNextPage && (
-        <div
-          ref={loadMoreRef}
-          className="py-8 text-center"
-          role="status"
-          aria-live="polite"
-          aria-label="Loading more results"
-        >
-          <div
-            className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white"
-            aria-hidden="true"
-          ></div>
-        </div>
+        <div ref={loadMoreRef} className="h-px" aria-hidden="true" />
       )}
 
-      {/* Title Dialog */}
-      {dialogState.isOpen && (
-        <Suspense fallback={null}>
-          <TitleDialog
-            isOpen={dialogState.isOpen}
-            titleId={dialogState.movieId}
-            onClose={() => setDialogState({ isOpen: false, movieId: "" })}
-            onMovieChange={handleMovieChange}
-          />
-        </Suspense>
-      )}
+      <DialogRenderer
+        dialogStack={dialogStack}
+        hasBackNavigation={hasBackNavigation}
+        onClose={closeDialog}
+        onBack={goBack}
+        onMovieClick={handleMovieClick}
+        onInfoDialogOpen={handleMovieChange}
+        onOpenCastDialog={openCastDialog}
+        onOpenDiscoverDialog={openDiscoverDialog}
+      />
     </>
   );
 }

@@ -5,6 +5,8 @@ import type { Movie } from "@/types/movie";
 import { usePerson } from "@/hooks/api/usePerson";
 import { useMemo, memo } from "react";
 
+const BIO_PREVIEW_LENGTH = 150;
+
 interface CastInfoProps {
   castId: string;
   castName: string;
@@ -50,6 +52,13 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
     [personData?.birthDate, formatDate],
   );
 
+  const truncatedBio = (() => {
+    if (!personData?.bio) return null;
+    if (personData.bio.length <= 150) return personData.bio;
+
+    return personData.bio.slice(0, 150).trimEnd();
+  })();
+
   return (
     <>
       {/* Movie Grid - Always visible */}
@@ -70,8 +79,8 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
               {/* Left Column - Bio */}
               {personData.bio && (
                 <div>
-                  <p className="text-white/80 text-sm leading-relaxed">
-                    {personData.bio}
+                  <p className="text-white/80 text-[15px] leading-relaxed">
+                    {truncatedBio}
                   </p>
                 </div>
               )}

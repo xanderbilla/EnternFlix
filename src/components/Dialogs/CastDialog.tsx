@@ -39,6 +39,7 @@ export default function CastDialog({
       onClose={onClose}
       onBack={onBack}
       zIndex={zIndex}
+      ariaLabel={`About ${castName}`}
       className="w-[95vw] sm:w-[90vw] md:w-[85vw] lg:w-[75vw] max-w-[1200px]"
     >
       {({ handleClose, handleBack }) => (

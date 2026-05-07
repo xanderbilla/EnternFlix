@@ -9,6 +9,7 @@ import {
   useEffect,
   useRef,
 } from "react";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText, getContentRating } from "@/utils/contentHelpers";
@@ -56,6 +57,12 @@ const Banner = () => {
   useEffect(() => {
     if (!movie) return;
 
+    // State reset is intentionally synchronized to upstream movie changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsVideoPlaying(false);
+    setVideoEnded(false);
+    setVideoUrl(null);
+
     const contentRatingTimer = setTimeout(() => {
       setShowContentRating(true);
     }, 1000);
@@ -69,7 +76,6 @@ const Banner = () => {
     if (videoSrc) {
       const videoTimer = setTimeout(() => {
         setVideoUrl(videoSrc);
-        setIsVideoPlaying(true);
       }, 3000);
 
       return () => {
@@ -137,13 +143,21 @@ const Banner = () => {
   const contentRating = getContentRating(movie);
 
   return (
-    <div className="relative h-[85vh] md:h-[92vh] lg:h-[100vh]">
+    <section
+      className="relative h-[85vh] md:h-[92vh] lg:h-[100vh]"
+      role="region"
+      aria-label={`Featured banner: ${movieTitle}`}
+    >
       {/* Backdrop Image */}
-      <div
-        className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-[1500ms] ease-in-out ${
+      <Image
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-[1500ms] ease-in-out ${
           isVideoPlaying ? "opacity-0" : "opacity-100"
         }`}
-        style={{ backgroundImage: `url('${backdropUrl}')` }}
+        src={backdropUrl}
+        alt={`${movieTitle} backdrop`}
+        fill
+        priority
+        sizes="100vw"
       />
 
       {/* Video Player */}
@@ -158,6 +172,7 @@ const Banner = () => {
           muted={isMuted}
           playsInline
           disablePictureInPicture
+          onCanPlay={() => setIsVideoPlaying(true)}
           onEnded={handleVideoEnd}
         />
       )}
@@ -221,7 +236,7 @@ const Banner = () => {
           {/* Replay Button - Only show when video has ended */}
           {videoEnded && videoUrl && (
             <button
-              aria-label="Replay"
+              aria-label={`Replay ${movieTitle} preview`}
               className="absolute inset-0 rounded-full border-2 border-white/60 bg-transparent hover:bg-white/10 flex items-center justify-center transition-opacity duration-500"
               type="button"
               onClick={handleReplay}
@@ -274,7 +289,7 @@ const Banner = () => {
         onOpenCastDialog={openCastDialog}
         onOpenDiscoverDialog={openDiscoverDialog}
       />
-    </div>
+    </section>
   );
 };
 

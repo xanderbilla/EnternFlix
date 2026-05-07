@@ -13,7 +13,11 @@ export default function FavoritesBanner({ movie }: FavoritesBannerProps) {
     : null;
 
   return (
-    <div className="relative h-[85vh] md:h-[92vh] lg:h-[100vh]">
+    <section
+      className="relative h-[85vh] md:h-[92vh] lg:h-[100vh]"
+      role="region"
+      aria-label="Favorites banner"
+    >
       {backdropUrl ? (
         <>
           <div
@@ -34,6 +38,6 @@ export default function FavoritesBanner({ movie }: FavoritesBannerProps) {
           Your personal collection of handpicked entertainment awaits.
         </p>
       </div>
-    </div>
+    </section>
   );
 }

@@ -1,9 +1,10 @@
 import "./globals.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import QueryProvider from "@/lib/query/QueryProvider";
 import { VideoProvider } from "@/contexts/VideoContext";
 import { TransitionProvider } from "@/contexts/TransitionContext";
+import { getAbsoluteUrl, siteConfig } from "@/config/site";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -11,41 +12,80 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL("https://enternflix.vercel.app"),
-  title: {
-    default: "EnternFlix - Stream Movies, TV Shows & Anime Online",
-    template: "%s - EnternFlix",
-  },
-  description:
-    "Stream unlimited movies, TV shows, and anime on EnternFlix. Discover trending content, explore categories, and enjoy next-gen entertainment anytime, anywhere.",
-  keywords: [
-    "streaming platform",
-    "movies online",
-    "tv shows",
-    "anime streaming",
-    "watch movies",
-    "entertainment",
-    "netflix alternative",
-    "video streaming",
+const defaultDocumentTitle = `${siteConfig.name} - ${siteConfig.tagline}`;
+const defaultOgImage = siteConfig.ogImage
+  ? [{ url: siteConfig.ogImage }]
+  : undefined;
+const defaultTwitterImages = siteConfig.ogImage
+  ? [siteConfig.ogImage]
+  : undefined;
+
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteConfig.url}#organization`,
+      name: siteConfig.name,
+      url: siteConfig.url,
+      logo: siteConfig.ogImage ? getAbsoluteUrl(siteConfig.ogImage) : undefined,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteConfig.url}#website`,
+      url: siteConfig.url,
+      name: siteConfig.name,
+      description: siteConfig.description,
+      publisher: { "@id": `${siteConfig.url}#organization` },
+      inLanguage: siteConfig.locale.replace("_", "-"),
+      potentialAction: {
+        "@type": "SearchAction",
+        target: {
+          "@type": "EntryPoint",
+          urlTemplate: `${getAbsoluteUrl("/search")}?q={search_term_string}`,
+        },
+        "query-input": "required name=search_term_string",
+      },
+    },
   ],
-  authors: [{ name: "EnternFlix" }],
-  creator: "EnternFlix",
-  publisher: "EnternFlix",
+};
+
+export const viewport: Viewport = {
+  themeColor: siteConfig.themeColor,
+  width: "device-width",
+  initialScale: 1,
+};
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: defaultDocumentTitle,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: [...siteConfig.keywords, "netflix alternative"],
+  authors: [{ name: siteConfig.creator }],
+  creator: siteConfig.creator,
+  publisher: siteConfig.creator,
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: "https://enternflix.vercel.app",
-    siteName: "EnternFlix",
-    title: "EnternFlix - Stream Movies, TV Shows & Anime Online",
-    description:
-      "Stream unlimited movies, TV shows, and anime on EnternFlix. Discover trending content, explore categories, and enjoy next-gen entertainment anytime, anywhere.",
+    locale: siteConfig.locale,
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: defaultDocumentTitle,
+    description: siteConfig.description,
+    images: defaultOgImage,
   },
   twitter: {
     card: "summary_large_image",
-    title: "EnternFlix - Stream Movies, TV Shows & Anime Online",
-    description:
-      "Stream unlimited movies, TV shows, and anime on EnternFlix. Discover trending content, explore categories, and enjoy next-gen entertainment anytime, anywhere.",
+    title: defaultDocumentTitle,
+    description: siteConfig.description,
+    images: defaultTwitterImages,
+    site: siteConfig.twitter.site || undefined,
+    creator: siteConfig.twitter.handle || undefined,
   },
   robots: {
     index: true,
@@ -65,6 +105,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.className} text-white`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        />
+        <a href="#main-content" className="skip-to-content">
+          Skip to main content
+        </a>
         <QueryProvider>
           <VideoProvider>
             <TransitionProvider>{children}</TransitionProvider>

@@ -18,8 +18,7 @@ export default function ScrollButton({
     <div
       className={`absolute ${isLeft ? "left-0 justify-start pl-4" : "right-0 justify-end pr-4"} top-0 bottom-0 z-[60] w-32 
       bg-gradient-to-${isLeft ? "r" : "l"} from-black/80 via-black/60 to-transparent
-      items-center flex group/scroll cursor-pointer`}
-      onClick={onClick}
+      items-center flex group/scroll`}
     >
       <CircularButton
         onClick={(e) => {

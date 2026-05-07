@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import RemoteImage from "@/components/UI/RemoteImage";
 import React, {
   useCallback,
   memo,
@@ -110,27 +110,21 @@ const MovieCard: React.FC<MovieCardProps> = ({
     >
       <button
         onClick={handleTitleDialog}
-        className="w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden"
+        className="relative w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden"
         aria-label={`View details for ${data?.title || "this title"}`}
       >
-        {movieData.posterUrl ? (
-          <Image
-            className="object-contain transition duration-300 shadow-xl w-full h-full rounded-md
+        <RemoteImage
+          className="object-contain transition duration-300 shadow-xl w-full h-full rounded-md
             md:group-hover/item:opacity-0 delay-300"
-            fill
-            sizes="(max-width: 640px) 150px, (max-width: 1024px) 180px, 200px"
-            src={movieData.posterUrl}
-            alt={data?.title || "Movie poster"}
-            loading={isFirst ? "eager" : "lazy"}
-            priority={isFirst}
-            placeholder="empty"
-            unoptimized={!movieData.posterUrl.includes("tmdb.org")}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base bg-zinc-800 rounded-md">
-            Image not available
-          </div>
-        )}
+          fill
+          sizes="(max-width: 640px) 150px, (max-width: 1024px) 180px, 200px"
+          src={movieData.posterUrl}
+          alt={data?.title || "Movie poster"}
+          loading={isFirst ? "eager" : "lazy"}
+          priority={isFirst}
+          placeholder="empty"
+          fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base bg-zinc-800 rounded-md"
+        />
       </button>
 
       <MovieCardHoverOverlay
@@ -143,6 +137,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
       >
         <MovieCardActionButtons
           contentId={data?.id?.toString() || ""}
+          title={data?.title || "this title"}
           contentType={data?.contentType || "MOVIE"}
           onAddClick={() => {}}
           onLikeClick={() => {}}

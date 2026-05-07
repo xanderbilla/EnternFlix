@@ -27,10 +27,3 @@ export const DEFAULT_GENRES: Record<string, NavbarGenre[]> = {
     { id: 14, name: "Fantasy" },
   ],
 };
-
-export const SORT_OPTIONS = [
-  "Suggestions for you",
-  "Year Released",
-  "A-Z",
-  "Z-A",
-];

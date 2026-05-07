@@ -1,14 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useMemo } from "react";
-import Icon from "@/components/Icon/Icon";
-import Button from "@/components/Button/Button";
+import { useRouter } from "next/navigation";
+import ActionButton from "@/components/Button/ActionButton";
 import { useTrending } from "@/hooks/api/useMovies";
 import { getImageUrl } from "@/utils/movieHelpers";
 
-export default function NotFoundContent() {
+interface NotFoundContentProps {
+  mode?: "not-found" | "error";
+  onRetry?: () => void;
+}
+
+export default function NotFoundContent({
+  mode = "not-found",
+  onRetry,
+}: NotFoundContentProps) {
+  const router = useRouter();
   const { data: trendingData } = useTrending();
 
   // Pick a backdrop once per trending payload so it stays stable across renders.
@@ -24,6 +32,15 @@ export default function NotFoundContent() {
     const index = Math.floor(Math.random() * results.length);
     return results[index].backdropPath ?? null;
   }, [trendingData]);
+
+  const isErrorMode = mode === "error";
+  const titleText = isErrorMode
+    ? "Something Went Wrong"
+    : "Content Not Available";
+  const statusBadge = isErrorMode ? "Error" : "Not Found";
+  const descriptionText = isErrorMode
+    ? "Something unexpected happened. Please try again, or discover thousands of movies, TV shows, and anime in our collection."
+    : "The page you're looking for doesn't exist or has been moved. Discover thousands of movies, TV shows, and anime in our collection.";
 
   return (
     <div className="relative h-screen w-full">
@@ -48,42 +65,49 @@ export default function NotFoundContent() {
         <div className="absolute top-[35%] md:top-[25%] ml-4 md:ml-16">
           {/* Subtitle */}
           <h2 className="text-white text-2xl md:text-4xl lg:text-5xl xl:text-6xl h-full w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] font-bold drop-shadow-xl mb-4">
-            Content Not Available
+            {titleText}
           </h2>
 
           {/* Meta Info */}
           <div className="flex gap-2 md:gap-4 font-light text-zinc-400 text-sm md:text-base mt-2 md:mt-4 lg:text-lg drop-shadow-xl">
             <p className="text-xs md:text-sm lg:text-lg">Error</p>
             <p className="border border-zinc-400 px-1 md:px-2 text-xs md:text-sm lg:text-lg">
-              Not Found
+              {statusBadge}
             </p>
           </div>
 
           {/* Description */}
           <p className="text-white text-sm md:text-base mt-3 md:mt-8 w-[95%] md:w-[90%] lg:w-[70%] xl:w-[60%] lg:text-lg drop-shadow-xl">
-            The page you&apos;re looking for doesn&apos;t exist or has been
-            moved. Discover thousands of movies, TV shows, and anime in our
-            collection.
+            {descriptionText}
           </p>
 
           {/* Action Buttons */}
           <div className="flex flex-row items-center mt-4 md:mt-6 gap-3">
-            <Link href="/">
-              <Button
-                variant="banner-play"
-                className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg font-semibold flex flex-row items-center"
-              >
-                <Icon name="home" size={20} className="mr-1" /> Go Home
-              </Button>
-            </Link>
-            <Link href="/search">
-              <Button
-                variant="banner-info"
-                className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg font-semibold flex flex-row items-center gap-1"
-              >
-                <Icon name="search" size={20} className="mr-1" /> Search Content
-              </Button>
-            </Link>
+            {isErrorMode && onRetry && (
+              <ActionButton
+                variant="primary"
+                icon="retry"
+                label="Try Again"
+                onClick={onRetry}
+                className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg"
+              />
+            )}
+
+            <ActionButton
+              variant="primary"
+              icon="home"
+              label="Go Home"
+              onClick={() => router.push("/browse")}
+              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg"
+            />
+
+            <ActionButton
+              variant="secondary"
+              icon="search"
+              label="Search Content"
+              onClick={() => router.push("/search")}
+              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg"
+            />
           </div>
         </div>
       </div>

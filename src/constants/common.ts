@@ -8,9 +8,3 @@ export const TEXT_LIMITS = {
   DESCRIPTION_MAX: 200,
   SHORT_DESCRIPTION: 100,
 } as const;
-
-export const ANIMATION_DURATION = {
-  FAST: 200,
-  NORMAL: 300,
-  SLOW: 500,
-} as const;

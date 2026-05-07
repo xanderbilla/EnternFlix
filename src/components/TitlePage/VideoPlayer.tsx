@@ -4,8 +4,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { TitleVideoPlayerProps } from "@/types/title";
 import { getImageUrl } from "@/utils/movieHelpers";
+import { constructVideoUrl } from "@/utils/videoHelpers";
 import type { Asset, AssetType } from "@/types/movie";
-import { config } from "@/lib/env/env";
 
 export default function VideoPlayer({
   data,
@@ -13,6 +13,7 @@ export default function VideoPlayer({
   videoLoaded,
   isMuted,
   videoRef,
+  previewVideoPath,
   onVideoEnded,
   onVideoLoaded,
 }: TitleVideoPlayerProps) {
@@ -30,13 +31,7 @@ export default function VideoPlayer({
       const asset = assets.find((a) => a.type === assetType);
       if (asset && asset.keys.length > 0) {
         const randomIndex = Math.floor(Math.random() * asset.keys.length);
-        let videoPath = asset.keys[randomIndex];
-
-        if (videoPath.startsWith("/")) {
-          videoPath = videoPath.substring(1);
-        }
-
-        return `${config.customApi.imageBaseUrl}${videoPath}`;
+        return constructVideoUrl(asset.keys[randomIndex]);
       }
     }
 
@@ -46,19 +41,21 @@ export default function VideoPlayer({
   useEffect(() => {
     if (!data) return;
 
-    const videoSrc = getVideoUrl(data.assets);
-    if (videoSrc) {
-      const timer = setTimeout(() => {
-        setVideoUrl(videoSrc);
-        setIsVideoPlaying(true);
-        if (onVideoLoaded) {
-          onVideoLoaded();
-        }
-      }, 1000);
+    const videoSrc = previewVideoPath
+      ? constructVideoUrl(previewVideoPath)
+      : getVideoUrl(data.assets);
 
-      return () => clearTimeout(timer);
+    // Video fade reset when source changes; this intentionally precedes
+    // subsequent async src assignment to preserve the crossfade effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsVideoPlaying(false);
+    if (videoSrc) {
+      setVideoUrl(videoSrc);
+      return;
     }
-  }, [data, getVideoUrl, onVideoLoaded]);
+
+    setVideoUrl(null);
+  }, [data, getVideoUrl, previewVideoPath]);
 
   useEffect(() => {
     if (videoRef?.current) {
@@ -73,6 +70,13 @@ export default function VideoPlayer({
     }
   }, [onVideoEnded]);
 
+  const handleCanPlay = useCallback(() => {
+    setIsVideoPlaying(true);
+    if (onVideoLoaded) {
+      onVideoLoaded();
+    }
+  }, [onVideoLoaded]);
+
   return (
     <>
       {/* Backdrop Image */}
@@ -82,10 +86,9 @@ export default function VideoPlayer({
             isVideoPlaying ? "opacity-0" : "opacity-100"
           }`}
           src={backdropUrl}
-          alt={`${data.title ?? data.name ?? data.originalName} backdrop`}
+          alt={`${data.title ?? ""} backdrop`}
           width={1920}
           height={1080}
-          unoptimized={!backdropUrl.includes("tmdb.org")}
         />
       ) : (
         <div className="absolute inset-0 w-full h-full bg-zinc-900" />
@@ -103,6 +106,8 @@ export default function VideoPlayer({
           muted={isMuted}
           playsInline
           disablePictureInPicture
+          onLoadedData={handleCanPlay}
+          onCanPlay={handleCanPlay}
           onEnded={handleVideoEnd}
         />
       )}

@@ -157,7 +157,7 @@ export default function DialogAboutSection({
                     onClick={() =>
                       onExploreClick?.(
                         genre.id.toString(),
-                        `${genre.name} Movies & Shows`,
+                        `${genre.name}`,
                         false,
                       )
                     }

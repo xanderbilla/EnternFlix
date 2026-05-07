@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo, useCallback, useRef, memo } from "react";
 import { MovieListProps } from "@/types/components";
 import { HOOK_MAP } from "@/constants/hookMap";
+import { Movie } from "@/types/movie";
 import {
   DynamicScrollButton as ScrollButton,
   DynamicMovieListRow as MovieListRow,
@@ -14,12 +15,19 @@ import { useMovieScroll } from "@/hooks/ui/useMovieScroll";
 import { useDialogBodyScroll } from "@/hooks/ui/useDialogBodyScroll";
 import { useBodyOverflow } from "@/hooks/ui/useBodyOverflow";
 import { useHoverState } from "@/hooks/ui/useHoverState";
+import { useRouter } from "next/navigation";
+import {
+  fetchFreshExploreMovies,
+  getDiscoverNavigation,
+} from "@/services/content/exploreContent";
 
 const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
+  const router = useRouter();
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showLeftButton, setShowLeftButton] = useState(false);
   const [showRightButton, setShowRightButton] = useState(true);
   const [showExploreButton, setShowExploreButton] = useState(false);
+  const [isCompactViewport, setIsCompactViewport] = useState(false);
 
   const useHook = HOOK_MAP[hookName];
   const { data: response, error } = useHook?.() || {};
@@ -52,6 +60,9 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
     [movies.length],
   );
 
+  const shouldShowInteractiveScroll =
+    shouldShowScrollButtons && (showButtons || isCompactViewport);
+
   const checkScrollButtons = useCallback(() => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
@@ -72,9 +83,22 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
     setShowExploreButton(false);
   }, []);
 
-  const handleExploreClick = useCallback(() => {
-    openExploreDialog(title, movies);
-  }, [openExploreDialog, title, movies]);
+  const handleExploreClick = useCallback(async () => {
+    try {
+      const freshMovies = await fetchFreshExploreMovies(hookName, movies);
+      const discoverNavigation = getDiscoverNavigation(hookName);
+
+      if (discoverNavigation) {
+        const { pagePath, queryType } = discoverNavigation;
+        router.push(queryType ? `${pagePath}?type=${queryType}` : pagePath);
+      } else {
+        // Disable pagination for non-discover lists (backward compatibility)
+        openExploreDialog(title, freshMovies.length > 0 ? freshMovies : movies);
+      }
+    } catch {
+      openExploreDialog(title, movies);
+    }
+  }, [openExploreDialog, title, movies, hookName, router]);
 
   const handleMovieClick = useCallback(
     (movieId: number | string) => {
@@ -82,6 +106,19 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
     },
     [openInfoDialog],
   );
+
+  useEffect(() => {
+    const syncViewport = () => {
+      setIsCompactViewport(window.innerWidth <= 768);
+    };
+
+    syncViewport();
+    window.addEventListener("resize", syncViewport);
+
+    return () => {
+      window.removeEventListener("resize", syncViewport);
+    };
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -127,15 +164,20 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
           className="relative overflow-visible group/movielist"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
+          onFocus={handleMouseEnter}
+          onBlur={handleMouseLeave}
+          role="region"
+          aria-label={`${title} carousel`}
         >
           {/* Left gradient overlay */}
           {!dialogState.isOpen &&
-            shouldShowScrollButtons &&
-            (showButtons || window.innerWidth <= 768) &&
+            shouldShowInteractiveScroll &&
             showLeftButton && (
-              <div
+              <button
+                type="button"
                 className="absolute left-0 top-0 bottom-0 w-32 z-[58] bg-gradient-to-r from-black/60 via-black/30 to-transparent cursor-pointer"
                 onClick={() => scroll("left")}
+                aria-label="Scroll list left"
               />
             )}
 
@@ -144,8 +186,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
             onClick={() => scroll("left")}
             show={
               !dialogState.isOpen &&
-              shouldShowScrollButtons &&
-              (showButtons || window.innerWidth <= 768) &&
+              shouldShowInteractiveScroll &&
               showLeftButton
             }
           />
@@ -161,20 +202,20 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
             onClick={() => scroll("right")}
             show={
               !dialogState.isOpen &&
-              shouldShowScrollButtons &&
-              (showButtons || window.innerWidth <= 768) &&
+              shouldShowInteractiveScroll &&
               showRightButton
             }
           />
 
           {/* Right gradient overlay */}
           {!dialogState.isOpen &&
-            shouldShowScrollButtons &&
-            (showButtons || window.innerWidth <= 768) &&
+            shouldShowInteractiveScroll &&
             showRightButton && (
-              <div
+              <button
+                type="button"
                 className="absolute right-0 top-0 bottom-0 w-32 z-[58] bg-gradient-to-l from-black/60 via-black/30 to-transparent cursor-pointer"
                 onClick={() => scroll("right")}
+                aria-label="Scroll list right"
               />
             )}
         </div>

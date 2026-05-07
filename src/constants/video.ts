@@ -12,14 +12,6 @@ export const HLS_CONFIG = {
   BACK_BUFFER_LENGTH: 90,
 } as const;
 
-export const VIDEO_QUALITY_OPTIONS = [
-  "auto",
-  "360p",
-  "480p",
-  "720p",
-  "1080p",
-] as const;
-
 export const KEYBOARD_SHORTCUTS = {
   PLAY_PAUSE: " ",
   SEEK_FORWARD: "ArrowRight",

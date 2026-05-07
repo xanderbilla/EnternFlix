@@ -31,9 +31,9 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
     }
   };
 
-  const releaseYear = data ? getReleaseYear(data as any) : "Unknown";
+  const releaseYear = data ? getReleaseYear(data) : "Unknown";
 
-  const isTV = data ? getContentType(data as any) === "TV" : false;
+  const isTV = data ? getContentType(data) === "TV" : false;
   const numberOfSeasons = data?.numberOfSeasons || 1;
 
   const casts = data?.casts || [];
@@ -47,7 +47,7 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
       <DialogVideoSection data={data} onClose={onClose} />
 
       {/* Information Section */}
-      <div className="px-4 md:px-16 py-8 bg-zinc-900">
+      <div className="relative -mt-px px-4 md:px-16 py-8 bg-zinc-900">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Left Column */}
           <DialogInfoSection
@@ -57,7 +57,7 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
             overview={data?.overview || ""}
             runtime={data?.runtime}
             contentRating={data?.contentRating}
-            movieData={data as any}
+            movieData={data ?? undefined}
           />
 
           {/* Right Column - Inline Info */}
@@ -89,9 +89,7 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
           genres={genres}
           tags={tags}
           moodTags={moodTags}
-          productionCompanies={
-            data?.studios || data?.production_companies || []
-          }
+          productionCompanies={data?.studios || []}
           contentRating={data?.contentRating}
           releaseDate={data?.releaseDate || data?.firstAirDate}
           auditDate={data?.audit?.createdAt}
@@ -99,7 +97,7 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
           originCountry={data?.originCountry}
           originalLanguage={data?.originalLanguage}
           onExploreClick={onExploreClick}
-          movieData={data as any}
+          movieData={data ?? undefined}
         />
       </div>
     </div>

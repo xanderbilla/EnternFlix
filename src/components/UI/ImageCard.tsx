@@ -33,6 +33,7 @@ export default function ImageCard({
             src={imageUrl}
             alt={alt}
             fill
+            sizes="(max-width: 768px) 96px, 128px"
             className={`object-cover ${shape === "square" ? "brightness-0 invert" : ""}`}
           />
         ) : (

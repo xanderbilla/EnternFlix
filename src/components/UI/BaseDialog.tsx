@@ -1,7 +1,7 @@
 "use client";
 
 import type { BaseDialogProps } from "@/types/components";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useVideo } from "@/contexts/VideoContext";
 
@@ -12,12 +12,15 @@ export default function BaseDialog({
   children,
   zIndex = 9999,
   className = "",
+  contentAlignment = "center",
   ariaLabel,
   ariaLabelledBy,
 }: BaseDialogProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [isEntering, setIsEntering] = useState(false);
   const [shouldRender, setShouldRender] = useState(isOpen);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedElementRef = useRef<HTMLElement | null>(null);
   const { pauseBanner, resumeBanner } = useVideo();
 
   const handleClose = useCallback(() => {
@@ -100,6 +103,43 @@ export default function BaseDialog({
     };
   }, [isOpen, handleClose, handleBack, onBack]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+
+    previouslyFocusedElementRef.current =
+      document.activeElement as HTMLElement | null;
+
+    const focusTarget = dialogRef.current?.querySelector<HTMLElement>(
+      "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+    );
+    focusTarget?.focus();
+
+    return () => {
+      previouslyFocusedElementRef.current?.focus();
+    };
+  }, [isOpen]);
+
+  const handleDialogKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key !== "Tab") return;
+
+    const focusable = dialogRef.current?.querySelectorAll<HTMLElement>(
+      "button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])",
+    );
+    if (!focusable || focusable.length === 0) return;
+
+    const firstElement = focusable[0];
+    const lastElement = focusable[focusable.length - 1];
+    const activeElement = document.activeElement as HTMLElement | null;
+
+    if (event.shiftKey && activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  };
+
   if (!shouldRender) return null;
 
   return createPortal(
@@ -107,17 +147,22 @@ export default function BaseDialog({
       className={`fixed inset-0 bg-black/50 overflow-y-auto no-scrollbar transition-opacity duration-500 ease-in-out ${
         isClosing ? "opacity-0" : isEntering ? "opacity-100" : "opacity-0"
       }`}
-      style={{ zIndex }}
+      style={{ zIndex, overflowAnchor: "none" }}
       onClick={onBack ? handleBack : handleClose}
       role="presentation"
     >
-      <div className="min-h-full flex items-center justify-center py-8">
+      <div
+        className={`min-h-full flex justify-center py-8 ${
+          contentAlignment === "start" ? "items-start" : "items-center"
+        }`}
+      >
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label={ariaLabelledBy ? undefined : (ariaLabel ?? "Dialog")}
           aria-labelledby={ariaLabelledBy}
-          className={`bg-zinc-900 rounded-lg shadow-2xl overflow-hidden transition-all duration-500 ease-in-out origin-center ${
+          className={`bg-zinc-900 rounded-lg shadow-2xl overflow-hidden transition-all duration-500 ease-in-out origin-center transform-gpu will-change-transform [backface-visibility:hidden] ${
             isClosing
               ? "scale-75 opacity-0"
               : isEntering
@@ -125,6 +170,7 @@ export default function BaseDialog({
                 : "scale-75 opacity-0"
           } ${className}`}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={handleDialogKeyDown}
         >
           {typeof children === "function"
             ? children({ handleClose, handleBack })

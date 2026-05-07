@@ -1,13 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
-import { useTitle, type TitleData } from "@/hooks/api/useTitle";
+import { useTitle } from "@/hooks/api/useTitle";
+import { useRouter } from "next/navigation";
 import DialogBanner from "./DialogBanner";
 import InfoDialog from "@/components/Dialogs/InfoDialog";
 import { DynamicDialogRenderer as DialogRenderer } from "@/utils/dynamicImports";
 import { useDialogManager } from "@/hooks/ui/useDialogManager";
 import { TitleDialogProps } from "@/types/components";
-import { useTrending } from "@/hooks/api/useMovies";
 import { useMovieTransition } from "@/hooks/ui/useMovieTransition";
 import { useExploreNavigation } from "@/hooks/ui/useExploreNavigation";
 
@@ -21,17 +21,19 @@ export default function TitleDialog({
 }: TitleDialogProps) {
   const [shouldFetchData, setShouldFetchData] = useState(false);
   const { data, error } = useTitle(titleId, shouldFetchData);
-  const { data: trendingData } = useTrending();
+  const router = useRouter();
 
   const handleExploreClick = useCallback(
     (idOrName: string, title: string, isCast?: boolean) => {
       if (isCast && onOpenCastDialog) {
         onOpenCastDialog(idOrName, title, undefined, 10001);
-      } else if (onOpenDiscoverDialog) {
-        onOpenDiscoverDialog(idOrName, title, 10001);
+      } else {
+        // Navigate to genre page instead of opening discover dialog
+        router.push(`/browse/genre/${idOrName}`);
+        onClose();
       }
     },
-    [onOpenCastDialog, onOpenDiscoverDialog],
+    [onOpenCastDialog, router, onClose],
   );
 
   const handleClose = useCallback(() => {
@@ -90,12 +92,12 @@ export default function TitleDialog({
       return null;
     }
 
-    const titleData = data as TitleData;
+    const titleData = data;
 
     return (
       <div className="relative transition-all duration-300 ease-in-out">
         <DialogBanner
-          data={titleData.content as any}
+          data={titleData.content}
           mediaType={titleData.mediaType}
           onClose={handleClose}
           onExploreClick={handleExploreClick}

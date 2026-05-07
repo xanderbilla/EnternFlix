@@ -1,35 +1,7 @@
-import { Metadata } from "next";
-import { DynamicHome } from "@/utils/dynamicImports";
+import { permanentRedirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Home",
-  description:
-    "Discover unlimited movies, TV shows, and anime on EnternFlix. Watch trending content, explore new releases, and stream your favorite entertainment.",
-  keywords: [
-    "home",
-    "streaming",
-    "movies",
-    "tv shows",
-    "anime",
-    "trending",
-    "new releases",
-    "entertainment",
-  ],
-  openGraph: {
-    title: "Home - EnternFlix",
-    description:
-      "Discover unlimited movies, TV shows, and anime on EnternFlix. Watch trending content, explore new releases, and stream your favorite entertainment.",
-    type: "website",
-    siteName: "EnternFlix",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Home - EnternFlix",
-    description:
-      "Discover unlimited movies, TV shows, and anime on EnternFlix. Watch trending content, explore new releases, and stream your favorite entertainment.",
-  },
-};
-
+// `/` is not a content surface; canonical landing is `/browse`. Issuing a
+// 308 keeps SEO equity consolidated on the canonical URL.
 export default function HomePage() {
-  return <DynamicHome />;
+  permanentRedirect("/browse");
 }

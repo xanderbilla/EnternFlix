@@ -5,7 +5,6 @@ import { DialogState } from "@/hooks/ui/useDialogManager";
 import { DialogRendererProps } from "@/types/components";
 import ExploreDialog from "./ExploreDialog";
 import CastDialog from "./CastDialog";
-import DiscoverDialog from "./DiscoverDialog";
 import InfoDialog from "./InfoDialog";
 
 const TitleDialog = lazy(() => import("@/components/TitlePage/TitleDialog"));
@@ -35,6 +34,9 @@ export default function DialogRenderer({
           attributeId,
           attributeName,
           zIndex,
+          discoverType,
+          discoverContent,
+          isPaginationEnabled,
         } = dialog;
 
         const isTopDialog = index === dialogStack.length - 1;
@@ -51,6 +53,9 @@ export default function DialogRenderer({
                 onClose={isTopDialog ? onClose : () => {}}
                 onMovieClick={onMovieClick}
                 zIndex={(zIndex || 9999) + index}
+                discoverType={discoverType}
+                discoverContent={discoverContent}
+                isPaginationEnabled={isPaginationEnabled}
               />
             );
 
@@ -71,20 +76,6 @@ export default function DialogRenderer({
                   }
                 }}
                 backdropUrl={backdropUrl}
-                zIndex={(zIndex || 10000) + index}
-              />
-            );
-
-          case "discover":
-            return (
-              <DiscoverDialog
-                key={key}
-                isOpen={isOpen}
-                attributeId={attributeId || ""}
-                attributeName={attributeName || title}
-                onClose={isTopDialog ? onClose : () => {}}
-                onBack={isTopDialog && hasBackNavigation ? onBack : undefined}
-                onMovieClick={onInfoDialogOpen || onMovieClick}
                 zIndex={(zIndex || 10000) + index}
               />
             );

@@ -44,6 +44,37 @@ export default function PlaybackControls({
   onToggleFullscreen,
   onTriggerFeedback,
 }: PlaybackControlsProps) {
+  const currentProgress =
+    duration > 0 ? Math.round((currentTime / duration) * 100) : 0;
+
+  const handleProgressKeyDown = (
+    event: React.KeyboardEvent<HTMLDivElement>,
+  ) => {
+    if (duration <= 0) return;
+
+    const seekStepSeconds = 10;
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      onSeek(Math.min(currentTime + seekStepSeconds, duration));
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      onSeek(Math.max(currentTime - seekStepSeconds, 0));
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault();
+      onSeek(0);
+    }
+
+    if (event.key === "End") {
+      event.preventDefault();
+      onSeek(duration);
+    }
+  };
+
   return (
     <div
       className={`absolute bottom-0 left-0 right-0 p-6 md:p-8 z-20 transition-opacity duration-300 ${
@@ -59,14 +90,28 @@ export default function PlaybackControls({
             const pos = (e.clientX - rect.left) / rect.width;
             onSeek(pos * duration);
           }}
+          role="slider"
+          tabIndex={0}
+          aria-label="Playback progress"
+          aria-valuemin={0}
+          aria-valuemax={duration > 0 ? Math.floor(duration) : 0}
+          aria-valuenow={Math.floor(currentTime)}
+          aria-valuetext={`${formatTime(currentTime)} elapsed of ${duration > 0 ? formatTime(duration) : "00:00"}`}
+          aria-describedby="playback-progress-help"
+          onKeyDown={handleProgressKeyDown}
         >
           <div
             className="h-full bg-white rounded-full relative transition-all duration-150"
-            style={{ width: `${(currentTime / duration) * 100}%` }}
+            style={{ width: `${currentProgress}%` }}
           >
             <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
         </div>
+
+        <span id="playback-progress-help" className="sr-only">
+          Use left and right arrow keys to seek backward or forward by 10
+          seconds.
+        </span>
 
         {/* Remaining time */}
         <span className="text-white text-sm font-medium whitespace-nowrap">

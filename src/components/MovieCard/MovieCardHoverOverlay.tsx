@@ -1,10 +1,12 @@
 "use client";
 
-import Image from "next/image";
-import { useState, useEffect, useRef, useCallback } from "react";
+import RemoteImage from "@/components/UI/RemoteImage";
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { MovieCardHoverOverlayProps } from "@/types/components";
 import type { Asset, AssetType } from "@/types/movie";
-import { config } from "@/lib/env/env";
+import { constructVideoUrl } from "@/utils/videoHelpers";
+import { usePlayback } from "@/hooks/api/usePlayback";
+import { getContentType } from "@/utils/movieHelpers";
 
 export default function MovieCardHoverOverlay({
   backdropUrl,
@@ -15,13 +17,23 @@ export default function MovieCardHoverOverlay({
   handleKeyPress,
   children,
 }: MovieCardHoverOverlayProps) {
-  const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const hoverTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const contentType = data
+    ? getContentType(data) === "TV"
+      ? "tv"
+      : "movie"
+    : "movie";
+
+  const { data: playbackData } = usePlayback(
+    contentType,
+    data?.id?.toString() || "",
+    isHovered && !!data?.id,
+  );
 
   const getVideoUrl = useCallback((assets?: Asset[]): string | null => {
     if (!assets || assets.length === 0) return null;
@@ -32,47 +44,35 @@ export default function MovieCardHoverOverlay({
       const asset = assets.find((a) => a.type === assetType);
       if (asset && asset.keys.length > 0) {
         const randomIndex = Math.floor(Math.random() * asset.keys.length);
-        let videoPath = asset.keys[randomIndex];
-
-        if (videoPath.startsWith("/")) {
-          videoPath = videoPath.substring(1);
-        }
-
-        return `${config.customApi.imageBaseUrl}${videoPath}`;
+        return constructVideoUrl(asset.keys[randomIndex]);
       }
     }
 
     return null;
   }, []);
 
-  useEffect(() => {
-    if (isHovered && data) {
-      const videoSrc = getVideoUrl(data.assets);
-      if (videoSrc) {
-        hoverTimerRef.current = setTimeout(() => {
-          setVideoUrl(videoSrc);
-          setIsVideoPlaying(true);
-        }, 1000);
-      }
-    } else {
-      if (hoverTimerRef.current) {
-        clearTimeout(hoverTimerRef.current);
-      }
-      // Hover-end teardown: synchronize the <video> external resource with
-      // React state. Clearing url + playback flags here is required to stop
-      // the underlying media element; it is not derivable from props.
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setVideoUrl(null);
-      setIsVideoPlaying(false);
-      setVideoEnded(false);
+  const videoUrl = useMemo(() => {
+    if (!isHovered || !data) return null;
+
+    const previewVideoPath = playbackData?.playback?.preview?.video;
+    if (previewVideoPath) {
+      return constructVideoUrl(previewVideoPath);
     }
 
-    return () => {
-      if (hoverTimerRef.current) {
-        clearTimeout(hoverTimerRef.current);
-      }
-    };
-  }, [isHovered, data, getVideoUrl]);
+    return getVideoUrl(data.assets);
+  }, [isHovered, data, playbackData, getVideoUrl]);
+
+  const handleHoverStart = useCallback(() => {
+    setIsHovered(true);
+    setIsVideoPlaying(false);
+    setVideoEnded(false);
+  }, []);
+
+  const handleHoverEnd = useCallback(() => {
+    setIsHovered(false);
+    setIsVideoPlaying(false);
+    setVideoEnded(false);
+  }, []);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -83,6 +83,10 @@ export default function MovieCardHoverOverlay({
   const handleVideoEnd = useCallback(() => {
     setIsVideoPlaying(false);
     setVideoEnded(true);
+  }, []);
+
+  const handleCanPlay = useCallback(() => {
+    setIsVideoPlaying(true);
   }, []);
 
   const handleReplay = useCallback((e: React.MouseEvent) => {
@@ -127,39 +131,45 @@ export default function MovieCardHoverOverlay({
 
   return (
     <div
-      className={`hidden md:block opacity-0 md:opacity-0 absolute top-0 transition-all duration-300 z-50
+      className={`hidden md:block opacity-0 md:opacity-0 absolute top-0 transition-all duration-300 z-10
         md:invisible md:group-hover/item:visible md:group-hover/item:opacity-100
         ${transforms.initial} ${transforms.hover}
         w-[320px] md:w-[380px] lg:w-[420px] aspect-video
         ${positionClass}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
     >
       <div
-        className="relative w-full h-full rounded-md overflow-hidden cursor-pointer"
-        onClick={navigateToTitle}
-        onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
-        role="button"
-        tabIndex={0}
-        aria-label={`View details for ${data?.title || "this title"}`}
+        className="relative w-full h-full rounded-md overflow-hidden"
+        role="group"
+        aria-label={`${data?.title || "Title"} preview controls`}
+        onMouseEnter={handleHoverStart}
+        onMouseLeave={handleHoverEnd}
+        onFocusCapture={handleHoverStart}
+        onBlurCapture={(e) => {
+          const nextTarget = e.relatedTarget as Node | null;
+          if (!nextTarget || !e.currentTarget.contains(nextTarget)) {
+            handleHoverEnd();
+          }
+        }}
       >
+        <button
+          type="button"
+          className="absolute inset-0 z-10 rounded-md cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-white/80"
+          onClick={navigateToTitle}
+          onKeyDown={(e) => handleKeyPress(e, navigateToTitle)}
+          aria-label={`Open details for ${data?.title || "this title"}`}
+        />
+
         {/* Backdrop Image */}
-        {backdropUrl ? (
-          <Image
-            className={`object-contain w-full h-full rounded-md transition-opacity duration-[1500ms] ease-in-out ${
-              isVideoPlaying ? "opacity-0" : "opacity-100"
-            }`}
-            fill
-            sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
-            src={backdropUrl}
-            alt={data?.title || "Movie backdrop"}
-            unoptimized={!backdropUrl.includes("tmdb.org")}
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-400 bg-zinc-800 rounded-md">
-            Image not available
-          </div>
-        )}
+        <RemoteImage
+          className={`object-contain w-full h-full rounded-md transition-opacity duration-[1500ms] ease-in-out ${
+            isVideoPlaying ? "opacity-0" : "opacity-100"
+          }`}
+          fill
+          sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
+          src={backdropUrl}
+          alt={data?.title || "Movie backdrop"}
+          fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 bg-zinc-800 rounded-md"
+        />
 
         {/* Video Player */}
         {videoUrl && (
@@ -173,13 +183,14 @@ export default function MovieCardHoverOverlay({
             muted={isMuted}
             playsInline
             disablePictureInPicture
+            onCanPlay={handleCanPlay}
             onEnded={handleVideoEnd}
           />
         )}
 
         {/* Volume/Replay Controls - Bottom Right */}
         {(isVideoPlaying || videoEnded) && (
-          <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 z-10">
+          <div className="absolute bottom-2 sm:bottom-3 right-2 sm:right-3 z-30">
             <div className="relative w-7 h-7 sm:w-8 sm:h-8">
               {/* Volume Button - Only show when video is playing */}
               {isVideoPlaying && (
@@ -245,7 +256,7 @@ export default function MovieCardHoverOverlay({
           </div>
         )}
 
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none">
+        <div className="absolute inset-0 z-20 bg-gradient-to-t from-black/60 via-black/30 to-transparent pointer-events-none">
           <div className="absolute bottom-0 w-full p-4 flex flex-col pointer-events-auto">
             {children}
           </div>

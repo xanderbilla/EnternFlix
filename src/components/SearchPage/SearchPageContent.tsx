@@ -1,72 +1,84 @@
 "use client";
 
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import { useSearch, useTrending } from "@/hooks/api/useMovies";
+import { useMemo, useEffect, useRef, useCallback, useState } from "react";
+import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearch } from "@/hooks/api/useMovies";
 import PageLayout from "@/components/Layout/PageLayout";
-import {
-  DynamicSearchResults as SearchResults,
-  DynamicIcon as Icon,
-} from "@/utils/dynamicImports";
-import { getImageUrl } from "@/utils/movieHelpers";
+import SortDropdown, { type SortOption } from "@/components/UI/SortDropdown";
+import { DynamicSearchResults as SearchResults } from "@/utils/dynamicImports";
 
-function debounce<T extends (...args: any[]) => any>(
-  func: T,
-  wait: number,
-): (...args: Parameters<T>) => void {
-  let timeout: NodeJS.Timeout | null = null;
-  return (...args: Parameters<T>) => {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => func(...args), wait);
-  };
-}
+type SearchSort = "" | "recent" | "latest" | "alpha_asc" | "alpha_desc";
+
+const SEARCH_SORT_OPTIONS: SortOption[] = [
+  { value: "recent", label: "Recent" },
+  { value: "latest", label: "Latest" },
+  { value: "alpha_asc", label: "Sort by A - Z" },
+  { value: "alpha_desc", label: "Sort by Z - A" },
+];
+
+const isSearchSort = (value: string | null): value is SearchSort =>
+  value === "" ||
+  value === "recent" ||
+  value === "latest" ||
+  value === "alpha_asc" ||
+  value === "alpha_desc";
 
 export default function SearchPageContent() {
-  const [searchQuery, setSearchQuery] = useState<string>("");
-  const [debouncedQuery, setDebouncedQuery] = useState<string>("");
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
+  const debouncedQuery = (searchParams.get("q") ?? "").trim();
+  const scopeParam = searchParams.get("in");
+  const selectedMode = scopeParam === "people" ? "people" : "content";
+  const scope = selectedMode === "people" ? "people" : "all";
 
-  const { data: trendingData } = useTrending();
+  const rawSort = searchParams.get("sort");
+  const selectedSort: SearchSort = isSearchSort(rawSort) ? rawSort : "recent";
+
+  useEffect(() => {
+    if (!debouncedQuery) {
+      router.replace("/browse");
+    }
+  }, [debouncedQuery, router]);
+
+  const handleSortChange = useCallback(
+    (nextSort: string) => {
+      if (!isSearchSort(nextSort)) return;
+
+      const params = new URLSearchParams(searchParams.toString());
+      if (nextSort) {
+        params.set("sort", nextSort);
+      } else {
+        params.delete("sort");
+      }
+
+      const query = params.toString();
+      router.push(query ? `${pathname}?${query}` : pathname);
+    },
+    [pathname, router, searchParams],
+  );
+
   const {
     data: searchData,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useSearch(debouncedQuery);
-
-  const movie = useMemo(() => {
-    if (trendingData?.results?.length) {
-      // Intentional UX randomness: surface a different trending title per
-      // search session. Confined inside useMemo keyed on `trendingData` so the
-      // pick is stable across re-renders and only changes with the data.
-      return trendingData.results[
-        // eslint-disable-next-line react-hooks/purity
-        Math.floor(Math.random() * trendingData.results.length)
-      ];
-    }
-    return null;
-  }, [trendingData]);
+  } = useSearch(debouncedQuery, scope, selectedSort || "recent");
 
   const searchRes = useMemo(() => {
     if (!searchData?.pages) return [];
-    return searchData.pages.flatMap((page) => page.results || []);
+    return searchData.pages.flatMap((page) => page.content.results || []);
   }, [searchData]);
 
-  const debouncedSearch = useMemo(
-    () =>
-      debounce((query: string) => {
-        setDebouncedQuery(query);
-      }, 1000),
-    [],
-  );
+  const peopleRes = useMemo(() => {
+    if (!searchData?.pages?.length) return [];
+    return searchData.pages[0]?.people.results || [];
+  }, [searchData]);
 
-  const handleSearch = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const query = e.target.value;
-      setSearchQuery(query);
-      debouncedSearch(query);
-    },
-    [debouncedSearch],
-  );
+  const contentCount = searchData?.pages?.[0]?.content.count ?? 0;
+  const peopleCount = searchData?.pages?.[0]?.people.count ?? 0;
 
   useEffect(() => {
     const element = loadMoreRef.current;
@@ -88,71 +100,46 @@ export default function SearchPageContent() {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
+  if (!debouncedQuery) {
+    return null;
+  }
+
   return (
-    <PageLayout showBanner={false}>
-      {/* Banner with centered search input */}
-      <div className="relative h-[50vh] -mt-24 bg-zinc-900 overflow-hidden">
-        {/* Random backdrop */}
-        {movie?.backdropPath && (
-          <>
-            <div
-              className="absolute inset-0 w-full h-full bg-cover bg-top"
-              style={{
-                backgroundImage: `url('${getImageUrl(movie.backdropPath, "original")}')`,
-              }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />
-          </>
-        )}
+    <PageLayout showBanner={false} reserveTopPaddingWhenNoBanner={false}>
+      <section className="relative z-10 pt-16 md:pt-20 bg-zinc-900 min-h-screen">
+        <div className="sticky top-[66px] z-20 flex min-h-[68px] items-center px-4 md:px-16 py-3 bg-zinc-900 transition duration-500">
+          <h1 className="text-white text-[22px] md:text-[30px] font-medium leading-none">
+            Search Results
+          </h1>
 
-        {/* Centered search input */}
-        <div className="relative h-full flex items-center justify-center z-10 px-4 md:px-8">
-          <div className="max-w-4xl w-full">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search for movies, TV shows, anime..."
-                className="
-                  w-full
-                  p-4 sm:p-5 md:p-6
-                  pl-12 sm:pl-14 md:pl-16
-                  rounded-lg
-                  bg-zinc-800/90
-                  text-white
-                  text-lg sm:text-xl md:text-2xl
-                  border-none
-                  outline-none
-                  focus:outline-none
-                  focus:ring-0
-                  backdrop-blur-sm
-                "
-                onChange={handleSearch}
-                value={searchQuery}
-              />
-              <Icon
-                name="search"
-                size={24}
-                className="absolute left-4 sm:left-5 md:left-6 top-1/2 transform -translate-y-1/2 text-gray-400"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Search Results - Below banner */}
-      {(searchQuery || debouncedQuery) && (
-        <div className="px-4 md:px-8 py-6 bg-zinc-900">
-          <div className="max-w-7xl mx-auto">
-            <SearchResults
-              searchQuery={searchQuery}
-              debouncedQuery={debouncedQuery}
-              searchRes={searchRes}
-              hasNextPage={hasNextPage || false}
-              loadMoreRef={loadMoreRef}
+          <div className="ml-auto flex items-center gap-2">
+            <SortDropdown
+              value={selectedSort}
+              options={SEARCH_SORT_OPTIONS}
+              onChange={handleSortChange}
+              buttonLabel="Sort"
+              ariaLabel="Sort search results"
+              showOptionIcon={false}
+              isOpen={sortDropdownOpen}
+              onOpenChange={setSortDropdownOpen}
             />
           </div>
         </div>
-      )}
+
+        <div className="px-4 md:px-16">
+          <SearchResults
+            debouncedQuery={debouncedQuery}
+            searchRes={searchRes}
+            peopleRes={peopleRes}
+            contentCount={contentCount}
+            peopleCount={peopleCount}
+            selectedMode={selectedMode}
+            hasNextPage={hasNextPage || false}
+            loadMoreRef={loadMoreRef}
+            onCardHover={() => setSortDropdownOpen(false)}
+          />
+        </div>
+      </section>
     </PageLayout>
   );
 }

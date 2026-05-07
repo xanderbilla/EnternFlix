@@ -29,9 +29,9 @@ export default function CastDialogHeader({
             src={backdropUrl}
             alt={title}
             fill
+            sizes="(max-width: 1024px) 100vw, 80vw"
             className="object-cover object-center"
             priority
-            unoptimized={!backdropUrl.includes("tmdb.org")}
             onLoad={() => setImageLoaded(true)}
           />
         </div>

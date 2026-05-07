@@ -1,13 +1,13 @@
 "use client";
 
-import { memo } from "react";
-import {
-  truncateText,
-  getContentRating,
-  getQuality,
-} from "@/utils/contentHelpers";
+import { memo, useMemo, useState } from "react";
+import { getContentRating, getQuality } from "@/utils/contentHelpers";
 import { DialogInfoSectionProps } from "@/types/title";
 import { getDuration } from "@/utils/movieHelpers";
+
+const OVERVIEW_PREVIEW_LENGTH = 125;
+const OVERVIEW_TOGGLE_THRESHOLD = 150;
+const OVERVIEW_SECTION_HEIGHT_CLASS = "h-36";
 
 function DialogInfoSection({
   releaseYear,
@@ -18,6 +18,8 @@ function DialogInfoSection({
   contentRating,
   movieData,
 }: DialogInfoSectionProps) {
+  const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
+
   const rating = movieData
     ? getContentRating(movieData)
     : contentRating === "18_PLUS"
@@ -29,6 +31,15 @@ function DialogInfoSection({
   const quality = movieData ? getQuality(movieData) : "HD";
 
   const duration = movieData ? getDuration(movieData) : "2h 30m";
+
+  const truncatedOverview = useMemo(() => {
+    if (!overview) return "";
+    if (overview.length <= OVERVIEW_TOGGLE_THRESHOLD) return overview;
+
+    return `${overview.slice(0, OVERVIEW_PREVIEW_LENGTH).trimEnd()}...`;
+  }, [overview]);
+
+  const shouldShowOverviewToggle = overview.length > OVERVIEW_TOGGLE_THRESHOLD;
 
   return (
     <div>
@@ -55,9 +66,41 @@ function DialogInfoSection({
       </div>
 
       {/* Description */}
-      <p className="text-white/80 text-sm leading-relaxed">
-        {truncateText(overview || "", 200)}
-      </p>
+      <div>
+        <div
+          className={
+            shouldShowOverviewToggle ? OVERVIEW_SECTION_HEIGHT_CLASS : undefined
+          }
+        >
+          <div
+            className={
+              shouldShowOverviewToggle
+                ? `overflow-hidden transition-[max-height] duration-300 ease-in-out ${
+                    isOverviewExpanded
+                      ? `${OVERVIEW_SECTION_HEIGHT_CLASS} overflow-y-auto no-scrollbar`
+                      : "max-h-24"
+                  }`
+                : undefined
+            }
+          >
+            <p className="text-white/80 text-[15px] leading-relaxed">
+              {isOverviewExpanded ? overview : truncatedOverview}
+              {shouldShowOverviewToggle && (
+                <>
+                  {" "}
+                  <button
+                    type="button"
+                    onClick={() => setIsOverviewExpanded((current) => !current)}
+                    className="italic text-white/80 text-[15px] hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
+                  >
+                    {isOverviewExpanded ? "less" : "more"}
+                  </button>
+                </>
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

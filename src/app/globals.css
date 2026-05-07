@@ -14,7 +14,6 @@
     scrollbar-width: none; /* Firefox */
   }
 
-  /* Custom scrollbar styles */
   .scrollbar-thin::-webkit-scrollbar {
     width: 8px;
   }
@@ -70,7 +69,6 @@
     scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
   }
 
-  /* Fade in animation */
   @keyframes fadeIn {
     from {
       opacity: 0;
@@ -85,7 +83,6 @@
     animation-timing-function: ease-out;
   }
 
-  /* Fade in and scale animation for cards */
   @keyframes fadeInScale {
     from {
       opacity: 0;
@@ -101,7 +98,6 @@
     animation: fadeInScale 0.4s ease-out;
   }
 
-  /* Scale in animation for video player dialog */
   @keyframes scaleIn {
     from {
       transform: scale(0.95);
@@ -143,4 +139,32 @@ html::-webkit-scrollbar {
 body {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.skip-to-content {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 100;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  background: rgb(24 24 27);
+  color: rgb(255 255 255);
+  border: 1px solid rgb(255 255 255 / 0.5);
+  transition: top 0.2s ease;
+}
+
+.skip-to-content:focus {
+  top: 0.75rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

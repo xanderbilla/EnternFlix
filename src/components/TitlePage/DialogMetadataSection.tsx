@@ -76,7 +76,7 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
                   onClick={() =>
                     onExploreClick?.(
                       genre.id.toString(),
-                      `${genre.name} Movies & Shows`,
+                      `${genre.name}`,
                       false,
                     )
                   }

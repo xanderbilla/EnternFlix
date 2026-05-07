@@ -1,5 +1,3 @@
-"use client";
-
 import PageLayout from "@/components/Layout/PageLayout";
 import { DynamicMovieList } from "@/utils/dynamicImports";
 

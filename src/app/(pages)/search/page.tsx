@@ -1,34 +1,56 @@
-import { Metadata } from "next";
+import { Suspense } from "react";
 import SearchPageContent from "@/components/SearchPage/SearchPageContent";
+import { createPageMetadata } from "@/lib/seo/metadata";
 
-export const metadata: Metadata = {
-  title: "Search",
-  description:
-    "Search for movies, TV shows, anime, and cast members. Discover new content and find your favorite entertainment on EnternFlix.",
-  keywords: [
-    "search",
-    "movies",
-    "tv shows",
-    "anime",
-    "cast",
-    "discover",
-    "find content",
-  ],
-  openGraph: {
-    title: "Search - EnternFlix",
-    description:
-      "Search for movies, TV shows, anime, and cast members. Discover new content and find your favorite entertainment on EnternFlix.",
-    type: "website",
-    siteName: "EnternFlix",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Search - EnternFlix",
-    description:
-      "Search for movies, TV shows, anime, and cast members. Discover new content and find your favorite entertainment on EnternFlix.",
-  },
-};
+interface SearchPageProps {
+  searchParams: Promise<{ q?: string }>;
+}
+
+const BASE_KEYWORDS = [
+  "search",
+  "movies",
+  "tv shows",
+  "anime",
+  "cast",
+  "discover",
+  "find content",
+];
+const DEFAULT_DESCRIPTION =
+  "Search for movies, TV shows, anime, and cast members. Discover new content and find your favorite entertainment on EnternFlix.";
+const MAX_QUERY_LENGTH = 80;
+
+function sanitizeQuery(raw: string | undefined): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim().slice(0, MAX_QUERY_LENGTH);
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+export async function generateMetadata({ searchParams }: SearchPageProps) {
+  const { q } = await searchParams;
+  const query = sanitizeQuery(q);
+
+  if (!query) {
+    return createPageMetadata({
+      title: "Search",
+      description: DEFAULT_DESCRIPTION,
+      path: "/search",
+      keywords: BASE_KEYWORDS,
+    });
+  }
+
+  return createPageMetadata({
+    title: `Search results for "${query}"`,
+    description: `Browse search results for "${query}" on EnternFlix.`,
+    path: `/search?q=${encodeURIComponent(query)}`,
+    keywords: [...BASE_KEYWORDS, query.toLowerCase()],
+    noIndex: true,
+  });
+}
 
 export default function SearchPage() {
-  return <SearchPageContent />;
+  return (
+    <Suspense>
+      <SearchPageContent />
+    </Suspense>
+  );
 }

@@ -52,8 +52,7 @@ export function useExploreNavigation({
       }
 
       const backdropUrl = data
-        ? getImageUrl((data as TitleData).content?.backdropPath, "original") ||
-          undefined
+        ? getImageUrl(data.content?.backdropPath, "original") || undefined
         : undefined;
 
       if (isCast) {

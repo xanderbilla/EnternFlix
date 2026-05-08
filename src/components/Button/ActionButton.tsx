@@ -4,8 +4,9 @@ import { memo } from "react";
 
 interface NetflixButtonProps {
   variant: "primary" | "secondary";
-  icon?: "play" | "info";
+  icon?: "play" | "info" | "home" | "search" | "retry";
   label: string;
+  ariaLabel?: string;
   onClick?: () => void;
   className?: string;
 }
@@ -41,10 +42,64 @@ const InfoIcon = () => (
   </svg>
 );
 
+const HomeIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path
+      d="M3 10.5L12 3L21 10.5V21H14.5V14.5H9.5V21H3V10.5Z"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const SearchIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M10 4a6 6 0 1 0 3.75 10.68l4.28 4.27 1.42-1.41-4.27-4.28A6 6 0 0 0 10 4m-8 6a8 8 0 1 1 14.32 4.9l4.1 4.1-2.83 2.83-4.1-4.1A8 8 0 0 1 2 10"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const RetryIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    width="24"
+    height="24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path
+      d="M20 12A8 8 0 1 1 17.66 6.34L20 9M20 9V3M20 9H14"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 function NetflixButton({
   variant,
   icon,
   label,
+  ariaLabel,
   onClick,
   className = "",
 }: NetflixButtonProps) {
@@ -59,12 +114,16 @@ function NetflixButton({
 
   return (
     <button
+      type="button"
       onClick={onClick}
       className={`${baseClasses} ${variantClasses[variant]} ${className}`}
-      aria-label={label}
+      aria-label={ariaLabel ?? label}
     >
       {icon === "play" && <PlayIcon />}
       {icon === "info" && <InfoIcon />}
+      {icon === "home" && <HomeIcon />}
+      {icon === "search" && <SearchIcon />}
+      {icon === "retry" && <RetryIcon />}
       <span>{label}</span>
     </button>
   );

@@ -7,6 +7,11 @@
  *   in the browser so a single missing key does not crash the app shell.
  * - Only `NEXT_PUBLIC_*` values are inlined into the client bundle. Never put
  *   secrets behind that prefix.
+ * - `NEXT_PUBLIC_*` values MUST be accessed via literal dot-notation
+ *   (e.g. `process.env.NEXT_PUBLIC_FOO`) so Next.js can statically replace
+ *   them at build time. Dynamic `process.env[name]` bracket access resolves
+ *   to `undefined` in the browser. The validators below therefore receive
+ *   pre-evaluated values plus a name (for error messages only).
  */
 
 type AppEnv = "development" | "test" | "production";
@@ -17,12 +22,14 @@ interface AppConfig {
   isDev: boolean;
   isTest: boolean;
   enableLogging: boolean;
+  app: {
+    // CI-injected build version, e.g. "v1.4.2". Empty string in local dev.
+    version: string;
+    // Deployment environment label ("dev" | "prod" | "").
+    deployEnv: string;
+  };
   http: {
     timeoutMs: number;
-  };
-  tmdb: {
-    apiKey: string;
-    baseUrl: string;
   };
   customApi: {
     baseUrl: string;
@@ -33,10 +40,8 @@ interface AppConfig {
   };
 }
 
-function readString(name: string, fallback?: string): string {
-  const value = process.env[name];
+function requireValue(name: string, value: string | undefined): string {
   if (value && value.length > 0) return value;
-  if (fallback !== undefined) return fallback;
   const message = `[config] Missing required environment variable: ${name}`;
   if (typeof window === "undefined") {
     throw new Error(message);
@@ -45,23 +50,24 @@ function readString(name: string, fallback?: string): string {
   return "";
 }
 
-function readBool(name: string, fallback: boolean): boolean {
-  const value = process.env[name];
+function withDefault(value: string | undefined, fallback: string): string {
+  return value && value.length > 0 ? value : fallback;
+}
+
+function parseBool(value: string | undefined, fallback: boolean): boolean {
   if (value === undefined) return fallback;
   return value === "true" || value === "1";
 }
 
-function readInt(name: string, fallback: number): number {
-  const raw = process.env[name];
-  if (!raw) return fallback;
-  const n = Number.parseInt(raw, 10);
+function parseInteger(value: string | undefined, fallback: number): number {
+  if (!value) return fallback;
+  const n = Number.parseInt(value, 10);
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
-function readList(name: string): string[] {
-  const raw = process.env[name];
-  if (!raw) return [];
-  return raw
+function parseList(value: string | undefined): string[] {
+  if (!value) return [];
+  return value
     .split(",")
     .map((s) => s.trim())
     .filter(Boolean);
@@ -69,43 +75,37 @@ function readList(name: string): string[] {
 
 const nodeEnv = (process.env.NODE_ENV ?? "development") as AppEnv;
 
-// NEXT_PUBLIC_* vars must be referenced with literal dot-notation so Next.js
-// can statically replace them at build time.  Dynamic `process.env[name]`
-// bracket access is NOT replaced and resolves to `undefined` in the browser.
 export const config: AppConfig = {
   appEnv: nodeEnv,
   isProd: nodeEnv === "production",
   isDev: nodeEnv === "development",
   isTest: nodeEnv === "test",
-  enableLogging:
-    (process.env.NEXT_PUBLIC_ENABLE_LOGGING ??
-      String(nodeEnv !== "production")) === "true" ||
-    process.env.NEXT_PUBLIC_ENABLE_LOGGING === "1",
+  enableLogging: parseBool(
+    process.env.NEXT_PUBLIC_ENABLE_LOGGING,
+    nodeEnv !== "production",
+  ),
+  app: {
+    version: withDefault(process.env.NEXT_PUBLIC_APP_VERSION, ""),
+    deployEnv: withDefault(process.env.NEXT_PUBLIC_APP_ENV, ""),
+  },
   http: {
     // Axios per-request timeout, in milliseconds.
-    timeoutMs: (() => {
-      const n = Number.parseInt(
-        process.env.NEXT_PUBLIC_HTTP_TIMEOUT_MS ?? "",
-        10,
-      );
-      return Number.isFinite(n) && n > 0 ? n : 10_000;
-    })(),
-  },
-  tmdb: {
-    apiKey: process.env.NEXT_PUBLIC_TMDB_API_KEY ?? "",
-    baseUrl:
-      process.env.NEXT_PUBLIC_TMDB_BASE_URL ?? "https://api.themoviedb.org/3",
+    timeoutMs: parseInteger(process.env.NEXT_PUBLIC_HTTP_TIMEOUT_MS, 10_000),
   },
   customApi: {
-    baseUrl: process.env.NEXT_PUBLIC_CUSTOM_API_URL ?? "",
-    imageBaseUrl: process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL ?? "",
+    // Primary backend — application is non-functional without these.
+    baseUrl: requireValue(
+      "NEXT_PUBLIC_CUSTOM_API_URL",
+      process.env.NEXT_PUBLIC_CUSTOM_API_URL,
+    ),
+    imageBaseUrl: requireValue(
+      "NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL",
+      process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL,
+    ),
   },
   images: {
     // Comma-separated extra hostnames allowed by `next/image`.
-    extraHosts: (process.env.NEXT_PUBLIC_IMAGE_HOSTS ?? "")
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean),
+    extraHosts: parseList(process.env.NEXT_PUBLIC_IMAGE_HOSTS),
   },
 };
 

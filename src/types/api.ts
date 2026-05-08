@@ -1,17 +1,24 @@
 export interface ApiResponse<T> {
   success: boolean;
   status: number;
-  code: string;
   message: string;
-  data: T;
-  path: string;
-  request_id: string;
+  data: T | null;
+  error: ApiErrorEnvelope | null;
+  path?: string;
+  requestId?: string;
+  request_id?: string;
   timestamp: string;
 }
 
 export interface EntityRef {
   id: string;
-  name: string;
+  name?: string;
+}
+
+export interface PagedData<T> {
+  items: T[];
+  nextCursor?: string;
+  count: number;
 }
 
 export interface PaginatedResponse<T> {
@@ -19,6 +26,15 @@ export interface PaginatedResponse<T> {
   page: number;
   total_pages: number;
   total_results: number;
+}
+
+export interface ApiErrorEnvelope {
+  type: string;
+  code: string;
+  title: string;
+  detail: string;
+  userMessage?: string;
+  context?: unknown;
 }
 
 export interface ApiError {

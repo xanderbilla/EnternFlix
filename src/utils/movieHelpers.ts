@@ -66,19 +66,16 @@ export const getReleaseYear = (data: MovieData): string => {
 
 export const getImageUrl = (
   path: string | null,
-  size: string = "w500",
+  _size: string = "w500",
 ): string => {
   if (!path) return "";
 
-  if (!path.startsWith("/")) {
-    const base = config.customApi.imageBaseUrl;
-    if (!base) {
-      logger.error("customApi.imageBaseUrl is not configured");
-      return "";
-    }
-    const cleanBase = base.endsWith("/") ? base : `${base}/`;
-    return `${cleanBase}${path}`;
+  const base = config.customApi.imageBaseUrl;
+  if (!base) {
+    logger.error("customApi.imageBaseUrl is not configured");
+    return "";
   }
-
-  return `https://image.tmdb.org/t/p/${size}${path}`;
+  const cleanBase = base.endsWith("/") ? base : `${base}/`;
+  const cleanPath = path.startsWith("/") ? path.slice(1) : path;
+  return `${cleanBase}${cleanPath}`;
 };

@@ -187,9 +187,10 @@ describe("Property 2: Validation Error Completeness", () => {
               const allowedTopLevelFields = new Set([
                 "success",
                 "status",
-                "code",
                 "message",
+                "error",
                 "path",
+                "requestId",
                 "request_id",
                 "timestamp",
               ]);

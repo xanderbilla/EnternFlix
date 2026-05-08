@@ -22,10 +22,6 @@ const Button: React.FC<ButtonProps> = ({
       "bg-zinc-700 text-white border border-zinc-600 tracking-widest hover:bg-zinc-600 focus:ring-zinc-500",
     outline:
       "text-gray-400 border-2 border-gray-400 tracking-widest hover:border-white hover:text-white focus:ring-gray-500",
-    "banner-play":
-      "bg-white text-black rounded-[4px] hover:bg-neutral-300 focus:ring-gray-500",
-    "banner-info":
-      "bg-white bg-opacity-30 text-white hover:bg-opacity-20 focus:ring-0 focus:ring-offset-0",
     auth: "bg-red-600 text-white font-bold hover:bg-red-700 focus:ring-red-500",
   };
 

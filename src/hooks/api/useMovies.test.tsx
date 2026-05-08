@@ -6,13 +6,9 @@ import type { ReactNode } from "react";
 vi.mock("@/lib/api/customAxios", () => ({
   default: {
     get: vi.fn(async () => ({
-      data: { data: [{ id: "a" }, { id: "b" }] },
+      data: { data: { items: [{ id: "a" }, { id: "b" }] } },
     })),
   },
-}));
-
-vi.mock("@/lib/api/axios", () => ({
-  default: { get: vi.fn() },
 }));
 
 import customAxios from "@/lib/api/customAxios";
@@ -40,7 +36,7 @@ describe("useBanner", () => {
 describe("useTrending", () => {
   it("wraps the custom API list in a paginated envelope", async () => {
     (customAxios.get as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
-      data: { data: [{ id: "1" }, { id: "2" }] },
+      data: { data: { items: [{ id: "1" }, { id: "2" }] } },
     });
     const { result } = renderHook(() => useTrending(), { wrapper });
     await waitFor(() => expect(result.current.isSuccess).toBe(true));

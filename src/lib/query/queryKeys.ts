@@ -39,8 +39,17 @@ export const queryKeys = {
   categoryContent: (category: string) => ["category", category] as const,
 
   title: (id: string) => ["title", id] as const,
+  person: (id: string) => ["person", id] as const,
+  personMovies: (id: string, type: string) =>
+    ["personMovies", id, type] as const,
+  playback: (contentType: string, contentId: string) =>
+    ["playback", contentType, contentId] as const,
 
-  search: (query: string) => ["search", query] as const,
+  search: (
+    query: string,
+    scope: "all" | "movie" | "tv" | "people" = "all",
+    sort: string = "recent",
+  ) => ["search", query, scope, sort] as const,
 
   genres: (category: string) => ["genres", category] as const,
 
@@ -51,4 +60,6 @@ export const queryKeys = {
     ["discover", type, content] as const,
   discoverByAttribute: (attributeId: string, content: string) =>
     ["discover", "attribute", attributeId, content] as const,
+  attributesGenres: (contentType: string) =>
+    ["attributes", "genres", contentType] as const,
 } as const;

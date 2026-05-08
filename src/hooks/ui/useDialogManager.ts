@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Movie } from "@/types/movie";
 
 export type DialogType = "explore" | "info" | "cast" | "discover" | null;
@@ -18,11 +18,33 @@ export interface DialogState {
   attributeName?: string;
   zIndex?: number;
   parentDialog?: DialogType;
+  // Pagination support
+  discoverType?: string;
+  discoverContent?: string;
+  isPaginationEnabled?: boolean;
 }
 
 export function useDialogManager() {
   const [dialogStack, setDialogStack] = useState<DialogState[]>([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const syncDialogQueryParam = useCallback(
+    (param: "title" | "cast" | null, value?: string) => {
+      if (typeof window === "undefined") return;
+
+      const url = new URL(window.location.href);
+      url.searchParams.delete("title");
+      url.searchParams.delete("cast");
+
+      if (param && value) {
+        url.searchParams.set(param, value);
+      }
+
+      const nextUrl = `${url.pathname}${url.search}${url.hash}`;
+      window.history.replaceState(window.history.state, "", nextUrl);
+    },
+    [],
+  );
 
   const currentDialog = dialogStack[dialogStack.length - 1] || {
     type: null,
@@ -31,8 +53,39 @@ export function useDialogManager() {
     movies: [],
   };
 
+  useEffect(() => {
+    if (dialogStack.length === 0) {
+      syncDialogQueryParam(null);
+      return;
+    }
+
+    const topDialog = dialogStack[dialogStack.length - 1];
+    if (!topDialog?.isOpen) {
+      return;
+    }
+
+    if (topDialog.type === "info" && topDialog.titleId) {
+      syncDialogQueryParam("title", topDialog.titleId);
+      return;
+    }
+
+    if (topDialog.type === "cast" && topDialog.castId) {
+      syncDialogQueryParam("cast", topDialog.castId);
+      return;
+    }
+
+    syncDialogQueryParam(null);
+  }, [dialogStack, syncDialogQueryParam]);
+
   const openExploreDialog = useCallback(
-    (title: string, movies: Movie[], zIndex?: number) => {
+    (
+      title: string,
+      movies: Movie[],
+      zIndex?: number,
+      discoverType?: string,
+      discoverContent?: string,
+      isPaginationEnabled: boolean = false,
+    ) => {
       setDialogStack([
         {
           type: "explore",
@@ -40,6 +93,9 @@ export function useDialogManager() {
           title,
           movies,
           zIndex,
+          discoverType,
+          discoverContent,
+          isPaginationEnabled,
         },
       ]);
     },

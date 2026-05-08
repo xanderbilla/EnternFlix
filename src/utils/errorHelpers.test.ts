@@ -157,12 +157,14 @@ describe("Property 4: Error Logging Context", () => {
   const originalNodeEnv = process.env.NODE_ENV;
 
   beforeEach(() => {
-    (process.env as any).NODE_ENV = "development";
+    (process.env as Record<string, string | undefined>).NODE_ENV =
+      "development";
     consoleErrorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
   });
 
   afterEach(() => {
-    (process.env as any).NODE_ENV = originalNodeEnv;
+    (process.env as Record<string, string | undefined>).NODE_ENV =
+      originalNodeEnv;
     consoleErrorSpy.mockRestore();
   });
 

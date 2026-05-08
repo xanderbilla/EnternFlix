@@ -61,9 +61,15 @@ export function getCurrentSubtitle(
 }
 
 export function constructVideoUrl(basePath: string, baseUrl?: string): string {
+  if (!basePath) return "";
+  if (basePath.startsWith("http://") || basePath.startsWith("https://")) {
+    return basePath;
+  }
+
   const url = baseUrl || config.customApi.imageBaseUrl;
+  const normalizedBase = url.endsWith("/") ? url : `${url}/`;
   const path = basePath.startsWith("/") ? basePath.substring(1) : basePath;
-  return `${url}${path}`;
+  return `${normalizedBase}${path}`;
 }
 
 export function isHLSSupported(): boolean {

@@ -1,7 +1,3 @@
-import { config } from "@/lib/env/env";
-
-const key = config.tmdb.apiKey;
-
 /**
  * Percent-encode a path segment so IDs containing `/`, `?`, `#`, spaces, etc.
  * cannot break out of the URL path or inject query parameters.
@@ -25,22 +21,46 @@ const requests = {
     `c/people/${encPath(id)}/content?type=${encQuery(type)}`,
   fetchDiscoverByAttribute: (attributeId: string, content: string = "all") =>
     `c/attributes/${encPath(attributeId)}?content=${encQuery(content)}`,
+  fetchAttributes: (type: string = "genres") =>
+    `c/attributes?type=${encQuery(type)}`,
   fetchDiscover: (type: string = "latest", content: string = "all") =>
     `c/discover?type=${encQuery(type)}&content=${encQuery(content)}`,
   fetchBanner: (type: string = "all") => `c/banner?type=${encQuery(type)}`,
+  fetchSearch: (
+    query: string,
+    options?: {
+      in?: "all" | "movie" | "tv" | "people";
+      sort?: string;
+      page?: number;
+      pageSize?: number;
+      contentPage?: number;
+      contentPageSize?: number;
+      peoplePage?: number;
+      peoplePageSize?: number;
+    },
+  ) => {
+    const params = [
+      `query=${encQuery(query)}`,
+      `in=${encQuery(options?.in ?? "all")}`,
+      `sort=${encQuery(options?.sort ?? "recent")}`,
+    ];
+
+    if (options?.page !== undefined) params.push(`page=${options.page}`);
+    if (options?.pageSize !== undefined)
+      params.push(`pageSize=${options.pageSize}`);
+    if (options?.contentPage !== undefined)
+      params.push(`contentPage=${options.contentPage}`);
+    if (options?.contentPageSize !== undefined)
+      params.push(`contentPageSize=${options.contentPageSize}`);
+    if (options?.peoplePage !== undefined)
+      params.push(`peoplePage=${options.peoplePage}`);
+    if (options?.peoplePageSize !== undefined)
+      params.push(`peoplePageSize=${options.peoplePageSize}`);
+
+    return `c/search?${params.join("&")}`;
+  },
   fetchPlayback: (contentType: string, contentId: string) =>
     `c/play/${encPath(contentType.toLowerCase())}/${encPath(contentId)}`,
-
-  fetchTrending: `trending/all/week?api_key=${key}&language=en-US`,
-  searchRequest: `search/multi?api_key=${key}&query=`,
-
-  fetchMoviesPopular: `movie/popular?api_key=${key}&language=en-US`,
-  fetchTVPopular: `tv/popular?api_key=${key}&language=en-US`,
-  fetchAnimePopular: `discover/tv?api_key=${key}&with_genres=16&with_origin_country=JP&sort_by=popularity.desc&language=en-US&vote_count.gte=50`,
-  fetchMoviesTrending: `trending/movie/week?api_key=${key}&language=en-US`,
-  fetchTVTrending: `trending/tv/week?api_key=${key}&language=en-US`,
-  fetchMoviesTopRated: `movie/top_rated?api_key=${key}&language=en-US`,
-  fetchTVTopRated: `tv/top_rated?api_key=${key}&language=en-US`,
 };
 
 export default requests;

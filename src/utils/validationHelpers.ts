@@ -132,15 +132,19 @@ export function validateApiResponse<T>(
     });
   }
 
-  if (typeof apiResponse.code !== "string") {
+  if (typeof apiResponse.timestamp !== "string") {
     errors.push({
-      field: "code",
-      message: "Response code must be a string",
+      field: "timestamp",
+      message: "Response timestamp must be a string",
       code: "INVALID_TYPE",
     });
   }
 
-  if (typeof apiResponse.path !== "string") {
+  if (
+    "path" in apiResponse &&
+    apiResponse.path !== undefined &&
+    typeof apiResponse.path !== "string"
+  ) {
     errors.push({
       field: "path",
       message: "Response path must be a string",
@@ -148,7 +152,23 @@ export function validateApiResponse<T>(
     });
   }
 
-  if (typeof apiResponse.request_id !== "string") {
+  if (
+    "requestId" in apiResponse &&
+    apiResponse.requestId !== undefined &&
+    typeof apiResponse.requestId !== "string"
+  ) {
+    errors.push({
+      field: "requestId",
+      message: "Response requestId must be a string",
+      code: "INVALID_TYPE",
+    });
+  }
+
+  if (
+    "request_id" in apiResponse &&
+    apiResponse.request_id !== undefined &&
+    typeof apiResponse.request_id !== "string"
+  ) {
     errors.push({
       field: "request_id",
       message: "Response request_id must be a string",
@@ -156,11 +176,11 @@ export function validateApiResponse<T>(
     });
   }
 
-  if (typeof apiResponse.timestamp !== "string") {
+  if (!("error" in apiResponse)) {
     errors.push({
-      field: "timestamp",
-      message: "Response timestamp must be a string",
-      code: "INVALID_TYPE",
+      field: "error",
+      message: "Response must contain error field",
+      code: "MISSING_FIELD",
     });
   }
 
@@ -174,6 +194,28 @@ export function validateApiResponse<T>(
 
   if (errors.length > 0) {
     return { isValid: false, errors };
+  }
+
+  if (apiResponse.data === null) {
+    return {
+      isValid: true,
+      data: {
+        success: apiResponse.success as boolean,
+        status: apiResponse.status as number,
+        message: apiResponse.message as string,
+        data: null,
+        error: (apiResponse.error ?? null) as ApiResponse<T>["error"],
+        path:
+          (apiResponse.path as string | undefined) ??
+          (apiResponse.path as undefined),
+        requestId:
+          (apiResponse.requestId as string | undefined) ??
+          (apiResponse.request_id as string | undefined),
+        request_id: apiResponse.request_id as string | undefined,
+        timestamp: apiResponse.timestamp as string,
+      },
+      errors: [],
+    };
   }
 
   const dataValidation = dataValidator(apiResponse.data);
@@ -192,11 +234,14 @@ export function validateApiResponse<T>(
     data: {
       success: apiResponse.success as boolean,
       status: apiResponse.status as number,
-      code: apiResponse.code as string,
       message: apiResponse.message as string,
       data: dataValidation.data!,
-      path: apiResponse.path as string,
-      request_id: apiResponse.request_id as string,
+      error: (apiResponse.error ?? null) as ApiResponse<T>["error"],
+      path: apiResponse.path as string | undefined,
+      requestId:
+        (apiResponse.requestId as string | undefined) ??
+        (apiResponse.request_id as string | undefined),
+      request_id: apiResponse.request_id as string | undefined,
       timestamp: apiResponse.timestamp as string,
     },
     errors: [],

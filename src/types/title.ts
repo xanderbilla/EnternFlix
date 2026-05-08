@@ -36,52 +36,8 @@ export interface Creator {
   profile_path: string;
 }
 
-export interface TitleData {
-  id: string;
-  backdropPath: string;
-  posterPath: string;
-  title?: string;
-  name?: string;
-  originalName?: string;
-  originalTitle?: string;
-  overview: string;
-  firstAirDate?: string;
-  releaseDate?: string;
-  numberOfSeasons?: number;
-  numberOfEpisodes?: number;
-  genres?: Array<{ id: string; name: string }>;
-  casts?: Array<{ id: string; name: string }>;
-  tags?: Array<{ id: string; name: string }>;
-  moodTags?: Array<{ id: string; name: string }>;
-  contentType?: "MOVIE" | "TV" | "PERSON";
-  runtime?: number;
-  status?: string;
-  tagline?: string;
-  voteAverage?: number;
-  contentRating?: "18_PLUS" | "21_PLUS";
-  createdBy?: Creator[];
-  originCountry?: string[];
-  originalLanguage?: string;
-  studios?: Array<{
-    id: string;
-    name: string;
-  }>;
-  production_companies?: Array<{
-    id: string;
-    name: string;
-  }>;
-  audit?: {
-    createdAt: string;
-    isDeleted: boolean;
-  };
-  assets?: Array<{
-    type: "TRAILER" | "TEASER" | "CLIP" | "PROMO" | "BTS";
-    keys: string[];
-  }>;
-}
-
 export interface DialogBannerProps {
-  data: TitleData | null;
+  data: import("./movie").Movie | null;
   mediaType: "movie" | "tv";
   onClose: () => void;
   onExploreClick?: (query: string, title: string, isCast?: boolean) => void;
@@ -153,12 +109,13 @@ export interface TitleVideoPlayerProps {
   videoLoaded?: boolean;
   isMuted: boolean;
   videoRef: React.RefObject<HTMLVideoElement | null>;
-  data: TitleData;
+  data: import("./movie").Movie;
+  previewVideoPath?: string;
   onVideoEnded: () => void;
   onVideoLoaded?: () => void;
 }
 
 export interface DialogVideoSectionProps {
-  data: TitleData | null;
+  data: import("./movie").Movie | null;
   onClose: () => void;
 }

@@ -3,10 +3,11 @@ import customAxios from "@/lib/api/customAxios";
 import requests from "@/lib/api/request";
 import { Person, PersonResponse } from "@/types/movie";
 import type { MoviesResponse } from "@/types/movie";
+import { queryKeys } from "@/lib/query/queryKeys";
 
 export const usePerson = (id: string, enabled: boolean = true) => {
   return useQuery<Person, Error>({
-    queryKey: ["person", id],
+    queryKey: queryKeys.person(id),
     queryFn: async () => {
       if (!id) {
         throw new Error("Person ID is required");
@@ -14,6 +15,9 @@ export const usePerson = (id: string, enabled: boolean = true) => {
       const response = await customAxios.get<PersonResponse>(
         requests.fetchPersonById(id),
       );
+      if (!response.data.data) {
+        throw new Error("Person not found");
+      }
       return response.data.data;
     },
     enabled: enabled && !!id,
@@ -29,7 +33,7 @@ export const usePersonMovies = (
   enabled: boolean = true,
 ) => {
   return useQuery({
-    queryKey: ["personMovies", id, type],
+    queryKey: queryKeys.personMovies(id, type),
     queryFn: async () => {
       if (!id) {
         throw new Error("Person ID is required");
@@ -37,7 +41,7 @@ export const usePersonMovies = (
       const response = await customAxios.get<MoviesResponse>(
         requests.fetchPersonMovies(id, type),
       );
-      return response.data.data;
+      return response.data.data?.items ?? [];
     },
     enabled: enabled && !!id,
     retry: 2,

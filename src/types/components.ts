@@ -1,5 +1,6 @@
 import { ReactNode, ButtonHTMLAttributes } from "react";
 import { Movie } from "./movie";
+import { SearchPersonResult } from "./movie";
 import { DialogState } from "@/hooks/ui/useDialogManager";
 
 export interface MovieCardProps {
@@ -23,6 +24,8 @@ export interface BannerProps {
 export interface PageLayoutProps {
   children: ReactNode;
   showBanner?: boolean;
+  isContentReady?: boolean;
+  reserveTopPaddingWhenNoBanner?: boolean;
   bannerVariant?: "home" | "category";
   bannerTitle?: string;
   bannerDescription?: string;
@@ -77,14 +80,7 @@ export interface IconButtonVariant {
 }
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?:
-    | "primary"
-    | "danger"
-    | "secondary"
-    | "outline"
-    | "banner-play"
-    | "banner-info"
-    | "auth";
+  variant?: "primary" | "danger" | "secondary" | "outline" | "auth";
   size?: "sm" | "md" | "lg";
   children: React.ReactNode;
   className?: string;
@@ -102,6 +98,7 @@ export interface MovieCardHoverOverlayProps {
 
 export interface MovieCardActionButtonsProps {
   contentId: string;
+  title: string;
   contentType?: "MOVIE" | "TV" | "PERSON";
   onAddClick: () => void;
   onLikeClick: () => void;
@@ -159,6 +156,9 @@ export interface ExploreDialogProps {
   showBackButton?: boolean;
   backdropUrl?: string;
   isCastDialog?: boolean;
+  discoverType?: string;
+  discoverContent?: string;
+  isPaginationEnabled?: boolean;
 }
 
 export interface MovieListHeaderProps {
@@ -205,9 +205,12 @@ export interface SearchHeroProps {
 }
 
 export interface SearchResultsProps {
-  searchQuery: string;
   debouncedQuery: string;
   searchRes: Movie[];
+  peopleRes: SearchPersonResult[];
+  contentCount?: number;
+  peopleCount?: number;
+  selectedMode?: "content" | "people";
   hasNextPage: boolean;
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
 }
@@ -332,6 +335,9 @@ export interface MovieGridProps {
   columns?: number;
   disableHover?: boolean;
   disableAnimation?: boolean;
+  fullWidth?: boolean;
+  eagerLoadCount?: number;
+  onCardHover?: () => void;
 }
 
 export interface DialogRendererProps {
@@ -386,6 +392,7 @@ export interface InfoDialogProps {
   onClose: () => void;
   children: ReactNode;
   zIndex?: number;
+  ariaLabel?: string;
 }
 
 export interface DiscoverDialogProps {
@@ -410,6 +417,7 @@ export interface BaseDialogProps {
       }) => ReactNode);
   zIndex?: number;
   className?: string;
+  contentAlignment?: "start" | "center";
   /** Accessible name for the dialog (used as aria-label). */
   ariaLabel?: string;
   /** ID of the element that labels the dialog (used as aria-labelledby). */

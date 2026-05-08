@@ -8,7 +8,6 @@ vi.mock("@/lib/env/env", () => ({
     isTest: true,
     enableLogging: false,
     http: { timeoutMs: 5000 },
-    tmdb: { apiKey: "test-key", baseUrl: "https://api.themoviedb.org/3/" },
     customApi: {
       baseUrl: "https://api.example.com",
       imageBaseUrl: "https://img.example.com",
@@ -59,6 +58,14 @@ describe("request URL builders", () => {
       );
     });
 
+    it("fetchAttributes defaults to genres", () => {
+      expect(requests.fetchAttributes()).toBe("c/attributes?type=genres");
+    });
+
+    it("fetchAttributes accepts explicit attribute type", () => {
+      expect(requests.fetchAttributes("GENRE")).toBe("c/attributes?type=GENRE");
+    });
+
     it("fetchDiscover defaults to latest/all", () => {
       expect(requests.fetchDiscover()).toBe(
         "c/discover?type=latest&content=all",
@@ -67,6 +74,26 @@ describe("request URL builders", () => {
 
     it("fetchBanner defaults to all", () => {
       expect(requests.fetchBanner()).toBe("c/banner?type=all");
+    });
+
+    it("fetchSearch builds query with defaults", () => {
+      expect(requests.fetchSearch("naruto")).toBe(
+        "c/search?query=naruto&in=all&sort=recent",
+      );
+    });
+
+    it("fetchSearch includes explicit pagination options", () => {
+      expect(
+        requests.fetchSearch("naruto", {
+          in: "people",
+          contentPage: 3,
+          contentPageSize: 30,
+          peoplePage: 2,
+          peoplePageSize: 15,
+        }),
+      ).toBe(
+        "c/search?query=naruto&in=people&sort=recent&contentPage=3&contentPageSize=30&peoplePage=2&peoplePageSize=15",
+      );
     });
 
     it("fetchPlayback embeds contentType and contentId", () => {
@@ -117,9 +144,21 @@ describe("request URL builders", () => {
       );
     });
 
+    it("encodes type for fetchAttributes query value", () => {
+      expect(requests.fetchAttributes("genre & mood")).toBe(
+        "c/attributes?type=genre+%26+mood",
+      );
+    });
+
     it("encodes both segments for fetchPlayback", () => {
       expect(requests.fetchPlayback("movie", "id with/space")).toBe(
         "c/play/movie/id%20with%2Fspace",
+      );
+    });
+
+    it("encodes search query values", () => {
+      expect(requests.fetchSearch("one piece&tv")).toBe(
+        "c/search?query=one+piece%26tv&in=all&sort=recent",
       );
     });
 
@@ -130,13 +169,7 @@ describe("request URL builders", () => {
     });
   });
 
-  describe("TMDB endpoints", () => {
-    it("includes the api key in TMDB query string", () => {
-      expect(requests.fetchTrending).toContain("api_key=test-key");
-      expect(requests.fetchMoviesPopular).toContain("api_key=test-key");
-      expect(requests.fetchTVPopular).toContain("api_key=test-key");
-    });
-
+  describe("custom backend URL hygiene", () => {
     it("never includes api key in custom backend URLs", () => {
       expect(requests.fetchBanner()).not.toContain("api_key");
       expect(requests.fetchAllContent()).not.toContain("api_key");

@@ -7,7 +7,6 @@ vi.mock("@/lib/env/env", () => ({
     isDev: false,
     isTest: true,
     enableLogging: false,
-    tmdb: { apiKey: "k", baseUrl: "https://api.themoviedb.org/3" },
     customApi: {
       baseUrl: "https://api.example.test",
       imageBaseUrl: "https://cdn.example.test",
@@ -15,7 +14,7 @@ vi.mock("@/lib/env/env", () => ({
   },
 }));
 
-import { getImageUrl } from "./movieHelpers";
+import { getImageUrl, getReleaseYear } from "./movieHelpers";
 
 describe("getImageUrl", () => {
   beforeEach(() => {
@@ -29,15 +28,13 @@ describe("getImageUrl", () => {
     expect(getImageUrl(null)).toBe("");
   });
 
-  it("builds a TMDB URL when path starts with /", () => {
-    expect(getImageUrl("/abc.jpg")).toBe(
-      "https://image.tmdb.org/t/p/w500/abc.jpg",
-    );
+  it("strips a leading slash and joins against the configured CDN", () => {
+    expect(getImageUrl("/abc.jpg")).toBe("https://cdn.example.test/abc.jpg");
   });
 
-  it("respects the requested TMDB size", () => {
+  it("ignores the size argument (CDN serves a single size)", () => {
     expect(getImageUrl("/abc.jpg", "original")).toBe(
-      "https://image.tmdb.org/t/p/original/abc.jpg",
+      "https://cdn.example.test/abc.jpg",
     );
   });
 
@@ -45,5 +42,30 @@ describe("getImageUrl", () => {
     expect(getImageUrl("posters/x.jpg")).toBe(
       "https://cdn.example.test/posters/x.jpg",
     );
+  });
+});
+
+describe("getReleaseYear", () => {
+  it("uses firstAirDate when releaseDate is missing", () => {
+    expect(
+      getReleaseYear({
+        id: "1",
+        backdropPath: null,
+        posterPath: null,
+        firstAirDate: "2022-11-20",
+      }),
+    ).toBe("2022");
+  });
+
+  it("returns Unknown when releaseDate is placeholder", () => {
+    expect(
+      getReleaseYear({
+        id: "2",
+        backdropPath: null,
+        posterPath: null,
+        releaseDate: "0001-01-01",
+        firstAirDate: "2021-08-15",
+      }),
+    ).toBe("Unknown");
   });
 });

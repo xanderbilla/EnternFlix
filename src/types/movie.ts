@@ -95,6 +95,56 @@ export interface Person {
   specialties?: Tag[];
 }
 
-export type MoviesResponse = import("@/types/api").ApiResponse<Movie[]>;
+export interface SearchWarning {
+  scope: string;
+  code: string;
+  message: string;
+}
+
+export interface SearchPersonResult {
+  id: string;
+  contentType: "PERSON";
+  name: string;
+  stageName?: string;
+  profilePath?: string;
+  backdropPath?: string;
+}
+
+export interface SearchContentBucket {
+  results: Movie[];
+  count: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SearchPeopleBucket {
+  results: SearchPersonResult[];
+  count: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface SearchResponseData {
+  content: SearchContentBucket;
+  people: SearchPeopleBucket;
+  warnings?: SearchWarning[];
+}
+
+export interface ContentAttribute {
+  id: string;
+  name: string;
+  attributeType: string[];
+  contentType: "MOVIE" | "TV" | "ALL";
+  active: boolean;
+}
+
+export type MoviesResponse = import("@/types/api").ApiResponse<
+  import("@/types/api").PagedData<Movie>
+>;
 export type MovieResponse = import("@/types/api").ApiResponse<Movie>;
 export type PersonResponse = import("@/types/api").ApiResponse<Person>;
+export type SearchResponse =
+  import("@/types/api").ApiResponse<SearchResponseData>;
+export type AttributesResponse = import("@/types/api").ApiResponse<
+  import("@/types/api").PagedData<ContentAttribute>
+>;

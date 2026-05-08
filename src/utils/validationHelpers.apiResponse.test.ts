@@ -6,11 +6,11 @@ describe("validateApiResponse", () => {
     const response = {
       success: true,
       status: 200,
-      code: "OK",
       message: "success",
       data: { id: "1" },
-      path: "/v1/content",
-      request_id: "req-1",
+      path: "/c/content",
+      requestId: "req-1",
+      error: null,
       timestamp: new Date().toISOString(),
     };
 
@@ -22,7 +22,7 @@ describe("validateApiResponse", () => {
 
     expect(result.isValid).toBe(true);
     expect(result.data?.success).toBe(true);
-    expect(result.data?.code).toBe("OK");
+    expect(result.data?.requestId).toBe("req-1");
   });
 
   it("returns error when required ApiResponse fields are missing", () => {
@@ -40,6 +40,26 @@ describe("validateApiResponse", () => {
 
     expect(result.isValid).toBe(false);
     expect(result.errors.some((e) => e.field === "success")).toBe(true);
-    expect(result.errors.some((e) => e.field === "code")).toBe(true);
+    expect(result.errors.some((e) => e.field === "error")).toBe(true);
+  });
+
+  it("accepts null data envelopes", () => {
+    const response = {
+      success: true,
+      status: 200,
+      message: "ok",
+      data: null,
+      error: null,
+      timestamp: new Date().toISOString(),
+    };
+
+    const result = validateApiResponse(response, () => ({
+      isValid: false,
+      data: undefined,
+      errors: [{ field: "data", message: "not used", code: "X" }],
+    }));
+
+    expect(result.isValid).toBe(true);
+    expect(result.data?.data).toBeNull();
   });
 });

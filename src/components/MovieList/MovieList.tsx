@@ -44,6 +44,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   } = useDialogManager();
 
   const movies = useMemo(() => response?.results || [], [response?.results]);
+  const listMovies = useMemo(() => movies.slice(0, 20), [movies]);
 
   const { setOverflowVisible, setOverflowHidden } = useBodyOverflow(
     dialogState.isOpen,
@@ -60,8 +61,9 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
     [movies.length],
   );
 
+  // Temporary: disable interactive carousel behavior (scroll buttons + gradients)
   const shouldShowInteractiveScroll =
-    shouldShowScrollButtons && (showButtons || isCompactViewport);
+    shouldShowScrollButtons && (showButtons || isCompactViewport) && false;
 
   const checkScrollButtons = useCallback(() => {
     if (scrollRef.current) {
@@ -192,7 +194,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
           />
 
           <MovieListRow
-            movies={movies}
+            movies={listMovies}
             scrollRef={scrollRef}
             onMovieClick={handleMovieClick}
           />

@@ -45,7 +45,14 @@ const Banner = () => {
 
   const isFavoritesPage = pathname.includes("/favorites");
 
-  const { data: movie, error } = useBanner("all");
+  const { data: movie, error, isLoading, refetch } = useBanner("all");
+
+  useEffect(() => {
+    if (!isLoading && (error || !movie?.backdropPath)) {
+      const timer = setTimeout(() => refetch(), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading, error, movie?.backdropPath, refetch]);
 
   const contentType = movie?.contentType === "TV" ? "tv" : "movie";
   const { data: playback } = usePlayback(
@@ -133,8 +140,13 @@ const Banner = () => {
     return <FavoritesBanner movie={movie ?? null} />;
   }
 
-  if (error || !movie?.backdropPath) {
-    return null;
+  if (isLoading || error || !movie?.backdropPath) {
+    return (
+      <div
+        className="relative h-[85vh] md:h-[92vh] lg:h-[100vh] bg-zinc-900"
+        aria-hidden="true"
+      />
+    );
   }
 
   const movieTitle = movie.title ?? "Untitled";

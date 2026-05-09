@@ -61,9 +61,8 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
     [movies.length],
   );
 
-  // Temporary: disable interactive carousel behavior (scroll buttons + gradients)
   const shouldShowInteractiveScroll =
-    shouldShowScrollButtons && (showButtons || isCompactViewport) && false;
+    shouldShowScrollButtons && (showButtons || isCompactViewport);
 
   const checkScrollButtons = useCallback(() => {
     if (scrollRef.current) {

@@ -84,6 +84,12 @@ function buildRemotePatterns() {
     }
   }
 
+  // Keep local/dev image optimization working even if NEXT_PUBLIC_* env vars
+  // are not loaded in the current shell/process.
+  if (patterns.length === 0) {
+    push("https", "bi8s-storage-dev.s3.us-east-1.amazonaws.com");
+  }
+
   return patterns;
 }
 
@@ -125,12 +131,18 @@ function buildContentSecurityPolicy() {
 }
 
 /** @type {import('next').NextConfig} */
+const imageRemotePatterns = buildRemotePatterns();
+
 const nextConfig = {
   output: "standalone",
   poweredByHeader: false,
   reactStrictMode: true,
   images: {
-    remotePatterns: buildRemotePatterns(),
+    remotePatterns: imageRemotePatterns,
+    // Local macOS/ISP networking can resolve public S3 hosts via NAT64
+    // addresses (for example 64:ff9b::/96), which Next may flag as private.
+    // Keep this enabled only in development to avoid broadening prod trust.
+    dangerouslyAllowLocalIP: process.env.NODE_ENV !== "production",
     formats: ["image/avif", "image/webp"],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],

@@ -1,5 +1,16 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.8.0 - 2026-05-09
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.8.0
+Git Tag: v0.8.0
+Commit SHA: 880219c2ff5f1f4c3566a8ff14d7d1edc89966e8
+
+Changes:
+- fix: improve banner loading behavior and update movie list rendering (880219c)
+- Revert "fix: movielist card clipping by enabling horizontal scroll" (3445e83)
+
 ## v0.7.0 - 2026-05-09
 
 Environment: dev

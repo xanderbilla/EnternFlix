@@ -8,7 +8,7 @@ function MovieListRow({ movies, scrollRef, onMovieClick }: MovieListRowProps) {
     <div
       id="movie-list"
       ref={scrollRef}
-      className="flex gap-2 overflow-x-auto overflow-y-visible w-full h-full scrollbar-hide scroll-smooth"
+      className="flex gap-2 overflow-x-hidden overflow-y-visible w-full h-full scrollbar-hide scroll-smooth"
     >
       {movies.map((movie: Movie, index: number) => (
         <div

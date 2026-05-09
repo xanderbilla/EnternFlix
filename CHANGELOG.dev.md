@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.9.0 - 2026-05-09
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.9.0
+Git Tag: v0.9.0
+Commit SHA: ea7a7e9883d6bff148245dd05af33cf4ebd0a713
+
+Changes:
+- fix: ensure local image optimization works without env vars and refine carousel behavior (ea7a7e9)
+
 ## v0.8.0 - 2026-05-09
 
 Environment: dev

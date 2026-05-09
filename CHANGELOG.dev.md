@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.4.0 - 2026-05-09
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.4.0
+Git Tag: v0.4.0
+Commit SHA: 7907c37df0b7b7e03becd12837a42414a90c6339
+
+Changes:
+- ci: deploy to amplify with version injection (7907c37)
+
 ## v0.3.0 - 2026-05-09
 
 Environment: dev

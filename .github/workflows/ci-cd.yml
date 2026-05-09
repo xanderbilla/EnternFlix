@@ -1,0 +1,445 @@
+name: CI/CD
+
+on:
+    push:
+        branches: [dev, prod]
+    pull_request:
+        branches: [dev, prod]
+    workflow_dispatch:
+        inputs:
+            bump:
+                description: "Version bump type"
+                required: false
+                default: "auto"
+                type: choice
+                options: [auto, major, minor, patch]
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: write
+    id-token: write
+    packages: write
+
+env:
+    NODE_VERSION: "20"
+
+jobs:
+    # ---------------------------------------------------------------------------
+    # Stage 1: detect environment and compute version
+    # ---------------------------------------------------------------------------
+    setup:
+        name: Setup (env + version)
+        runs-on: ubuntu-latest
+        outputs:
+            environment: ${{ steps.env.outputs.environment }}
+            version: ${{ steps.version.outputs.version }}
+            version_tag: ${{ steps.version.outputs.version_tag }}
+            previous_version: ${{ steps.version.outputs.previous_version }}
+            bump_type: ${{ steps.version.outputs.bump_type }}
+            release: ${{ steps.env.outputs.release }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Detect environment from branch
+              id: env
+              run: |
+                  BRANCH="${GITHUB_REF_NAME}"
+                  case "$BRANCH" in
+                    dev)  ENVIRONMENT=dev ;;
+                    prod) ENVIRONMENT=prod ;;
+                    *)
+                      echo "::error::Unsupported branch '$BRANCH'. Pipeline only runs for dev/prod." >&2
+                      exit 1
+                      ;;
+                  esac
+                  if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                    RELEASE=true
+                  else
+                    RELEASE=false
+                  fi
+                  echo "environment=${ENVIRONMENT}" >> "$GITHUB_OUTPUT"
+                  echo "release=${RELEASE}" >> "$GITHUB_OUTPUT"
+
+            - name: Determine version
+              id: version
+              env:
+                  BUMP_INPUT: ${{ inputs.bump || 'auto' }}
+                  ENVIRONMENT: ${{ steps.env.outputs.environment }}
+              run: |
+                  set -euo pipefail
+                  PREV_TAG="$(git tag --list "${ENVIRONMENT}-v*" --sort=-v:refname | head -n1 || true)"
+                  if [ -n "$PREV_TAG" ]; then
+                    MESSAGES="$(git log --pretty=%s "${PREV_TAG}..HEAD")"
+                  else
+                    MESSAGES="$(git log --pretty=%s -n 50)"
+                  fi
+                  OUT="$(node scripts/version-bump.mjs --env "$ENVIRONMENT" --bump "$BUMP_INPUT" --messages "$MESSAGES")"
+                  echo "$OUT"
+                  NEXT="$(echo "$OUT" | sed -n 's/.*next=\([^ ]*\).*/\1/p')"
+                  KIND="$(echo "$OUT" | sed -n 's/.*bump=\([^ ]*\).*/\1/p')"
+                  PREV="$(echo "$OUT" | sed -n 's/.*prev=\([^ ]*\).*/\1/p')"
+                  if ! echo "$NEXT" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+                    echo "::error::Invalid next version: $NEXT"
+                    exit 1
+                  fi
+                  echo "version=${NEXT}" >> "$GITHUB_OUTPUT"
+                  echo "version_tag=v${NEXT}" >> "$GITHUB_OUTPUT"
+                  echo "previous_version=${PREV}" >> "$GITHUB_OUTPUT"
+                  echo "bump_type=${KIND}" >> "$GITHUB_OUTPUT"
+
+    # ---------------------------------------------------------------------------
+    # Stage 2: install + parallel quality gates
+    # ---------------------------------------------------------------------------
+    lint:
+        name: Lint
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: npm
+            - run: npm ci --no-audit --no-fund
+            - run: npm run lint
+
+    format:
+        name: Format check
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: npm
+            - run: npm ci --no-audit --no-fund
+            - run: npm run format:check
+
+    typecheck:
+        name: Typecheck
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: npm
+            - run: npm ci --no-audit --no-fund
+            - run: npm run typecheck
+
+    test:
+        name: Unit tests (Vitest)
+        needs: setup
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: npm
+            - run: npm ci --no-audit --no-fund
+            - run: npm test
+            # Integration & E2E suites are not configured in this repo. Add them
+            # (e.g. Playwright) and a job here when introduced.
+
+    audit:
+        name: Dependency audit
+        needs: setup
+        runs-on: ubuntu-latest
+        continue-on-error: true
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: npm
+            - run: npm ci --no-audit --no-fund
+            - run: npm run audit:ci
+
+    # ---------------------------------------------------------------------------
+    # Stage 3: Next.js build
+    # ---------------------------------------------------------------------------
+    build:
+        name: Next.js build
+        needs: [setup, lint, format, typecheck, test]
+        runs-on: ubuntu-latest
+        env:
+            NEXT_PUBLIC_CUSTOM_API_URL: ${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_API_URL }}
+            NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL: ${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL }}
+            NEXT_PUBLIC_SITE_URL: ${{ vars.BUILD_NEXT_PUBLIC_SITE_URL }}
+            NEXT_PUBLIC_IMAGE_HOSTS: ${{ vars.BUILD_NEXT_PUBLIC_IMAGE_HOSTS }}
+            NEXT_PUBLIC_APP_VERSION: v${{ needs.setup.outputs.version }}
+            NEXT_PUBLIC_APP_ENV: ${{ needs.setup.outputs.environment }}
+            NEXT_TELEMETRY_DISABLED: "1"
+        steps:
+            - uses: actions/checkout@v4
+            - uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.NODE_VERSION }}
+                  cache: npm
+            - name: Validate required build env
+              run: |
+                  : "${NEXT_PUBLIC_CUSTOM_API_URL:?BUILD_NEXT_PUBLIC_CUSTOM_API_URL must be set as a GitHub Actions variable}"
+                  : "${NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL:?BUILD_NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL must be set as a GitHub Actions variable}"
+                  : "${NEXT_PUBLIC_APP_VERSION:?Computed app version is missing}"
+            - run: npm ci --no-audit --no-fund
+            - run: npm run build
+
+    # ---------------------------------------------------------------------------
+    # Stage 4: Docker (build + tag + push)  — only on push/dispatch to dev/prod
+    # ---------------------------------------------------------------------------
+    docker:
+        name: Build & push Docker image
+        needs: [setup, build, audit]
+        if: needs.setup.outputs.release == 'true'
+        runs-on: ubuntu-latest
+        permissions:
+            id-token: write
+            contents: read
+        env:
+            AWS_REGION: ${{ vars.AWS_REGION }}
+            ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+            ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+            ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+            VERSION: ${{ needs.setup.outputs.version }}
+        outputs:
+            image_versioned: ${{ steps.tags.outputs.image_versioned }}
+            image_latest: ${{ steps.tags.outputs.image_latest }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Validate required CI variables
+              run: |
+                  : "${AWS_REGION:?AWS_REGION repository variable must be set}"
+                  : "${ECR_REPOSITORY:?ECR_REPOSITORY repository variable must be set}"
+                  : "${ECR_REGISTRY:?ECR_REGISTRY repository variable must be set}"
+                  if [ -z "${{ secrets.AWS_ROLE_ARN }}" ]; then
+                    echo "::error::AWS_ROLE_ARN secret must be set" >&2
+                    exit 1
+                  fi
+
+            - name: Configure AWS credentials (OIDC)
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+                  aws-region: ${{ env.AWS_REGION }}
+
+            - name: Login to Amazon ECR
+              uses: aws-actions/amazon-ecr-login@v2
+
+            - uses: docker/setup-qemu-action@v3
+            - uses: docker/setup-buildx-action@v3
+
+            - name: Compute image tags
+              id: tags
+              run: |
+                  BASE="${ECR_REGISTRY}/${ECR_REPOSITORY}"
+                  VERSIONED_TAG="efx-image-${ENVIRONMENT}-v${VERSION}"
+                  LATEST_TAG="efx-image-${ENVIRONMENT}-latest"
+                  {
+                    echo "versioned_tag=${VERSIONED_TAG}"
+                    echo "latest_tag=${LATEST_TAG}"
+                    echo "image_versioned=${BASE}:${VERSIONED_TAG}"
+                    echo "image_latest=${BASE}:${LATEST_TAG}"
+                  } >> "$GITHUB_OUTPUT"
+
+            - name: Build & push (linux/amd64, linux/arm64)
+              uses: docker/build-push-action@v6
+              with:
+                  context: .
+                  file: ./Dockerfile
+                  platforms: linux/amd64,linux/arm64
+                  push: true
+                  provenance: false
+                  tags: |
+                      ${{ steps.tags.outputs.image_versioned }}
+                      ${{ steps.tags.outputs.image_latest }}
+                  build-args: |
+                      NEXT_PUBLIC_CUSTOM_API_URL=${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_API_URL }}
+                      NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL=${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL }}
+                      NEXT_PUBLIC_SITE_URL=${{ vars.BUILD_NEXT_PUBLIC_SITE_URL }}
+                      NEXT_PUBLIC_IMAGE_HOSTS=${{ vars.BUILD_NEXT_PUBLIC_IMAGE_HOSTS }}
+                      NEXT_PUBLIC_HTTP_TIMEOUT_MS=10000
+                      NEXT_PUBLIC_ENABLE_LOGGING=false
+                      NEXT_PUBLIC_APP_VERSION=v${{ env.VERSION }}
+                      NEXT_PUBLIC_APP_ENV=${{ env.ENVIRONMENT }}
+                  cache-from: type=gha
+                  cache-to: type=gha,mode=max
+
+            - name: Verify image tag matches app version
+              run: |
+                  EXPECTED="efx-image-${ENVIRONMENT}-v${VERSION}"
+                  if [ "${{ steps.tags.outputs.versioned_tag }}" != "$EXPECTED" ]; then
+                    echo "::error::Docker tag '${{ steps.tags.outputs.versioned_tag }}' does not match app version '$EXPECTED'"
+                    exit 1
+                  fi
+
+            - name: Image summary
+              run: |
+                  {
+                    echo "## Pushed image"
+                    echo "- ${{ steps.tags.outputs.image_versioned }}"
+                    echo "- ${{ steps.tags.outputs.image_latest }}"
+                  } >> "$GITHUB_STEP_SUMMARY"
+
+    # ---------------------------------------------------------------------------
+    # Stage 5: changelog + version commit + git tag + GitHub release
+    # ---------------------------------------------------------------------------
+    release:
+        name: Tag + changelog + release
+        needs: [setup, docker]
+        if: needs.setup.outputs.release == 'true'
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+        env:
+            ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+            VERSION: ${{ needs.setup.outputs.version }}
+            PREV_VERSION: ${{ needs.setup.outputs.previous_version }}
+            BUMP_TYPE: ${{ needs.setup.outputs.bump_type }}
+            IMAGE_VERSIONED: ${{ needs.docker.outputs.image_versioned }}
+            IMAGE_LATEST: ${{ needs.docker.outputs.image_latest }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Configure git
+              run: |
+                  git config user.name  "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+            - name: Compute git tag
+              id: gittag
+              run: |
+                  echo "git_tag=${ENVIRONMENT}-v${VERSION}"           >> "$GITHUB_OUTPUT"
+                  echo "prev_git_tag=${ENVIRONMENT}-v${PREV_VERSION}" >> "$GITHUB_OUTPUT"
+
+            - name: Generate changelog entry
+              id: changelog
+              env:
+                  GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
+                  PREV_GIT_TAG: ${{ steps.gittag.outputs.prev_git_tag }}
+              run: |
+                  set -euo pipefail
+                  DATE="$(date -u +%Y-%m-%d)"
+                  if git rev-parse -q --verify "refs/tags/${PREV_GIT_TAG}" >/dev/null; then
+                    CHANGES="$(git log --pretty='- %s (%h)' "${PREV_GIT_TAG}..HEAD")"
+                  else
+                    CHANGES="$(git log --pretty='- %s (%h)' -n 20)"
+                  fi
+                  [ -z "$CHANGES" ] && CHANGES="- (no changes)"
+
+                  ENTRY_FILE="$(mktemp)"
+                  {
+                    echo "## v${VERSION} - ${DATE}"
+                    echo
+                    echo "Environment: ${ENVIRONMENT}"
+                    echo "Docker Image: ${IMAGE_VERSIONED}"
+                    echo "Git Tag: ${GIT_TAG}"
+                    echo "Commit SHA: ${GITHUB_SHA}"
+                    echo
+                    echo "Changes:"
+                    echo "$CHANGES"
+                    echo
+                  } > "$ENTRY_FILE"
+
+                  CHANGELOG_FILE="CHANGELOG.${ENVIRONMENT}.md"
+                  [ -f "$CHANGELOG_FILE" ] || printf "# Changelog (%s)\n\n" "$ENVIRONMENT" > "$CHANGELOG_FILE"
+
+                  # Insert new entry after the first two lines (title + blank line).
+                  HEADER="$(head -n 2 "$CHANGELOG_FILE")"
+                  BODY="$(tail -n +3 "$CHANGELOG_FILE" || true)"
+                  {
+                    printf "%s\n" "$HEADER"
+                    cat "$ENTRY_FILE"
+                    printf "%s\n" "$BODY"
+                  } > "$CHANGELOG_FILE"
+
+                  echo "changelog_file=${CHANGELOG_FILE}" >> "$GITHUB_OUTPUT"
+                  {
+                    echo "entry<<EOF"
+                    cat "$ENTRY_FILE"
+                    echo "EOF"
+                  } >> "$GITHUB_OUTPUT"
+
+            - name: Bump version file
+              run: echo "${VERSION}" > ".version.${ENVIRONMENT}"
+
+            - name: Commit version + changelog back to branch
+              run: |
+                  git add ".version.${ENVIRONMENT}" "${{ steps.changelog.outputs.changelog_file }}"
+                  if git diff --cached --quiet; then
+                    echo "No changes to commit."
+                  else
+                    git commit -m "chore(release): ${ENVIRONMENT} v${VERSION} [skip ci]"
+                    git push origin "HEAD:${GITHUB_REF_NAME}"
+                  fi
+
+            - name: Create git tag
+              env:
+                  GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
+              run: |
+                  git tag -a "${GIT_TAG}" -m "${ENVIRONMENT} release v${VERSION}"
+                  git push origin "${GIT_TAG}"
+
+            - name: Create GitHub Release
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
+              run: |
+                  ENV_UPPER="$(echo "$ENVIRONMENT" | tr '[:lower:]' '[:upper:]')"
+                  TITLE="${ENV_UPPER} Release v${VERSION}"
+                  NOTES_FILE="$(mktemp)"
+                  {
+                    echo "Environment: ${ENVIRONMENT}"
+                    echo "Version: v${VERSION}"
+                    echo "Docker Image: ${IMAGE_VERSIONED}"
+                    echo "Git Tag: ${GIT_TAG}"
+                    echo "Branch: ${GITHUB_REF_NAME}"
+                    echo "Commit SHA: ${GITHUB_SHA}"
+                    echo
+                    echo "Changes:"
+                    echo "${{ steps.changelog.outputs.entry }}" | awk '/^Changes:/{flag=1; next} flag'
+                  } > "$NOTES_FILE"
+
+                  PRERELEASE_FLAG=""
+                  [ "$ENVIRONMENT" = "dev" ] && PRERELEASE_FLAG="--prerelease"
+
+                  gh release create "${GIT_TAG}" \
+                    --title "${TITLE}" \
+                    --notes-file "${NOTES_FILE}" \
+                    --target "${GITHUB_SHA}" \
+                    ${PRERELEASE_FLAG}
+
+    # ---------------------------------------------------------------------------
+    # Stage 6: deploy hook (placeholder — wire up your platform here)
+    # ---------------------------------------------------------------------------
+    deploy:
+        name: Deploy
+        needs: [setup, release]
+        if: needs.setup.outputs.release == 'true'
+        runs-on: ubuntu-latest
+        environment:
+            name: ${{ needs.setup.outputs.environment }}
+        env:
+            ENVIRONMENT: ${{ needs.setup.outputs.environment }}
+            VERSION: ${{ needs.setup.outputs.version }}
+        steps:
+            - name: Deploy notice
+              run: |
+                  {
+                    echo "## Deployed"
+                    echo "- env: ${ENVIRONMENT}"
+                    echo "- version: v${VERSION}"
+                    echo "- image: efx-image-${ENVIRONMENT}-v${VERSION}"
+                  } >> "$GITHUB_STEP_SUMMARY"
+                  echo "Wire your ECS / EKS / App Runner / Argo CD trigger here."

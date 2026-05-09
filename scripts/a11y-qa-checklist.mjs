@@ -1,0 +1,27 @@
+const lines = [
+  "EnternFlix Accessibility QA Checklist",
+  "",
+  "Automated checks:",
+  "1. npm run a11y:qa",
+  "2. npm run build",
+  "",
+  "Manual keyboard checks:",
+  "1. Tab from page start and verify Skip to main content is reachable and works.",
+  "2. Verify all actionable controls are focusable and have visible focus.",
+  "3. Verify dialog focus trap, Escape close, and focus restoration.",
+  "4. Verify search and sort dropdowns are keyboard operable.",
+  "5. Verify watch page controls: play/pause, seek slider arrows/Home/End, mute, fullscreen.",
+  "",
+  "Screen reader checks:",
+  "1. Verify page landmarks: nav, main, footer.",
+  "2. Verify dialog announces title/label and modal context.",
+  "3. Verify slider value text announces elapsed and total time.",
+  "",
+  "Motion checks:",
+  "1. Enable prefers-reduced-motion and verify reduced animation behavior.",
+  "",
+  "Browser QA suggestion:",
+  "1. Run Lighthouse Accessibility and target >= 95.",
+];
+
+console.log(lines.join("\n"));

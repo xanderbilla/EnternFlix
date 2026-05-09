@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import FooterBrand from "./FooterBrand";
 import FooterLinkGroup from "./FooterLinkGroup";
+import { config } from "@/lib/env/env";
 
 const navigationLinks = [
   { href: "/anime", label: "Anime" },
@@ -32,6 +33,12 @@ const contactLinks = [
 ];
 
 export default function Footer() {
+  const rawVersion = config.app.version;
+  const versionLabel = rawVersion
+    ? rawVersion.startsWith("v")
+      ? rawVersion
+      : `v${rawVersion}`
+    : "v0.0.0-local";
   return (
     <footer className="bg-zinc-900 text-zinc-400 mt-8 py-8 sm:py-10 md:py-12 px-4 sm:px-6 md:px-8 lg:px-12">
       <div className="max-w-7xl mx-auto">
@@ -52,14 +59,13 @@ export default function Footer() {
               &copy; {new Date().getFullYear()} EnternFlix. All rights reserved.
             </p>
             <div className="flex space-x-4 sm:space-x-6 text-xs sm:text-sm">
-              <Link
-                href="https://github.com/xanderbilla"
-                className="hover:text-white transition"
-                target="_blank"
-                rel="noopener noreferrer"
+              <span
+                className="text-zinc-400"
+                aria-label={`Application version ${versionLabel}`}
+                data-testid="app-version"
               >
-                Developer
-              </Link>
+                {versionLabel}
+              </span>
               <Link
                 href="https://github.com/xanderbilla/EnternFlix"
                 className="hover:text-white transition"

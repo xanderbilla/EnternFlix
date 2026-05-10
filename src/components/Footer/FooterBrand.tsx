@@ -4,15 +4,18 @@ import { DynamicIcon as Icon } from "@/utils/dynamicImports";
 
 export default function FooterBrand() {
   return (
-    <div className="flex flex-col space-y-6">
-      <Image
+    <div className="flex flex-col items-center space-y-6 md:items-start">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src="/logo.png"
         height={90}
         width={150}
         alt="EnternFlix Logo"
-        className="h-12 object-contain"
+        className="h-12 w-auto object-contain"
+        loading="lazy"
+        decoding="async"
       />
-      <div className="flex space-x-4">
+      <div className="flex items-center space-x-4">
         <Link
           href="https://x.com/xanderbilla"
           className="hover:text-white transition"

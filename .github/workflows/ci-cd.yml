@@ -72,7 +72,7 @@ jobs:
                   ENVIRONMENT: ${{ steps.env.outputs.environment }}
               run: |
                   set -euo pipefail
-                  PREV_TAG="$(git tag --list "${ENVIRONMENT}-v*" --sort=-v:refname | head -n1 || true)"
+                  PREV_TAG="$(git tag --list "v*" --sort=-v:refname | head -n1 || true)"
                   if [ -n "$PREV_TAG" ]; then
                     MESSAGES="$(git log --pretty=%s "${PREV_TAG}..HEAD")"
                   else
@@ -336,8 +336,8 @@ jobs:
             - name: Compute git tag
               id: gittag
               run: |
-                  echo "git_tag=${ENVIRONMENT}-v${VERSION}"           >> "$GITHUB_OUTPUT"
-                  echo "prev_git_tag=${ENVIRONMENT}-v${PREV_VERSION}" >> "$GITHUB_OUTPUT"
+                  echo "git_tag=v${VERSION}"           >> "$GITHUB_OUTPUT"
+                  echo "prev_git_tag=v${PREV_VERSION}" >> "$GITHUB_OUTPUT"
 
             - name: Generate changelog entry
               id: changelog
@@ -404,7 +404,7 @@ jobs:
               env:
                   GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
               run: |
-                  git tag -a "${GIT_TAG}" -m "${ENVIRONMENT} release v${VERSION}"
+                git tag -a "${GIT_TAG}" -m "release ${GIT_TAG}"
                   git push origin "${GIT_TAG}"
 
             - name: Create GitHub Release
@@ -412,7 +412,7 @@ jobs:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
               run: |
-                  TITLE="${GIT_TAG}"
+                TITLE="v${VERSION}"
                   NOTES_FILE="$(mktemp)"
                   {
                     echo "Environment: ${ENVIRONMENT}"

@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.20.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.20.0
+Git Tag: v0.20.0
+Commit SHA: 188b78ee0413895aa00e3872c28c21370442ba88
+
+Changes:
+- fix(ci): poll until all Amplify jobs cleared before triggering new deploy (188b78e)
+
 ## v0.19.0 - 2026-05-10
 
 Environment: dev

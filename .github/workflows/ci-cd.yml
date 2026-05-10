@@ -475,22 +475,36 @@ jobs:
         run: |
           BRANCH_NAME=$([ "$ENVIRONMENT" = "prod" ] && echo "prod" || echo "dev")
 
-          # Stop any pending/running jobs to avoid LimitExceededException
-          RUNNING_JOB=$(aws amplify list-jobs \
-            --app-id "$AMPLIFY_APP_ID" \
-            --branch-name "$BRANCH_NAME" \
-            --max-results 1 \
-            --query 'jobSummaries[?status==`RUNNING` || status==`PENDING`].jobId' \
-            --output text)
-          if [ -n "$RUNNING_JOB" ] && [ "$RUNNING_JOB" != "None" ]; then
-            echo "Stopping existing Amplify job: $RUNNING_JOB"
-            aws amplify stop-job \
+          # Poll until no RUNNING/PENDING jobs remain (Amplify auto-builds on push
+          # can re-queue immediately after a stop, so we keep retrying).
+          MAX_ATTEMPTS=12   # 12 × 10s = 2 min ceiling
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            ACTIVE_JOBS=$(aws amplify list-jobs \
               --app-id "$AMPLIFY_APP_ID" \
               --branch-name "$BRANCH_NAME" \
-              --job-id "$RUNNING_JOB" || true
-            # Brief pause for the stop to propagate
-            sleep 5
-          fi
+              --max-results 10 \
+              --query 'jobSummaries[?status==`RUNNING` || status==`PENDING`].jobId' \
+              --output text)
+
+            if [ -z "$ACTIVE_JOBS" ] || [ "$ACTIVE_JOBS" = "None" ]; then
+              echo "No active Amplify jobs — proceeding to start new job."
+              break
+            fi
+
+            echo "Attempt $attempt/$MAX_ATTEMPTS: stopping active job(s): $ACTIVE_JOBS"
+            for JOB_ID in $ACTIVE_JOBS; do
+              aws amplify stop-job \
+                --app-id "$AMPLIFY_APP_ID" \
+                --branch-name "$BRANCH_NAME" \
+                --job-id "$JOB_ID" || true
+            done
+
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              echo "::warning::Active jobs still present after $MAX_ATTEMPTS attempts — proceeding anyway."
+            else
+              sleep 10
+            fi
+          done
 
           aws amplify start-job \
             --app-id "$AMPLIFY_APP_ID" \

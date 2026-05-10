@@ -475,6 +475,23 @@ jobs:
         run: |
           BRANCH_NAME=$([ "$ENVIRONMENT" = "prod" ] && echo "prod" || echo "dev")
 
+          # Stop any pending/running jobs to avoid LimitExceededException
+          RUNNING_JOB=$(aws amplify list-jobs \
+            --app-id "$AMPLIFY_APP_ID" \
+            --branch-name "$BRANCH_NAME" \
+            --max-results 1 \
+            --query 'jobSummaries[?status==`RUNNING` || status==`PENDING`].jobId' \
+            --output text)
+          if [ -n "$RUNNING_JOB" ] && [ "$RUNNING_JOB" != "None" ]; then
+            echo "Stopping existing Amplify job: $RUNNING_JOB"
+            aws amplify stop-job \
+              --app-id "$AMPLIFY_APP_ID" \
+              --branch-name "$BRANCH_NAME" \
+              --job-id "$RUNNING_JOB" || true
+            # Brief pause for the stop to propagate
+            sleep 5
+          fi
+
           aws amplify start-job \
             --app-id "$AMPLIFY_APP_ID" \
             --branch-name "$BRANCH_NAME" \

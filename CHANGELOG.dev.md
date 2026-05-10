@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.19.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.19.0
+Git Tag: v0.19.0
+Commit SHA: 056b517c364c531476dcc23a9813ce4c353069b2
+
+Changes:
+- fix(ci): stop pending Amplify jobs before triggering new deploy to avoid LimitExceededException (056b517)
+
 ## v0.18.0 - 2026-05-10
 
 Environment: dev

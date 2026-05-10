@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.16.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.16.0
+Git Tag: v0.16.0
+Commit SHA: 69dcd897c45a9614f650df4fa53c1d0e9c21c51e
+
+Changes:
+- fix(amplify): install devDependencies during build (69dcd89)
+
 ## v0.15.0 - 2026-05-10
 
 Environment: dev

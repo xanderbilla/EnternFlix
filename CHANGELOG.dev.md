@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.10.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.10.0
+Git Tag: v0.10.0
+Commit SHA: 505920a6f9f58e82057ff98d1206c21690b6623c
+
+Changes:
+- feat: enhance Amplify environment setup with detailed variable management and defaults (505920a)
+
 ## v0.9.0 - 2026-05-09
 
 Environment: dev

@@ -5,46 +5,26 @@ frontend:
       commands:
         - echo "Loading version from .version.${AMPLIFY_ENV:=dev}..."
         - |
-          # Create .env.build file to persist variables across build phases
-          {
-            if [ "$AMPLIFY_ENV" = "prod" ]; then
-              VERSION=$(cat .version.prod 2>/dev/null || echo "0.0.0")
-              echo "NODE_ENV=production"
-              echo "NEXT_PUBLIC_APP_ENV=prod"
-              echo "NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-https://your-domain.com}"
-              echo "NEXT_PUBLIC_CUSTOM_API_URL=${NEXT_PUBLIC_CUSTOM_API_URL:-https://api.yourdomain.com/v1}"
-            else
-              VERSION=$(cat .version.dev 2>/dev/null || echo "0.0.0")
-              echo "NODE_ENV=development"
-              echo "NEXT_PUBLIC_APP_ENV=dev"
-              echo "NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:3000}"
-              echo "NEXT_PUBLIC_CUSTOM_API_URL=${NEXT_PUBLIC_CUSTOM_API_URL:-http://localhost:8080/v1}"
-            fi
-            
-            echo "NEXT_PUBLIC_APP_VERSION=v${VERSION}"
-            echo "PORT=${PORT:-3000}"
-            echo "HOSTNAME=${HOSTNAME:-0.0.0.0}"
-            echo "NEXT_PUBLIC_ENABLE_LOGGING=${NEXT_PUBLIC_ENABLE_LOGGING:-true}"
-            echo "NEXT_PUBLIC_HTTP_TIMEOUT_MS=${NEXT_PUBLIC_HTTP_TIMEOUT_MS:-10000}"
-            echo "NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL=${NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL:-https://bi8s-storage-dev.s3.us-east-1.amazonaws.com/}"
-            echo "NEXT_PUBLIC_IMAGE_HOSTS=${NEXT_PUBLIC_IMAGE_HOSTS:-}"
-          } > .env.build
-          
-          # Source the file and display values
-          set -a
-          source .env.build
-          set +a
-          
-          echo "✓ Environment configured:"
-          echo "  Version: $NEXT_PUBLIC_APP_VERSION"
-          echo "  Environment: $NEXT_PUBLIC_APP_ENV"
-          echo "  Site URL: $NEXT_PUBLIC_SITE_URL"
-          echo "  API URL: $NEXT_PUBLIC_CUSTOM_API_URL"
+          if [ "$AMPLIFY_ENV" = "prod" ]; then
+            VERSION=$(cat .version.prod 2>/dev/null || echo "0.0.0")
+          else
+            VERSION=$(cat .version.dev 2>/dev/null || echo "0.0.0")
+          fi
+          export NEXT_PUBLIC_APP_VERSION="v${VERSION}"
+          echo "Version: $NEXT_PUBLIC_APP_VERSION"
+          echo "Environment: $AMPLIFY_ENV"
     build:
       commands:
-        - set -a && source .env.build && set +a
-        - npm ci
+        - npm ci --legacy-peer-deps
         - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*
   artifacts:
     baseDirectory: .next
     files:

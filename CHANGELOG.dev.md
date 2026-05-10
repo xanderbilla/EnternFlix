@@ -1,5 +1,16 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.14.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.14.0
+Git Tag: v0.14.0
+Commit SHA: 2f0d7ea2bf0fcf99716420b244acb4fb42536bef
+
+Changes:
+- fix(amplify): remove duplicated build spec keys (2f0d7ea)
+- docs: add amplify build troubleshooting guide (1d22007)
+
 ## v0.13.0 - 2026-05-10
 
 Environment: dev

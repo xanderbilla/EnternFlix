@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import type { FavoritesBannerProps } from "@/types/components";
 import { getImageUrl } from "@/utils/movieHelpers";
 
@@ -21,8 +22,8 @@ export default function FavoritesBanner({ movie }: FavoritesBannerProps) {
       {backdropUrl ? (
         <>
           <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{ backgroundImage: `url('${backdropUrl}')` }}
+            className="absolute inset-0 w-full h-full bg-cover bg-center bg-dynamic"
+            style={{ "--bg-image": `url('${backdropUrl}')` } as CSSProperties}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/60 to-transparent" />
         </>

@@ -105,7 +105,7 @@ export default function SortDropdown({
         onClick={handleToggleOpen}
         className="inline-flex w-auto min-w-[120px] max-w-[90vw] items-center justify-between gap-2 border border-white/70 bg-black/65 px-2.5 py-1.5 text-white font-medium text-[12px] md:text-[13px] leading-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
         aria-label={ariaLabel}
-        aria-expanded={isOpen}
+        aria-expanded={isOpen ? "true" : "false"}
         aria-haspopup="listbox"
         aria-controls={listboxId}
       >
@@ -134,7 +134,7 @@ export default function SortDropdown({
                   }}
                   className="flex items-center gap-2 text-left px-2 py-1 text-[12px] md:text-[13px] leading-5 text-white/90 hover:text-white hover:underline hover:underline-offset-4 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                   role="option"
-                  aria-selected={isActive}
+                  aria-selected={isActive ? "true" : "false"}
                 >
                   {showOptionIcon && (
                     <span className="text-white/70">

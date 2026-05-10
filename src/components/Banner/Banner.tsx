@@ -141,12 +141,7 @@ const Banner = () => {
   }
 
   if (isLoading || error || !movie?.backdropPath) {
-    return (
-      <div
-        className="relative h-[85vh] md:h-[92vh] lg:h-[100vh] bg-zinc-900"
-        aria-hidden="true"
-      />
-    );
+    return null;
   }
 
   const movieTitle = movie.title ?? "Untitled";
@@ -156,7 +151,7 @@ const Banner = () => {
 
   return (
     <section
-      className="relative h-[85vh] md:h-[92vh] lg:h-[100vh]"
+      className="relative h-[70vh] sm:h-[80vh] md:h-[92vh] lg:h-[100vh]"
       role="region"
       aria-label={`Featured banner: ${movieTitle}`}
     >

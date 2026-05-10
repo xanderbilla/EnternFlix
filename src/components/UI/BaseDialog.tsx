@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import type { BaseDialogProps } from "@/types/components";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { createPortal } from "react-dom";
@@ -144,10 +145,10 @@ export default function BaseDialog({
 
   return createPortal(
     <div
-      className={`fixed inset-0 bg-black/50 overflow-y-auto no-scrollbar transition-opacity duration-500 ease-in-out ${
+      className={`fixed inset-0 bg-black/50 overflow-y-auto no-scrollbar [overflow-anchor:none] z-dynamic transition-opacity duration-500 ease-in-out ${
         isClosing ? "opacity-0" : isEntering ? "opacity-100" : "opacity-0"
       }`}
-      style={{ zIndex, overflowAnchor: "none" }}
+      style={{ "--z-idx": zIndex } as CSSProperties}
       onClick={onBack ? handleBack : handleClose}
       role="presentation"
     >

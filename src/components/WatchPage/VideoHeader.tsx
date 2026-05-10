@@ -13,7 +13,7 @@ export default function VideoHeader({
 }: VideoHeaderProps) {
   return (
     <div
-      className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black to-transparent p-6 md:p-8 z-20 transition-opacity duration-300 flex items-center justify-between ${
+      className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black to-transparent p-3 sm:p-5 md:p-6 lg:p-8 z-20 transition-opacity duration-300 flex items-center justify-between ${
         showControls ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -23,7 +23,11 @@ export default function VideoHeader({
         className="transition-transform duration-300 ease-in-out hover:scale-110 cursor-pointer"
         aria-label="Back to Browse"
       >
-        <ArrowLeft size={40} color="white" strokeWidth={2.5} />
+        <ArrowLeft
+          className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"
+          color="white"
+          strokeWidth={2.5}
+        />
       </button>
 
       {/* Report Button */}
@@ -35,8 +39,7 @@ export default function VideoHeader({
       >
         <svg
           viewBox="0 0 24 24"
-          width="40"
-          height="40"
+          className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           role="img"

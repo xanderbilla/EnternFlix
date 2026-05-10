@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { formatTime } from "@/utils/videoHelpers";
 import ControlButton from "./ControlButton";
 import VolumeControl from "./VolumeControl";
@@ -46,6 +47,8 @@ export default function PlaybackControls({
 }: PlaybackControlsProps) {
   const currentProgress =
     duration > 0 ? Math.round((currentTime / duration) * 100) : 0;
+  const ariaValueMax = duration > 0 ? Math.floor(duration) : 0;
+  const ariaValueNow = Math.floor(currentTime);
 
   const handleProgressKeyDown = (
     event: React.KeyboardEvent<HTMLDivElement>,
@@ -77,7 +80,7 @@ export default function PlaybackControls({
 
   return (
     <div
-      className={`absolute bottom-0 left-0 right-0 p-6 md:p-8 z-20 transition-opacity duration-300 ${
+      className={`absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 lg:p-8 z-20 transition-opacity duration-300 ${
         showControls ? "opacity-100" : "opacity-0"
       }`}
     >
@@ -94,15 +97,17 @@ export default function PlaybackControls({
           tabIndex={0}
           aria-label="Playback progress"
           aria-valuemin={0}
-          aria-valuemax={duration > 0 ? Math.floor(duration) : 0}
-          aria-valuenow={Math.floor(currentTime)}
+          aria-valuemax={ariaValueMax}
+          aria-valuenow={ariaValueNow}
           aria-valuetext={`${formatTime(currentTime)} elapsed of ${duration > 0 ? formatTime(duration) : "00:00"}`}
           aria-describedby="playback-progress-help"
           onKeyDown={handleProgressKeyDown}
         >
           <div
-            className="h-full bg-white rounded-full relative transition-all duration-150"
-            style={{ width: `${currentProgress}%` }}
+            className="h-full bg-white rounded-full relative transition-all duration-150 progress-fill"
+            style={
+              { "--progress-width": `${currentProgress}%` } as CSSProperties
+            }
           >
             <div className="absolute right-0 top-1/2 transform translate-x-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
@@ -120,7 +125,7 @@ export default function PlaybackControls({
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           {/* Play/Pause Button */}
           <ControlButton
             onClick={() => {
@@ -180,7 +185,7 @@ export default function PlaybackControls({
         )}
 
         {/* Fullscreen Button */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 md:gap-4">
           <ControlButton
             onClick={() => {
               onTriggerFeedback("fullscreen");

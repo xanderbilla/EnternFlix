@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { useNavbar } from "@/hooks/ui/useNavbar";
@@ -9,9 +10,16 @@ import Link from "next/link";
 import SearchField from "@/components/UI/SearchField";
 import { useNavbarSearch } from "@/hooks/ui/useNavbarSearch";
 
+const desktopNavLinks = [
+  { href: "/browse/trending", label: "Trending" },
+  { href: "/browse/tv-shows", label: "TV Shows" },
+  { href: "/browse/movies", label: "Movies" },
+  { href: "/browse/latest", label: "Latest" },
+];
+
 const Navbar = ({ classname = "" }: NavbarProps) => {
   const pathname = usePathname();
-  const { showBackground } = useNavbar();
+  const { showBackground, showMobileMenu, toggleMobileMenu } = useNavbar();
   const {
     searchContainerRef,
     isSearchOpen,
@@ -23,9 +31,14 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
     handleScopeChange,
   } = useNavbarSearch();
 
-  const isMoviesActive = pathname?.startsWith("/browse/movies");
-  const isTvShowsActive = pathname?.startsWith("/browse/tv-shows");
-  const isLatestActive = pathname?.startsWith("/browse/latest");
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = showMobileMenu ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showMobileMenu]);
+
   const isTransparentRoute =
     pathname === "/browse" ||
     pathname === "/movies" ||
@@ -45,7 +58,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
       className={twMerge("w-full fixed top-0 left-0 z-40", classname)}
     >
       <div
-        className={`px-4 md:px-16 py-4 flex flex-row items-center transition duration-500 ${navbarBackgroundClass}`}
+        className={`px-4 sm:px-6 md:px-16 py-4 flex flex-row items-center transition duration-500 ${navbarBackgroundClass}`}
       >
         {/* Logo */}
         <Link
@@ -65,31 +78,20 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="flex-row ml-8 gap-8 hidden md:flex">
-          <Link
-            href="/browse/tv-shows"
-            aria-current={isTvShowsActive ? "page" : undefined}
-            className="text-sm text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
-          >
-            TV Shows
-          </Link>
-          <Link
-            href="/browse/movies"
-            aria-current={isMoviesActive ? "page" : undefined}
-            className="text-sm text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
-          >
-            Movies
-          </Link>
-          <Link
-            href="/browse/latest"
-            aria-current={isLatestActive ? "page" : undefined}
-            className="text-sm text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
-          >
-            Latest
-          </Link>
+        <div className="flex-row ml-4 sm:ml-6 md:ml-8 gap-4 sm:gap-6 md:gap-8 hidden md:flex">
+          {desktopNavLinks.map(({ href, label }) => (
+            <Link
+              key={href}
+              href={href}
+              aria-current={pathname?.startsWith(href) ? "page" : undefined}
+              className="text-sm text-gray-300 hover:text-white transition cursor-pointer aria-[current=page]:text-white"
+            >
+              {label}
+            </Link>
+          ))}
         </div>
 
-        {/* Right Side - Search Icon */}
+        {/* Right Side - Search + Hamburger */}
         <div
           ref={searchContainerRef}
           className="flex flex-row ml-auto gap-2 md:gap-4 items-center"
@@ -103,8 +105,101 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
             onClear={handleClearSearch}
             onScopeChange={handleScopeChange}
           />
+
+          {/* Hamburger — mobile only, animates burger ↔ X */}
+          <button
+            type="button"
+            className="md:hidden flex flex-col justify-center items-center w-6 h-6 gap-0 focus:outline-none"
+            aria-label={
+              showMobileMenu ? "Close navigation menu" : "Open navigation menu"
+            }
+            aria-expanded={showMobileMenu}
+            aria-controls="mobile-nav-menu"
+            onClick={toggleMobileMenu}
+          >
+            <span
+              className={`block w-5 h-px bg-white rounded transition-all duration-300 origin-center ${
+                showMobileMenu ? "rotate-45 translate-y-[5px]" : ""
+              }`}
+            />
+            <span
+              className={`block w-5 h-px bg-white rounded transition-all duration-200 my-[3px] ${
+                showMobileMenu ? "opacity-0 scale-x-0" : ""
+              }`}
+            />
+            <span
+              className={`block w-5 h-px bg-white rounded transition-all duration-300 origin-center ${
+                showMobileMenu ? "-rotate-45 -translate-y-[5px]" : ""
+              }`}
+            />
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {showMobileMenu && (
+        <div
+          id="mobile-nav-menu"
+          className="animate-slideDown fixed inset-0 z-50 bg-zinc-900 flex flex-col md:hidden"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigation menu"
+        >
+          {/* Top row: X on right, logo centered */}
+          <div className="relative px-4 sm:px-6 py-5 flex items-center justify-center">
+            <Link
+              href="/"
+              aria-label="EnternFlix home"
+              onClick={toggleMobileMenu}
+            >
+              <Image
+                height={90}
+                width={150}
+                src="/logo.png"
+                alt="EnternFlix"
+                loading="eager"
+                className="h-10 w-auto object-contain"
+              />
+            </Link>
+            <button
+              type="button"
+              onClick={toggleMobileMenu}
+              aria-label="Close navigation menu"
+              className="absolute right-4 sm:right-6 text-white p-1 focus:outline-none"
+            >
+              <svg
+                viewBox="0 0 24 24"
+                className="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Nav links — below logo */}
+          <nav
+            className="flex flex-col items-center gap-6 sm:gap-8 pt-8"
+            aria-label="Mobile navigation"
+          >
+            {desktopNavLinks.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={toggleMobileMenu}
+                aria-current={pathname?.startsWith(href) ? "page" : undefined}
+                className="text-lg sm:text-xl font-medium text-gray-300 hover:text-white transition aria-[current=page]:text-white"
+              >
+                {label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+      )}
     </nav>
   );
 };

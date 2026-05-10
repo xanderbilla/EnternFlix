@@ -103,10 +103,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
     <div
       ref={cardRef}
       className="relative w-full aspect-[2/3] opacity-0 scale-95 animate-fadeInScale transition-all duration-300 ease-in-out"
-      style={{
-        animationDelay: `${index * 50}ms`,
-        animationFillMode: "forwards",
-      }}
+      style={{ "--card-delay": `${index * 50}ms` } as React.CSSProperties}
     >
       <button
         onClick={handleTitleDialog}

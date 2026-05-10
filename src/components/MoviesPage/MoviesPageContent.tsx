@@ -97,7 +97,7 @@ export default function MoviesPageContent({
     >
       {/* Banner Section */}
       {showHeroBanner && (
-        <div className="relative h-[65vh] -mt-24">
+        <div className="relative h-[50vh] sm:h-[58vh] md:h-[65vh] -mt-24">
           {backdropUrl ? (
             <>
               <Image
@@ -117,7 +117,7 @@ export default function MoviesPageContent({
             </>
           )}
           <div
-            className="absolute top-40 md:top-44 left-4 md:left-16 z-20 flex items-center gap-3 md:gap-4"
+            className="absolute top-28 sm:top-36 md:top-44 left-3 sm:left-6 md:left-16 z-20 flex items-center gap-2 sm:gap-3 md:gap-4"
             ref={dropdownRef}
           >
             <h1 className="text-white text-2xl md:text-4xl font-semibold leading-none">
@@ -183,7 +183,7 @@ export default function MoviesPageContent({
             </div>
           </div>
 
-          <div className="absolute bottom-4 md:bottom-6 lg:bottom-8 left-0 right-0 px-4 md:px-16">
+          <div className="absolute bottom-4 md:bottom-6 lg:bottom-8 left-0 right-0 px-4 sm:px-6 md:px-16">
             <h1 className="font-bold text-white mb-2 leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
               {heroTitle}
             </h1>

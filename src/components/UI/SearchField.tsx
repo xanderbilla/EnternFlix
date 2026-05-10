@@ -86,7 +86,7 @@ export default function SearchField({
         className={twMerge(
           "relative flex items-center overflow-visible rounded-[2px] border-[0.5px] border-white/70 bg-black/70 transition-[width,opacity,padding,background-color,border-color] duration-300 ease-in-out",
           isOpen
-            ? "h-[34px] w-52 md:w-64 px-2"
+            ? "h-[34px] w-36 sm:w-48 md:w-64 px-2"
             : "w-10 border-transparent bg-transparent px-0 py-0",
         )}
       >

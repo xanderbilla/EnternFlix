@@ -107,8 +107,8 @@ export default function SearchPageContent() {
   return (
     <PageLayout showBanner={false} reserveTopPaddingWhenNoBanner={false}>
       <section className="relative z-10 pt-16 md:pt-20 bg-zinc-900 min-h-screen">
-        <div className="sticky top-[66px] z-20 flex min-h-[68px] items-center px-4 md:px-16 py-3 bg-zinc-900 transition duration-500">
-          <h1 className="text-white text-[22px] md:text-[30px] font-medium leading-none">
+        <div className="sticky top-[66px] z-20 flex min-h-[68px] items-center px-4 sm:px-6 md:px-16 py-3 bg-zinc-900 transition duration-500">
+          <h1 className="text-white text-lg sm:text-xl md:text-[22px] lg:text-[30px] font-medium leading-none">
             Search Results
           </h1>
 
@@ -126,7 +126,7 @@ export default function SearchPageContent() {
           </div>
         </div>
 
-        <div className="px-4 md:px-16">
+        <div className="px-4 sm:px-6 md:px-16">
           <SearchResults
             debouncedQuery={debouncedQuery}
             searchRes={searchRes}

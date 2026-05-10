@@ -49,7 +49,7 @@ export default function DialogVideoSection({
   };
 
   return (
-    <div className="relative h-[40vh] md:h-[50vh] lg:h-[55vh] w-full overflow-hidden bg-zinc-900 -mb-px">
+    <div className="relative h-[35vh] sm:h-[40vh] md:h-[50vh] lg:h-[55vh] w-full overflow-hidden bg-zinc-900 -mb-px">
       {data && (
         <>
           <VideoPlayer

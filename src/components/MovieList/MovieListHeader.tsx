@@ -13,7 +13,7 @@ export default function MovieListHeader({
     <div className="flex items-center gap-4">
       <button
         type="button"
-        className="text-white text-lg md:text-xl lg:text-2xl font-medium hover:text-gray-300 transition-colors duration-200 cursor-pointer bg-transparent border-0 p-0"
+        className="text-white text-base sm:text-lg md:text-xl lg:text-2xl font-medium hover:text-gray-300 transition-colors duration-200 cursor-pointer bg-transparent border-0 p-0"
         onClick={onExploreClick}
         onMouseEnter={onTitleHover?.onEnter}
         onMouseLeave={onTitleHover?.onLeave}

@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import ControlButton from "./ControlButton";
 
 interface VolumeControlProps {
@@ -110,14 +111,9 @@ export default function VolumeControl({
           step="0.01"
           value={volume}
           onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
-          className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider"
-          style={{
-            background: `linear-gradient(to right, white ${volume * 100}%, rgba(255,255,255,0.2) ${volume * 100}%)`,
-          }}
+          className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider volume-slider-track"
+          style={{ "--vol": `${volume * 100}%` } as CSSProperties}
           aria-label="Volume"
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={Math.round(volume * 100)}
           aria-valuetext={
             isMuted || volume === 0 ? "Muted" : `${Math.round(volume * 100)}%`
           }

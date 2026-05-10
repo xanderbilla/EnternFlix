@@ -22,7 +22,7 @@ export default function MovieCardMetadata({
   return (
     <div className="flex flex-col gap-2 mt-2">
       <button
-        className="text-green-400 font-semibold text-base cursor-pointer flex items-center bg-transparent border-0 p-0 hover:text-green-300"
+        className="text-green-400 font-semibold text-sm sm:text-base cursor-pointer flex items-center bg-transparent border-0 p-0 hover:text-green-300"
         onClick={onTitleClick}
         onKeyDown={(e) => handleKeyPress(e, onTitleClick)}
         aria-label={`View details for ${truncatedTitle}`}

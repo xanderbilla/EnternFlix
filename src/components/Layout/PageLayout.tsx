@@ -31,7 +31,7 @@ function PageLayoutContent({
           <div
             className={
               showBanner
-                ? "relative -mt-32 md:-mt-40 lg:-mt-48 z-10 pb-4 space-y-6"
+                ? "relative -mt-24 sm:-mt-32 md:-mt-40 lg:-mt-48 z-10 pb-4 space-y-6"
                 : isContentReady
                   ? reserveTopPaddingWhenNoBanner
                     ? "pt-24 pb-4 space-y-6"

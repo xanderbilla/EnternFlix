@@ -5,16 +5,13 @@ import FooterLinkGroup from "./FooterLinkGroup";
 import { config } from "@/lib/env/env";
 
 const navigationLinks = [
-  { href: "/anime", label: "Anime" },
-  { href: "/tv-shows", label: "TV Shows" },
-  { href: "/movies", label: "Movies" },
+  { href: "/browse/trending", label: "Trending" },
+  { href: "/browse/tv-shows", label: "TV Shows" },
+  { href: "/browse/movies", label: "Movies" },
+  { href: "/browse/latest", label: "Latest" },
 ];
 
-const accountLinks = [
-  { href: "/account", label: "My Account" },
-  { href: "/browse", label: "Profiles" },
-  { href: "/auth", label: "Sign In" },
-];
+const accountLinks = [{ href: "/browse", label: "Browse" }];
 
 const legalLinks = [
   { href: "#", label: "Privacy Policy" },

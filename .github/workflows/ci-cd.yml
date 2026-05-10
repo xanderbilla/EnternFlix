@@ -412,8 +412,7 @@ jobs:
                   GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
               run: |
-                  ENV_UPPER="$(echo "$ENVIRONMENT" | tr '[:lower:]' '[:upper:]')"
-                  TITLE="${ENV_UPPER} Release v${VERSION}"
+                  TITLE="${GIT_TAG}"
                   NOTES_FILE="$(mktemp)"
                   {
                     echo "Environment: ${ENVIRONMENT}"

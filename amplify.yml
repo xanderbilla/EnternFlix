@@ -3,16 +3,9 @@ frontend:
   phases:
     preBuild:
       commands:
-        - echo "Loading version from .version.${AMPLIFY_ENV:=dev}..."
-        - |
-          if [ "$AMPLIFY_ENV" = "prod" ]; then
-            VERSION=$(cat .version.prod 2>/dev/null || echo "0.0.0")
-          else
-            VERSION=$(cat .version.dev 2>/dev/null || echo "0.0.0")
-          fi
-          export NEXT_PUBLIC_APP_VERSION="v${VERSION}"
-          echo "Version: $NEXT_PUBLIC_APP_VERSION"
-          echo "Environment: $AMPLIFY_ENV"
+        - echo "Node version:" && node --version
+        - echo "npm version:" && npm --version
+        - echo "Installing dependencies..."
     build:
       commands:
         - npm ci --legacy-peer-deps

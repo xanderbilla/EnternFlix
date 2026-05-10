@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.17.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.17.0
+Git Tag: v0.17.0
+Commit SHA: 5e8b18f0c48c09a8dae68bc381b1f7fbb8ad8f07
+
+Changes:
+- fix(build): stabilize turbopack root and amplify install (5e8b18f)
+
 ## v0.16.0 - 2026-05-10
 
 Environment: dev

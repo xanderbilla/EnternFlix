@@ -1,5 +1,17 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.18.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.18.0
+Git Tag: v0.18.0
+Commit SHA: 2235ca39e7e01c735ccae7e3ad1c8d3982b7f8f3
+
+Changes:
+- fix: add missing @testing-library/dom peer dependency (2235ca3)
+- fix(Navbar): center logo and adjust mobile menu layout (6b1ef67)
+-  Please enter the commit message for your changes. Lines starting (1330c71)
+
 ## v0.17.0 - 2026-05-10
 
 Environment: dev

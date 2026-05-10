@@ -1,5 +1,16 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.11.0 - 2026-05-10
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.11.0
+Git Tag: v0.11.0
+Commit SHA: 366c97b1351b6130cc5147261237718749d2687c
+
+Changes:
+- fix(amplify): simplify build config with legacy peer deps (366c97b)
+- fix(amplify): persist environment variables to build phase (3143df1)
+
 ## v0.10.0 - 2026-05-10
 
 Environment: dev

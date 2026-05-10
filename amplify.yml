@@ -1,0 +1,28 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - echo "Loading version from .version.${AMPLIFY_ENV:=dev}..."
+        - |
+          if [ "$AMPLIFY_ENV" = "prod" ]; then
+            VERSION=$(cat .version.prod 2>/dev/null || echo "0.0.0")
+          else
+            VERSION=$(cat .version.dev 2>/dev/null || echo "0.0.0")
+          fi
+          export NEXT_PUBLIC_APP_VERSION="v${VERSION}"
+          export NEXT_PUBLIC_APP_ENV="${AMPLIFY_ENV:=dev}"
+          echo "Version: $NEXT_PUBLIC_APP_VERSION"
+          echo "Environment: $NEXT_PUBLIC_APP_ENV"
+    build:
+      commands:
+        - npm ci
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*

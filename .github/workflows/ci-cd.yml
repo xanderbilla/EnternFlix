@@ -448,7 +448,30 @@ jobs:
         env:
             ENVIRONMENT: ${{ needs.setup.outputs.environment }}
             VERSION: ${{ needs.setup.outputs.version }}
+            AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
+            AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
         steps:
+            - uses: actions/checkout@v4
+
+            - name: Configure AWS credentials
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                  aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+                  aws-region: ${{ env.AWS_REGION }}
+
+            - name: Trigger Amplify build with version
+              if: env.AMPLIFY_APP_ID != ''
+              run: |
+                  BRANCH_NAME=$([ "$ENVIRONMENT" = "prod" ] && echo "prod" || echo "dev")
+                  
+                  aws amplify start-job \
+                    --app-id "$AMPLIFY_APP_ID" \
+                    --branch-name "$BRANCH_NAME" \
+                    --job-type "RELEASE" \
+                    --job-reason "Deployment v$VERSION" \
+                    --environment-variables "NEXT_PUBLIC_APP_VERSION=v${VERSION},NEXT_PUBLIC_APP_ENV=${ENVIRONMENT}"
+
             - name: Deploy notice
               run: |
                   {
@@ -456,5 +479,5 @@ jobs:
                     echo "- env: ${ENVIRONMENT}"
                     echo "- version: v${VERSION}"
                     echo "- image: efx-image-${ENVIRONMENT}-v${VERSION}"
+                    [ -n "$AMPLIFY_APP_ID" ] && echo "- amplify: triggered" || echo "- amplify: not configured (set AMPLIFY_APP_ID secret)"
                   } >> "$GITHUB_STEP_SUMMARY"
-                  echo "Wire your ECS / EKS / App Runner / Argo CD trigger here."

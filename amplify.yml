@@ -5,10 +5,12 @@ frontend:
       commands:
         - echo "Node version:" && node --version
         - echo "npm version:" && npm --version
-        - echo "Installing dependencies..."
+        - echo "Clearing npm cache..."
+        - npm cache clean --force
     build:
       commands:
-        - npm ci --legacy-peer-deps
+        - echo "Installing dependencies with npm install..."
+        - npm install --legacy-peer-deps --prefer-offline
         - npm run build
   artifacts:
     baseDirectory: .next

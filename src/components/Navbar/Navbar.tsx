@@ -140,50 +140,51 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
       {showMobileMenu && (
         <div
           id="mobile-nav-menu"
-          className="animate-slideDown fixed inset-0 z-50 bg-zinc-900 flex flex-col md:hidden"
+          className="animate-slideDown fixed inset-0 z-50 bg-zinc-900 flex flex-col items-center justify-center md:hidden"
           role="dialog"
           aria-modal="true"
           aria-label="Navigation menu"
         >
-          {/* Top row: X on right, logo centered */}
-          <div className="relative px-4 sm:px-6 py-5 flex items-center justify-center">
-            <Link
-              href="/"
-              aria-label="EnternFlix home"
-              onClick={toggleMobileMenu}
+          {/* Close button — absolute top-right */}
+          <button
+            type="button"
+            onClick={toggleMobileMenu}
+            aria-label="Close navigation menu"
+            className="absolute top-4 right-4 sm:right-6 text-white p-1 focus:outline-none"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              aria-hidden="true"
             >
-              <Image
-                height={90}
-                width={150}
-                src="/logo.png"
-                alt="EnternFlix"
-                loading="eager"
-                className="h-10 w-auto object-contain"
-              />
-            </Link>
-            <button
-              type="button"
-              onClick={toggleMobileMenu}
-              aria-label="Close navigation menu"
-              className="absolute right-4 sm:right-6 text-white p-1 focus:outline-none"
-            >
-              <svg
-                viewBox="0 0 24 24"
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.5"
-                strokeLinecap="round"
-                aria-hidden="true"
-              >
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
 
-          {/* Nav links — below logo */}
+          {/* Logo — centered */}
+          <Link
+            href="/"
+            aria-label="EnternFlix home"
+            onClick={toggleMobileMenu}
+            className="mb-10"
+          >
+            <Image
+              height={90}
+              width={150}
+              src="/logo.png"
+              alt="EnternFlix"
+              loading="eager"
+              className="h-10 w-auto object-contain"
+            />
+          </Link>
+
+          {/* Nav links — centered below logo */}
           <nav
-            className="flex flex-col items-center gap-6 sm:gap-8 pt-8"
+            className="flex flex-col items-center gap-6 sm:gap-8"
             aria-label="Mobile navigation"
           >
             {desktopNavLinks.map(({ href, label }) => (

@@ -111,7 +111,7 @@ function MovieGrid({
       }`}
     >
       <div
-        className={`grid ${gridCols} gap-x-1 gap-y-16 sm:gap-x-2 sm:gap-y-16 md:gap-y-16 lg:gap-y-16`}
+        className={`grid ${gridCols} gap-x-2 gap-y-6 sm:gap-x-3 sm:gap-y-8 md:gap-y-16 lg:gap-y-16`}
       >
         {movies.map((movie, index) => (
           <MovieCardItem

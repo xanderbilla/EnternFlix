@@ -9,8 +9,8 @@ frontend:
         - npm cache clean --force
     build:
       commands:
-        - echo "Installing dependencies with npm install..."
-        - npm install --legacy-peer-deps --prefer-offline --include=dev
+        - echo "Installing dependencies with npm ci..."
+        - npm ci --legacy-peer-deps --include=dev
         - NODE_ENV=production npm run build
   artifacts:
     baseDirectory: .next

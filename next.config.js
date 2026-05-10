@@ -1,3 +1,4 @@
+const path = require("path");
 const withBundleAnalyzer = require("@next/bundle-analyzer")({
   enabled: process.env.ANALYZE === "true",
 });
@@ -135,6 +136,9 @@ const imageRemotePatterns = buildRemotePatterns();
 
 const nextConfig = {
   output: "standalone",
+  turbopack: {
+    root: path.resolve(__dirname),
+  },
   poweredByHeader: false,
   reactStrictMode: true,
   images: {

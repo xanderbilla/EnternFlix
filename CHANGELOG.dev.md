@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.21.0 - 2026-05-27
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.21.0
+Git Tag: v0.21.0
+Commit SHA: e646f355f170e9108908b66a5f7bff700357ab83
+
+Changes:
+- fix: responsive navbar clearance for movies, genre, and collection pages (e646f35)
+
 ## v0.20.0 - 2026-05-10
 
 Environment: dev

@@ -116,8 +116,9 @@ export default function MoviesPageContent({
               <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-zinc-900/40 to-transparent" />
             </>
           )}
+          {/* Sticky: always sits just below the fixed navbar while the banner is in view */}
           <div
-            className="absolute top-28 sm:top-36 md:top-44 left-3 sm:left-6 md:left-16 z-20 flex items-center gap-2 sm:gap-3 md:gap-4"
+            className="sticky top-16 md:top-[72px] z-20 px-3 sm:px-6 md:px-16 pt-2 pb-1 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 md:gap-4"
             ref={dropdownRef}
           >
             <h1 className="text-white text-2xl md:text-4xl font-semibold leading-none">
@@ -183,7 +184,7 @@ export default function MoviesPageContent({
             </div>
           </div>
 
-          <div className="absolute bottom-4 md:bottom-6 lg:bottom-8 left-0 right-0 px-4 sm:px-6 md:px-16">
+          <div className="absolute bottom-4 md:bottom-6 lg:bottom-8 left-0 right-0 z-20 px-4 sm:px-6 md:px-16">
             <h1 className="font-bold text-white mb-2 leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
               {heroTitle}
             </h1>

@@ -116,8 +116,8 @@ export default function BrowseCollectionPageContent({
 
   return (
     <PageLayout showBanner={false} reserveTopPaddingWhenNoBanner={false}>
-      <section className="relative z-10 pt-[66px] pb-8 md:pb-12 bg-zinc-900 min-h-screen">
-        <div className="sticky top-[66px] z-20 flex min-h-[68px] items-center px-4 sm:px-6 md:px-16 py-3 bg-zinc-900 transition duration-500">
+      <section className="relative z-10 pt-16 md:pt-[72px] pb-8 md:pb-12 bg-zinc-900 min-h-screen">
+        <div className="sticky top-16 md:top-[72px] z-20 flex min-h-[68px] items-center px-4 sm:px-6 md:px-16 py-3 bg-zinc-900 transition duration-500">
           <div className="flex items-center gap-2 text-white/70">
             <h1 className="text-white text-lg sm:text-xl md:text-[22px] lg:text-[30px] font-medium leading-none">
               {heading}

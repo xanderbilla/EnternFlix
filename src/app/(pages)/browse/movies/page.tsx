@@ -1,5 +1,11 @@
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 import MoviesPageContent from "@/components/MoviesPage/MoviesPageContent";
 import { createPageMetadata } from "@/lib/seo/metadata";
+import { prefetchContentPage } from "@/lib/query/serverPrefetch";
 
 export const metadata = createPageMetadata({
   title: "Movies",
@@ -19,18 +25,23 @@ export const metadata = createPageMetadata({
   ],
 });
 
-export default function MoviesPage() {
+export default async function MoviesPage() {
+  const queryClient = new QueryClient();
+  await prefetchContentPage(queryClient, "movie");
+
   return (
-    <MoviesPageContent
-      contentType="movie"
-      heroTitle="Experience Cinema at Home"
-      heroDescription="Watch the latest blockbusters and timeless classics from the comfort of your home."
-      movieLists={[
-        { title: "Recently Added Movies", hookName: "recentlyAdded" },
-        { title: "Latest Movies", hookName: "latestMovies" },
-        { title: "Trending Movies", hookName: "trendingMovies" },
-        { title: "Popular Movies", hookName: "popularMovies" },
-      ]}
-    />
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <MoviesPageContent
+        contentType="movie"
+        heroTitle="Experience Cinema at Home"
+        heroDescription="Watch the latest blockbusters and timeless classics from the comfort of your home."
+        movieLists={[
+          { title: "Recently Added Movies", hookName: "recentlyAdded" },
+          { title: "Latest Movies", hookName: "latestMovies" },
+          { title: "Trending Movies", hookName: "trendingMovies" },
+          { title: "Popular Movies", hookName: "popularMovies" },
+        ]}
+      />
+    </HydrationBoundary>
   );
 }

@@ -1,42 +1,7 @@
 export const queryKeys = {
   trending: ["trending"] as const,
-  trendingMovies: ["trending", "movies"] as const,
-  trendingTV: ["trending", "tv"] as const,
-
-  movies: {
-    popular: ["movies", "popular"] as const,
-    topRated: ["movies", "topRated"] as const,
-    upcoming: ["movies", "upcoming"] as const,
-    action: ["movies", "action"] as const,
-    comedy: ["movies", "comedy"] as const,
-    horror: ["movies", "horror"] as const,
-    romance: ["movies", "romance"] as const,
-    thriller: ["movies", "thriller"] as const,
-  },
-
-  tv: {
-    popular: ["tv", "popular"] as const,
-    topRated: ["tv", "topRated"] as const,
-    action: ["tv", "action"] as const,
-    comedy: ["tv", "comedy"] as const,
-    drama: ["tv", "drama"] as const,
-    crime: ["tv", "crime"] as const,
-  },
-
-  netflixOriginals: ["netflix", "originals"] as const,
-
-  anime: {
-    trending: ["anime", "trending"] as const,
-    movies: ["anime", "movies"] as const,
-    tv: ["anime", "tv"] as const,
-    popular: ["anime", "popular"] as const,
-    topRated: ["anime", "topRated"] as const,
-    action: ["anime", "action"] as const,
-  },
 
   randomContent: ["random", "content"] as const,
-
-  categoryContent: (category: string) => ["category", category] as const,
 
   title: (id: string) => ["title", id] as const,
   person: (id: string) => ["person", id] as const,
@@ -60,6 +25,13 @@ export const queryKeys = {
     ["discover", type, content] as const,
   discoverByAttribute: (attributeId: string, content: string) =>
     ["discover", "attribute", attributeId, content] as const,
+  discoverInfinite: (type: string, content: string, sort: string = "") =>
+    ["discoverInfinite", type, content, sort] as const,
+  discoverByAttributeInfinite: (
+    attributeId: string,
+    content: string,
+    sort: string = "",
+  ) => ["discoverByAttributeInfinite", attributeId, content, sort] as const,
   attributesGenres: (contentType: string) =>
     ["attributes", "genres", contentType] as const,
 } as const;

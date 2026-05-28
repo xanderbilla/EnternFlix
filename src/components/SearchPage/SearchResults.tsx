@@ -16,6 +16,7 @@ export default function SearchResults({
   selectedMode = "content",
   hasNextPage,
   loadMoreRef,
+  isLoading = false,
   onCardHover,
 }: SearchResultsProps & { onCardHover?: () => void }) {
   const {
@@ -54,7 +55,11 @@ export default function SearchResults({
   const activePeopleRes = showPeople ? peopleRes : [];
   const activeSearchRes = showContent ? searchRes : [];
 
-  if (activeSearchRes.length === 0 && activePeopleRes.length === 0) {
+  if (
+    !isLoading &&
+    activeSearchRes.length === 0 &&
+    activePeopleRes.length === 0
+  ) {
     return (
       <div className="text-center text-gray-400 py-12">
         <p className="text-xl">

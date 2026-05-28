@@ -1,9 +1,16 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { Movie } from "@/types/movie";
 
 export type DialogType = "explore" | "info" | "cast" | "discover" | null;
+
+// Module-level guard: tracks the URL from which dialog state was last restored.
+// Only the first useDialogManager instance that mounts on a given URL performs
+// the restoration — all subsequent instances on the same page skip it, which
+// prevents duplicate dialogs when several components share the same URL.
+let _restoredFromUrl = "";
 
 export interface DialogState {
   type: DialogType;
@@ -27,17 +34,29 @@ export interface DialogState {
 export function useDialogManager() {
   const [dialogStack, setDialogStack] = useState<DialogState[]>([]);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const searchParams = useSearchParams();
 
   const syncDialogQueryParam = useCallback(
-    (param: "title" | "cast" | null, value?: string) => {
+    (
+      param: "title" | "cast" | "discover" | null,
+      value?: string,
+      extraValue?: string,
+    ) => {
       if (typeof window === "undefined") return;
 
       const url = new URL(window.location.href);
       url.searchParams.delete("title");
       url.searchParams.delete("cast");
+      url.searchParams.delete("discover");
+      url.searchParams.delete("name");
 
-      if (param && value) {
-        url.searchParams.set(param, value);
+      if (param === "title" && value) {
+        url.searchParams.set("title", value);
+      } else if (param === "cast" && value) {
+        url.searchParams.set("cast", value);
+      } else if (param === "discover" && value) {
+        url.searchParams.set("discover", value);
+        if (extraValue) url.searchParams.set("name", extraValue);
       }
 
       const nextUrl = `${url.pathname}${url.search}${url.hash}`;
@@ -71,6 +90,15 @@ export function useDialogManager() {
 
     if (topDialog.type === "cast" && topDialog.castId) {
       syncDialogQueryParam("cast", topDialog.castId);
+      return;
+    }
+
+    if (topDialog.type === "discover" && topDialog.attributeId) {
+      syncDialogQueryParam(
+        "discover",
+        topDialog.attributeId,
+        topDialog.attributeName,
+      );
       return;
     }
 
@@ -341,6 +369,41 @@ export function useDialogManager() {
   }, [isTransitioning]);
 
   const hasBackNavigation = dialogStack.length > 1;
+
+  // Snapshot the initial search params so the restoration effect below only
+  // reads the URL that was present when this hook first mounted, not the
+  // live params that change on subsequent navigations.
+  const mountSearchParamsRef = useRef(searchParams);
+
+  // Re-open the dialog that was visible before the user navigated to a
+  // dedicated page (e.g. /browse/genre/28). When the browser Back button is
+  // pressed, Next.js restores the previous URL which still contains the
+  // dialog query params written by syncDialogQueryParam. This effect reads
+  // those params on initial mount and reopens the correct dialog.
+  // The module-level _restoredFromUrl guard ensures only one instance
+  // per URL performs this, preventing duplicate dialogs.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const currentUrl = window.location.href;
+    if (_restoredFromUrl === currentUrl) return;
+
+    const params = mountSearchParamsRef.current;
+    const discoverParam = params.get("discover");
+    const nameParam = params.get("name");
+    const titleParam = params.get("title");
+
+    if (discoverParam) {
+      _restoredFromUrl = currentUrl;
+      openDiscoverDialog(
+        discoverParam,
+        nameParam ? decodeURIComponent(nameParam) : discoverParam,
+      );
+    } else if (titleParam) {
+      _restoredFromUrl = currentUrl;
+      openInfoDialog(titleParam);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Intentionally empty: restore dialog state from URL only on initial mount
 
   return {
     dialogState: currentDialog,

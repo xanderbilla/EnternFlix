@@ -32,7 +32,10 @@ export function useNavbarSearch() {
   const [selectedScope, setSelectedScope] = useState<SearchScope>(scopeFromUrl);
 
   useEffect(() => {
-    // URL params are the source of truth when route/query changes.
+    // Sync local state when URL params change (e.g. back/forward navigation or
+    // a direct link). Calling setState inside useEffect is intentional here —
+    // URL params are the authoritative source of truth and we must mirror them
+    // into controlled inputs after the navigation commits.
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setSearchValue(queryFromUrl);
     setSelectedScope(scopeFromUrl);

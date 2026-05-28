@@ -415,7 +415,7 @@ jobs:
           GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
         run: |
           git tag -a "${GIT_TAG}" -m "release ${GIT_TAG}"
-            git push origin "${GIT_TAG}"
+          git push origin "${GIT_TAG}"
 
       - name: Create GitHub Release
         env:
@@ -423,27 +423,27 @@ jobs:
           GIT_TAG: ${{ steps.gittag.outputs.git_tag }}
         run: |
           TITLE="v${VERSION}"
-            NOTES_FILE="$(mktemp)"
-            {
-              echo "Environment: ${ENVIRONMENT}"
-              echo "Version: v${VERSION}"
-              echo "Docker Image: ${IMAGE_VERSIONED}"
-              echo "Git Tag: ${GIT_TAG}"
-              echo "Branch: ${GITHUB_REF_NAME}"
-              echo "Commit SHA: ${GITHUB_SHA}"
-              echo
-              echo "Changes:"
-              echo "${{ steps.changelog.outputs.entry }}" | awk '/^Changes:/{flag=1; next} flag'
-            } > "$NOTES_FILE"
+          NOTES_FILE="$(mktemp)"
+          {
+            echo "Environment: ${ENVIRONMENT}"
+            echo "Version: v${VERSION}"
+            echo "Docker Image: ${IMAGE_VERSIONED}"
+            echo "Git Tag: ${GIT_TAG}"
+            echo "Branch: ${GITHUB_REF_NAME}"
+            echo "Commit SHA: ${GITHUB_SHA}"
+            echo
+            echo "Changes:"
+            echo "${{ steps.changelog.outputs.entry }}" | awk '/^Changes:/{flag=1; next} flag'
+          } > "$NOTES_FILE"
 
-            PRERELEASE_FLAG=""
-            [ "$ENVIRONMENT" = "dev" ] && PRERELEASE_FLAG="--prerelease"
+          PRERELEASE_FLAG=""
+          [ "$ENVIRONMENT" = "dev" ] && PRERELEASE_FLAG="--prerelease"
 
-            gh release create "${GIT_TAG}" \
-              --title "${TITLE}" \
-              --notes-file "${NOTES_FILE}" \
-              --target "${GITHUB_SHA}" \
-              ${PRERELEASE_FLAG}
+          gh release create "${GIT_TAG}" \
+            --title "${TITLE}" \
+            --notes-file "${NOTES_FILE}" \
+            --target "${GITHUB_SHA}" \
+            ${PRERELEASE_FLAG}
 
   # ---------------------------------------------------------------------------
   # Stage 6: deploy hook (placeholder — wire up your platform here)
@@ -458,7 +458,7 @@ jobs:
     env:
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
       VERSION: ${{ needs.setup.outputs.version }}
-      AWS_REGION: ${{ secrets.AWS_REGION || 'us-east-1' }}
+      AWS_REGION: ${{ vars.AWS_REGION || 'us-east-1' }}
       AMPLIFY_APP_ID: ${{ secrets.AMPLIFY_APP_ID }}
     steps:
       - uses: actions/checkout@v4

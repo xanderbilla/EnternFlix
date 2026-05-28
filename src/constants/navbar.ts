@@ -1,5 +1,17 @@
 import { NavbarGenre } from "@/types/navbar";
 
+export interface NavLink {
+  href: string;
+  label: string;
+}
+
+export const DESKTOP_NAV_LINKS: NavLink[] = [
+  { href: "/browse/trending", label: "Trending" },
+  { href: "/browse/tv-shows", label: "TV Shows" },
+  { href: "/browse/movies", label: "Movies" },
+  { href: "/browse/latest", label: "Latest" },
+];
+
 export const DEFAULT_GENRES: Record<string, NavbarGenre[]> = {
   movies: [
     { id: 28, name: "Action" },

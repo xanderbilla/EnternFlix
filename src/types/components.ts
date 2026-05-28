@@ -213,6 +213,7 @@ export interface SearchResultsProps {
   selectedMode?: "content" | "people";
   hasNextPage: boolean;
   loadMoreRef: React.RefObject<HTMLDivElement | null>;
+  isLoading?: boolean;
 }
 
 export interface MovieListItem {

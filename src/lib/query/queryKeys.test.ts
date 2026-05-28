@@ -4,11 +4,7 @@ import { queryKeys } from "./queryKeys";
 describe("queryKeys", () => {
   it("exposes stable static keys", () => {
     expect(queryKeys.trending).toEqual(["trending"]);
-    expect(queryKeys.trendingMovies).toEqual(["trending", "movies"]);
-    expect(queryKeys.movies.popular).toEqual(["movies", "popular"]);
-    expect(queryKeys.tv.drama).toEqual(["tv", "drama"]);
-    expect(queryKeys.anime.trending).toEqual(["anime", "trending"]);
-    expect(queryKeys.netflixOriginals).toEqual(["netflix", "originals"]);
+    expect(queryKeys.randomContent).toEqual(["random", "content"]);
   });
 
   it("derives parameterized keys", () => {
@@ -31,10 +27,6 @@ describe("queryKeys", () => {
       "tv",
       "popular",
     ]);
-    expect(queryKeys.categoryContent("trending")).toEqual([
-      "category",
-      "trending",
-    ]);
     expect(queryKeys.discover("movie", "popular")).toEqual([
       "discover",
       "movie",
@@ -45,6 +37,24 @@ describe("queryKeys", () => {
       "attribute",
       "g1",
       "movie",
+    ]);
+    expect(queryKeys.discoverInfinite("latest", "all")).toEqual([
+      "discoverInfinite",
+      "latest",
+      "all",
+      "",
+    ]);
+    expect(queryKeys.discoverInfinite("latest", "movie", "alpha_asc")).toEqual([
+      "discoverInfinite",
+      "latest",
+      "movie",
+      "alpha_asc",
+    ]);
+    expect(queryKeys.discoverByAttributeInfinite("g1", "movie")).toEqual([
+      "discoverByAttributeInfinite",
+      "g1",
+      "movie",
+      "",
     ]);
     expect(queryKeys.attributesGenres("movie")).toEqual([
       "attributes",

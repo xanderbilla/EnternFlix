@@ -1,4 +1,9 @@
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
+import {
+  useQuery,
+  useQueryClient,
+  useInfiniteQuery,
+  keepPreviousData,
+} from "@tanstack/react-query";
 import customAxios from "@/lib/api/customAxios";
 import requests from "@/lib/api/request";
 import {
@@ -11,15 +16,14 @@ import {
   ContentAttribute,
 } from "@/types/movie";
 import type { PaginatedResponse } from "@/types/api";
+import { STALE_TIMES } from "@/constants/common";
 import { queryKeys } from "@/lib/query/queryKeys";
+import { toPaginated } from "@/lib/query/queryHelpers";
 
-function toPaginated<T>(items: T[]): PaginatedResponse<T> {
-  return {
-    results: items,
-    page: 1,
-    total_pages: 1,
-    total_results: items.length,
-  };
+interface DiscoverPageData {
+  items: Movie[];
+  nextCursor?: string;
+  count: number;
 }
 
 export const useCustomContent = (type: string = "all") =>
@@ -108,13 +112,24 @@ export const useSearch = (
         ? lastPage.content.page + 1
         : undefined;
     },
+    // Keep stale results visible while new sort/scope fetches so the grid
+    // doesn't snap to empty between query-key changes.
+    placeholderData: keepPreviousData,
     enabled: !!query && query.length > 2,
   });
 
-export const useRandomContent = () =>
-  useQuery<Movie, Error>({
+export const useRandomContent = () => {
+  const queryClient = useQueryClient();
+  return useQuery<Movie, Error>({
     queryKey: queryKeys.randomContent,
     queryFn: async () => {
+      const cached = queryClient.getQueryData<PaginatedResponse<Movie>>(
+        queryKeys.discover("recent", "all"),
+      );
+      const items = cached?.results;
+      if (items && items.length > 0) {
+        return items[Math.floor(Math.random() * items.length)];
+      }
       const { data } = await customAxios.get<MoviesResponse>(
         requests.fetchDiscover("recent", "all"),
       );
@@ -123,10 +138,13 @@ export const useRandomContent = () =>
       return movies[Math.floor(Math.random() * movies.length)];
     },
   });
+};
 
 export const useBanner = (type: string = "all") =>
   useQuery<Movie, Error>({
     queryKey: queryKeys.banner(type),
+    staleTime: STALE_TIMES.CONTENT,
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data } = await customAxios.get<MovieResponse>(
         requests.fetchBanner(type),
@@ -145,6 +163,7 @@ export const useDiscoverByAttribute = (
 ) =>
   useQuery<Movie[], Error>({
     queryKey: queryKeys.discoverByAttribute(attributeId, content),
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data } = await customAxios.get<MoviesResponse>(
         requests.fetchDiscoverByAttribute(attributeId, content),
@@ -160,24 +179,19 @@ export const useInfiniteDiscoverByAttribute = (
   enabled: boolean = true,
   sort?: "alpha_asc" | "alpha_desc",
 ) => {
-  const safeQueryKey = [
-    "discoverByAttributeInfinite",
-    String(attributeId || ""),
-    String(content || "all"),
-    String(sort || ""),
-  ] as const;
-
   return useInfiniteQuery({
-    queryKey: safeQueryKey,
+    queryKey: queryKeys.discoverByAttributeInfinite(
+      String(attributeId || ""),
+      String(content || "all"),
+      String(sort || ""),
+    ),
     queryFn: async ({ pageParam = null }: { pageParam?: string | null }) => {
       const cursor = pageParam as string | null;
-      let url = `c/attributes/${encodeURIComponent(String(attributeId || ""))}?content=${encodeURIComponent(String(content || "all"))}&limit=20`;
-      if (sort) {
-        url += `&sort=${encodeURIComponent(sort)}`;
-      }
-      if (cursor) {
-        url += `&cursor=${encodeURIComponent(cursor)}`;
-      }
+      const url = requests.fetchDiscoverByAttributePaginated(
+        String(attributeId || ""),
+        String(content || "all"),
+        { limit: 20, ...(sort && { sort }), ...(cursor && { cursor }) },
+      );
 
       const { data } = await customAxios.get<MoviesResponse>(url);
       const pageData = data?.data;
@@ -211,6 +225,8 @@ export const useInfiniteDiscoverByAttribute = (
 export const useDiscover = (type: string = "latest", content: string = "all") =>
   useQuery<PaginatedResponse<Movie>, Error>({
     queryKey: queryKeys.discover(type, content),
+    staleTime: STALE_TIMES.CONTENT,
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data } = await customAxios.get<MoviesResponse>(
         requests.fetchDiscover(type, content),
@@ -219,43 +235,28 @@ export const useDiscover = (type: string = "latest", content: string = "all") =>
     },
   });
 
-interface DiscoverPageData {
-  items: Movie[];
-  nextCursor?: string;
-  count: number;
-}
-
 export const useInfiniteDiscover = (
   type: string = "latest",
   content: string = "all",
   enabled: boolean = true,
   sort?: "alpha_asc" | "alpha_desc",
 ) => {
-  // Keep a dedicated key for infinite discover to avoid cache-shape collisions
-  // with `useDiscover` (which stores a non-infinite paginated object).
-  const safeQueryKey = [
-    "discoverInfinite",
-    String(type || "latest"),
-    String(content || "all"),
-    String(sort || ""),
-  ] as const;
-
   return useInfiniteQuery({
-    queryKey: safeQueryKey,
+    queryKey: queryKeys.discoverInfinite(
+      String(type || "latest"),
+      String(content || "all"),
+      String(sort || ""),
+    ),
     queryFn: async ({ pageParam = null }: { pageParam?: string | null }) => {
       const cursor = pageParam as string | null;
-      // Build URL with cursor for pagination
-      let url = `c/discover?type=${encodeURIComponent(String(type || "latest"))}&content=${encodeURIComponent(String(content || "all"))}&limit=20`;
-      if (sort) {
-        url += `&sort=${encodeURIComponent(sort)}`;
-      }
-      if (cursor) {
-        url += `&cursor=${encodeURIComponent(cursor)}`;
-      }
+      const url = requests.fetchDiscoverPaginated(
+        String(type || "latest"),
+        String(content || "all"),
+        { limit: 20, ...(sort && { sort }), ...(cursor && { cursor }) },
+      );
 
       const { data } = await customAxios.get<MoviesResponse>(url);
 
-      // Handle the response structure safely
       const pageData = data?.data;
       if (!pageData) {
         return {
@@ -287,15 +288,13 @@ export const useInfiniteDiscover = (
 export const useGenresAttributes = (contentType: "movie" | "tv") =>
   useQuery<ContentAttribute[], Error>({
     queryKey: queryKeys.attributesGenres(contentType),
+    staleTime: Infinity,
     queryFn: async () => {
       const fetchAttributeItems = async (type: string) => {
         const { data } = await customAxios.get<AttributesResponse>(
           requests.fetchAttributes(type),
         );
 
-        // API can return either:
-        // 1) data: { items: [...] }
-        // 2) data: [...]
         const payload = data.data;
         if (Array.isArray(payload)) {
           return payload as ContentAttribute[];
@@ -313,20 +312,24 @@ export const useGenresAttributes = (contentType: "movie" | "tv") =>
         return [];
       };
 
-      let allAttributes = await fetchAttributeItems("genres");
+      const [genres, upperGenre, lowerGenre] = await Promise.allSettled([
+        fetchAttributeItems("genres"),
+        fetchAttributeItems("GENRE"),
+        fetchAttributeItems("genre"),
+      ]);
 
-      // Backends may accept different enum spellings for type.
-      if (allAttributes.length === 0) {
-        allAttributes = await fetchAttributeItems("GENRE");
-      }
-      if (allAttributes.length === 0) {
-        allAttributes = await fetchAttributeItems("genre");
-      }
+      const allAttributes =
+        (genres.status === "fulfilled" && genres.value.length > 0
+          ? genres.value
+          : null) ??
+        (upperGenre.status === "fulfilled" && upperGenre.value.length > 0
+          ? upperGenre.value
+          : null) ??
+        (lowerGenre.status === "fulfilled" ? lowerGenre.value : []);
 
       const expectedContentType = contentType === "movie" ? "movie" : "tv";
 
       const normalized = allAttributes.filter((attribute) => {
-        // Some environments return lowercase/uppercase values or omit fields.
         const normalizedContentType = String(attribute.contentType ?? "all")
           .trim()
           .toLowerCase();
@@ -349,7 +352,6 @@ export const useGenresAttributes = (contentType: "movie" | "tv") =>
         return isGenre && isActive && matchesContentType;
       });
 
-      // Keep list stable and deduplicated by id.
       const uniqueById = new Map<string, ContentAttribute>();
       normalized.forEach((attribute) => {
         if (!uniqueById.has(attribute.id)) {

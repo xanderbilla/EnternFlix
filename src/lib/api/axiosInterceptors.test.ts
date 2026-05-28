@@ -71,7 +71,7 @@ describe("axios interceptors", () => {
       configureResponseInterceptor(instance, "TEST");
       const fulfilled = responseHandlers(instance)[0].fulfilled;
 
-      const ok = { status: 200, data: { ok: true } };
+      const ok = { status: 200, data: { ok: true }, config: {} };
       expect(fulfilled(ok)).toBe(ok);
       expect(loggerMock.error).not.toHaveBeenCalled();
       expect(loggerMock.warn).not.toHaveBeenCalled();
@@ -87,6 +87,7 @@ describe("axios interceptors", () => {
         "[API] server error",
         503,
         "/boom",
+        expect.any(String),
       );
     });
 

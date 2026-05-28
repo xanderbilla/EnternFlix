@@ -108,7 +108,7 @@ export default function DialogAboutSection({
             <span className="text-gray-400">Studio: </span>
             <span className="text-white/80">
               {productionCompanies.slice(0, 2).map((company, index) => (
-                <span key={company.id}>
+                <span key={`${company.id}-${index}`}>
                   <button
                     onClick={() =>
                       onExploreClick?.(company.name, company.name, false)
@@ -130,7 +130,7 @@ export default function DialogAboutSection({
             <span className="text-gray-400">Cast: </span>
             <span className="text-white/80">
               {casts.map((cast, index) => (
-                <span key={cast.id}>
+                <span key={`${cast.id}-${index}`}>
                   <button
                     onClick={() =>
                       onExploreClick?.(cast.id.toString(), cast.name, true)
@@ -152,7 +152,7 @@ export default function DialogAboutSection({
             <span className="text-gray-400">Genres: </span>
             <span className="text-white/80">
               {genres.map((genre, index) => (
-                <span key={genre.id}>
+                <span key={`${genre.id}-${index}`}>
                   <button
                     onClick={() =>
                       onExploreClick?.(
@@ -178,7 +178,7 @@ export default function DialogAboutSection({
             <span className="text-gray-400">Tags: </span>
             <span className="text-white/80">
               {tags.map((tag, index) => (
-                <span key={tag.id}>
+                <span key={`${tag.id}-${index}`}>
                   <button
                     onClick={() =>
                       onExploreClick?.(tag.id.toString(), tag.name, false)
@@ -202,7 +202,7 @@ export default function DialogAboutSection({
             </span>
             <span className="text-white/80">
               {moodTags.map((tag, index) => (
-                <span key={tag.id}>
+                <span key={`${tag.id}-${index}`}>
                   <button
                     onClick={() =>
                       onExploreClick?.(tag.id.toString(), tag.name, false)

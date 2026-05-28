@@ -29,7 +29,7 @@ export default function SearchPageContent() {
   const searchParams = useSearchParams();
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
-  const debouncedQuery = (searchParams.get("q") ?? "").trim();
+  const query = (searchParams.get("q") ?? "").trim();
   const scopeParam = searchParams.get("in");
   const selectedMode = scopeParam === "people" ? "people" : "content";
   const scope = selectedMode === "people" ? "people" : "all";
@@ -38,10 +38,10 @@ export default function SearchPageContent() {
   const selectedSort: SearchSort = isSearchSort(rawSort) ? rawSort : "recent";
 
   useEffect(() => {
-    if (!debouncedQuery) {
+    if (!query) {
       router.replace("/browse");
     }
-  }, [debouncedQuery, router]);
+  }, [query, router]);
 
   const handleSortChange = useCallback(
     (nextSort: string) => {
@@ -65,7 +65,9 @@ export default function SearchPageContent() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useSearch(debouncedQuery, scope, selectedSort || "recent");
+    isLoading,
+    isFetching,
+  } = useSearch(query, scope, selectedSort || "recent");
 
   const searchRes = useMemo(() => {
     if (!searchData?.pages) return [];
@@ -82,11 +84,11 @@ export default function SearchPageContent() {
 
   useEffect(() => {
     const element = loadMoreRef.current;
-    if (!element || !hasNextPage || isFetchingNextPage) return;
+    if (!element || !hasNextPage) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNextPage) {
+        if (entries[0].isIntersecting && !isFetchingNextPage) {
           fetchNextPage();
         }
       },
@@ -100,14 +102,14 @@ export default function SearchPageContent() {
     };
   }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (!debouncedQuery) {
+  if (!query) {
     return null;
   }
 
   return (
     <PageLayout showBanner={false} reserveTopPaddingWhenNoBanner={false}>
       <section className="relative z-10 pt-16 md:pt-20 bg-zinc-900 min-h-screen">
-        <div className="sticky top-[66px] z-20 flex min-h-[68px] items-center px-4 sm:px-6 md:px-16 py-3 bg-zinc-900 transition duration-500">
+        <div className="sticky top-[var(--navbar-height)] z-20 flex min-h-[68px] items-center px-4 sm:px-6 md:px-16 py-3 bg-zinc-900 transition duration-500">
           <h1 className="text-white text-lg sm:text-xl md:text-[22px] lg:text-[30px] font-medium leading-none">
             Search Results
           </h1>
@@ -128,7 +130,7 @@ export default function SearchPageContent() {
 
         <div className="px-4 sm:px-6 md:px-16">
           <SearchResults
-            debouncedQuery={debouncedQuery}
+            debouncedQuery={query}
             searchRes={searchRes}
             peopleRes={peopleRes}
             contentCount={contentCount}
@@ -136,6 +138,7 @@ export default function SearchPageContent() {
             selectedMode={selectedMode}
             hasNextPage={hasNextPage || false}
             loadMoreRef={loadMoreRef}
+            isLoading={isLoading || isFetching}
             onCardHover={() => setSortDropdownOpen(false)}
           />
         </div>

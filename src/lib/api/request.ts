@@ -25,6 +25,28 @@ const requests = {
     `c/attributes?type=${encQuery(type)}`,
   fetchDiscover: (type: string = "latest", content: string = "all") =>
     `c/discover?type=${encQuery(type)}&content=${encQuery(content)}`,
+  fetchDiscoverPaginated: (
+    type: string = "latest",
+    content: string = "all",
+    options?: { limit?: number; cursor?: string; sort?: string },
+  ) => {
+    const params = [`type=${encQuery(type)}`, `content=${encQuery(content)}`];
+    if (options?.limit !== undefined) params.push(`limit=${options.limit}`);
+    if (options?.sort) params.push(`sort=${encQuery(options.sort)}`);
+    if (options?.cursor) params.push(`cursor=${encQuery(options.cursor)}`);
+    return `c/discover?${params.join("&")}`;
+  },
+  fetchDiscoverByAttributePaginated: (
+    attributeId: string,
+    content: string = "all",
+    options?: { limit?: number; cursor?: string; sort?: string },
+  ) => {
+    const params = [`content=${encQuery(content)}`];
+    if (options?.limit !== undefined) params.push(`limit=${options.limit}`);
+    if (options?.sort) params.push(`sort=${encQuery(options.sort)}`);
+    if (options?.cursor) params.push(`cursor=${encQuery(options.cursor)}`);
+    return `c/attributes/${encPath(attributeId)}?${params.join("&")}`;
+  },
   fetchBanner: (type: string = "all") => `c/banner?type=${encQuery(type)}`,
   fetchSearch: (
     query: string,

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import SearchPageContent from "@/components/SearchPage/SearchPageContent";
 import { createPageMetadata } from "@/lib/seo/metadata";
+import { TEXT_LIMITS } from "@/constants/common";
 
 interface SearchPageProps {
   searchParams: Promise<{ q?: string }>;
@@ -17,11 +18,10 @@ const BASE_KEYWORDS = [
 ];
 const DEFAULT_DESCRIPTION =
   "Search for movies, TV shows, anime, and cast members. Discover new content and find your favorite entertainment on EnternFlix.";
-const MAX_QUERY_LENGTH = 80;
 
 function sanitizeQuery(raw: string | undefined): string | null {
   if (!raw) return null;
-  const trimmed = raw.trim().slice(0, MAX_QUERY_LENGTH);
+  const trimmed = raw.trim().slice(0, TEXT_LIMITS.SEARCH_QUERY_MAX);
   return trimmed.length > 0 ? trimmed : null;
 }
 

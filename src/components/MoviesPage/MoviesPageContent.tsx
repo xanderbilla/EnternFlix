@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -61,6 +61,15 @@ export default function MoviesPageContent({
   } = useDialogManager();
   const { showBackground } = useNavbar();
 
+  // Kick off browser image decode while other data is loading.
+  useEffect(() => {
+    if (!bannerMovie?.backdropPath) return;
+    const url = getImageUrl(bannerMovie.backdropPath, "original");
+    if (!url) return;
+    const img = document.createElement("img");
+    img.src = url;
+  }, [bannerMovie?.backdropPath]);
+
   const { dropdownRef } = useDropdown(isGenresOpen, () =>
     setIsGenresOpen(false),
   );
@@ -74,8 +83,7 @@ export default function MoviesPageContent({
   const genreOptions = useMemo(() => genres ?? [], [genres]);
   const selectedGenreLabel = "Genres";
 
-  const isPageLoading =
-    !bannerMovie || !recentContent || !latestContent || isGenresLoading;
+  const isPageLoading = !bannerMovie || !recentContent || !latestContent;
 
   const backdropUrl = bannerMovie?.backdropPath
     ? getImageUrl(bannerMovie.backdropPath, "original")

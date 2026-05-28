@@ -1,21 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import { useNavbar } from "@/hooks/ui/useNavbar";
 import { NavbarProps } from "@/types/navbar";
+import { DESKTOP_NAV_LINKS } from "@/constants/navbar";
 import Link from "next/link";
 import SearchField from "@/components/UI/SearchField";
 import { useNavbarSearch } from "@/hooks/ui/useNavbarSearch";
-
-const desktopNavLinks = [
-  { href: "/browse/trending", label: "Trending" },
-  { href: "/browse/tv-shows", label: "TV Shows" },
-  { href: "/browse/movies", label: "Movies" },
-  { href: "/browse/latest", label: "Latest" },
-];
+import { useDialogBodyScroll } from "@/hooks/ui/useDialogBodyScroll";
 
 const Navbar = ({ classname = "" }: NavbarProps) => {
   const pathname = usePathname();
@@ -31,13 +25,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
     handleScopeChange,
   } = useNavbarSearch();
 
-  // Lock body scroll when mobile menu is open
-  useEffect(() => {
-    document.body.style.overflow = showMobileMenu ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [showMobileMenu]);
+  useDialogBodyScroll(showMobileMenu);
 
   const isTransparentRoute =
     pathname === "/browse" ||
@@ -62,7 +50,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
       >
         {/* Logo */}
         <Link
-          href="/"
+          href="/browse"
           aria-label="EnternFlix home"
           className="inline-flex items-center"
         >
@@ -79,7 +67,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
 
         {/* Desktop Navigation */}
         <div className="flex-row ml-4 sm:ml-6 md:ml-8 gap-4 sm:gap-6 md:gap-8 hidden md:flex">
-          {desktopNavLinks.map(({ href, label }) => (
+          {DESKTOP_NAV_LINKS.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
@@ -187,7 +175,7 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
             className="flex flex-col items-center gap-6 sm:gap-8"
             aria-label="Mobile navigation"
           >
-            {desktopNavLinks.map(({ href, label }) => (
+            {DESKTOP_NAV_LINKS.map(({ href, label }) => (
               <Link
                 key={href}
                 href={href}

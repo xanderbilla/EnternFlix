@@ -1,4 +1,5 @@
 import { ValidationResult, ValidationError } from "@/types/validation";
+import { TEXT_LIMITS } from "@/constants/common";
 
 export function validateContentId(id: string): ValidationResult<string> {
   const errors: ValidationError[] = [];
@@ -70,10 +71,10 @@ export function validateUrl(url: string): ValidationResult<string> {
 export function validateSearchQuery(query: string): ValidationResult<string> {
   const errors: ValidationError[] = [];
 
-  if (query && query.length > 100) {
+  if (query && query.length > TEXT_LIMITS.SEARCH_QUERY_MAX) {
     errors.push({
       field: "query",
-      message: "Search query must be less than 100 characters",
+      message: `Search query must be less than ${TEXT_LIMITS.SEARCH_QUERY_MAX} characters`,
       code: "MAX_LENGTH",
     });
   }

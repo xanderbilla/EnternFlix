@@ -141,7 +141,12 @@ const Banner = () => {
   }
 
   if (isLoading || error || !movie?.backdropPath) {
-    return null;
+    return (
+      <div
+        className="relative h-[70vh] sm:h-[80vh] md:h-[92vh] lg:h-[100vh] bg-zinc-900 animate-pulse"
+        aria-hidden="true"
+      />
+    );
   }
 
   const movieTitle = movie.title ?? "Untitled";

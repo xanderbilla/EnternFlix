@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect, useRef } from "react";
+import { UI } from "@/constants/common";
 
 export function useNavbar() {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
@@ -27,9 +28,8 @@ export function useNavbar() {
   }, []);
 
   useEffect(() => {
-    const TOP_OFFSET = 66;
     const handleScroll = () => {
-      if (window.scrollY >= TOP_OFFSET) {
+      if (window.scrollY >= UI.NAVBAR_SCROLL_OFFSET_PX) {
         setShowBackground(true);
       } else {
         setShowBackground(false);

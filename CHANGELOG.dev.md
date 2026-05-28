@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.22.0 - 2026-05-28
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.22.0
+Git Tag: v0.22.0
+Commit SHA: 223a6a28585a5412102ed4dadc62575b04322ee2
+
+Changes:
+- feat: implement server-side prefetching for movies and browse pages, enhance loading states and error handling (223a6a2)
+
 ## v0.21.0 - 2026-05-27
 
 Environment: dev

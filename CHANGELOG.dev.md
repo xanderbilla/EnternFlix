@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.23.0 - 2026-05-28
+
+Environment: dev
+Docker Image: 929910138721.dkr.ecr.us-east-1.amazonaws.com/enternflix:efx-image-dev-v0.23.0
+Git Tag: v0.23.0
+Commit SHA: 4fa43ecde25ab3f3726800080908b79be0d81806
+
+Changes:
+- fix: remove unnecessary animation class from loading state in Banner component (4fa43ec)
+
 ## v0.22.0 - 2026-05-28
 
 Environment: dev

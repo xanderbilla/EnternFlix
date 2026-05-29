@@ -20,10 +20,10 @@ echo "App ID: $APP_ID"
 # Create environment variables JSON based on branch
 if [ "$BRANCH" = "prod" ]; then
   # Production environment
-  ENV_JSON='{"NODE_ENV":"production","PORT":"3000","HOSTNAME":"0.0.0.0","NEXT_PUBLIC_ENABLE_LOGGING":"false","NEXT_PUBLIC_SITE_URL":"https://your-domain.com","NEXT_PUBLIC_HTTP_TIMEOUT_MS":"10000","NEXT_PUBLIC_CUSTOM_API_URL":"https://api.yourdomain.com/v1","NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL":"https://your-cdn-bucket.s3.region.amazonaws.com/","NEXT_PUBLIC_IMAGE_HOSTS":"","NEXT_PUBLIC_APP_ENV":"prod"}'
+  ENV_JSON='{"NODE_ENV":"production","PORT":"3000","HOSTNAME":"0.0.0.0","NEXT_PUBLIC_ENABLE_LOGGING":"false","NEXT_PUBLIC_SITE_URL":"https://emm4bi8s.dev","NEXT_PUBLIC_HTTP_TIMEOUT_MS":"10000","NEXT_PUBLIC_CUSTOM_API_URL":"https://api.emm4bi8s.dev/v1/","NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL":"https://cdn.emm4bi8s.dev/","NEXT_PUBLIC_IMAGE_HOSTS":"api.emm4bi8s.dev,api-dev.emm4bi8s.dev,cdn.emm4bi8s.dev,cdn-dev.emm4bi8s.dev","NEXT_PUBLIC_APP_ENV":"prod"}'
 else
   # Development environment
-  ENV_JSON='{"NODE_ENV":"development","PORT":"3000","HOSTNAME":"0.0.0.0","NEXT_PUBLIC_ENABLE_LOGGING":"true","NEXT_PUBLIC_SITE_URL":"http://localhost:3000","NEXT_PUBLIC_HTTP_TIMEOUT_MS":"10000","NEXT_PUBLIC_CUSTOM_API_URL":"http://localhost:8080/v1","NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL":"https://bi8s-storage-dev.s3.us-east-1.amazonaws.com/","NEXT_PUBLIC_IMAGE_HOSTS":"","NEXT_PUBLIC_APP_ENV":"dev"}'
+  ENV_JSON='{"NODE_ENV":"production","PORT":"3000","HOSTNAME":"0.0.0.0","NEXT_PUBLIC_ENABLE_LOGGING":"true","NEXT_PUBLIC_SITE_URL":"https://dev.emm4bi8s.dev","NEXT_PUBLIC_HTTP_TIMEOUT_MS":"10000","NEXT_PUBLIC_CUSTOM_API_URL":"https://api-dev.emm4bi8s.dev/v1/","NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL":"https://cdn-dev.emm4bi8s.dev/","NEXT_PUBLIC_IMAGE_HOSTS":"api.emm4bi8s.dev,api-dev.emm4bi8s.dev,cdn.emm4bi8s.dev,cdn-dev.emm4bi8s.dev","NEXT_PUBLIC_APP_ENV":"dev"}'
 fi
 
 echo ""
@@ -43,15 +43,17 @@ if [ $? -eq 0 ]; then
     echo "   Production Variables:"
     echo "   NODE_ENV=production"
     echo "   NEXT_PUBLIC_ENABLE_LOGGING=false"
-    echo "   NEXT_PUBLIC_SITE_URL=https://your-domain.com"
-    echo "   NEXT_PUBLIC_CUSTOM_API_URL=https://api.yourdomain.com/v1"
+    echo "   NEXT_PUBLIC_SITE_URL=https://emm4bi8s.dev"
+    echo "   NEXT_PUBLIC_CUSTOM_API_URL=https://api.emm4bi8s.dev/v1/"
+    echo "   NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL=https://cdn.emm4bi8s.dev/"
     echo "   NEXT_PUBLIC_APP_ENV=prod"
   else
     echo "  Development Variables:"
-    echo "   NODE_ENV=development"
+    echo "   NODE_ENV=production"
     echo "   NEXT_PUBLIC_ENABLE_LOGGING=true"
-    echo "   NEXT_PUBLIC_SITE_URL=http://localhost:3000"
-    echo "   NEXT_PUBLIC_CUSTOM_API_URL=http://localhost:8080/v1"
+    echo "   NEXT_PUBLIC_SITE_URL=https://dev.emm4bi8s.dev"
+    echo "   NEXT_PUBLIC_CUSTOM_API_URL=https://api-dev.emm4bi8s.dev/v1/"
+    echo "   NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL=https://cdn-dev.emm4bi8s.dev/"
     echo "   NEXT_PUBLIC_APP_ENV=dev"
   fi
   echo "   PORT=3000"

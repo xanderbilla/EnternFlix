@@ -85,12 +85,6 @@ function buildRemotePatterns() {
     }
   }
 
-  // Keep local/dev image optimization working even if NEXT_PUBLIC_* env vars
-  // are not loaded in the current shell/process.
-  if (patterns.length === 0) {
-    push("https", "bi8s-storage-dev.s3.us-east-1.amazonaws.com");
-  }
-
   return patterns;
 }
 

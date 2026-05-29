@@ -3,16 +3,37 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      # ---------------------------------------------------------------------------
+      # Do NOT add NEXT_PUBLIC_CUSTOM_API_URL or NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL
+      # here. The Dockerfile ARG defaults bake in placeholder URLs, which
+      # entrypoint.sh replaces at container startup with the real runtime values.
+      # Passing real URLs as build args defeats that strategy.
+      # ---------------------------------------------------------------------------
       args:
-        NEXT_PUBLIC_CUSTOM_API_URL: ${NEXT_PUBLIC_CUSTOM_API_URL}
-        NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL: ${NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL}
         NEXT_PUBLIC_ENABLE_LOGGING: ${NEXT_PUBLIC_ENABLE_LOGGING:-false}
         NEXT_PUBLIC_HTTP_TIMEOUT_MS: ${NEXT_PUBLIC_HTTP_TIMEOUT_MS:-10000}
-        NEXT_PUBLIC_IMAGE_HOSTS: ${NEXT_PUBLIC_IMAGE_HOSTS:-}
-    image: enternflix:latest
+        NEXT_PUBLIC_IMAGE_HOSTS: ${NEXT_PUBLIC_IMAGE_HOSTS:-api.emm4bi8s.dev,api-dev.emm4bi8s.dev,cdn.emm4bi8s.dev,cdn-dev.emm4bi8s.dev}
+    # Local build tags the image as enternflix:local-build.
+    # To use a pre-built ECR image instead, set ENTERNFLIX_IMAGE in your env file
+    # or prefix the command:
+    #   docker compose --env-file .env.dev up          (local build)
+    #   docker compose --env-file .env.dev up           (ECR image, if ENTERNFLIX_IMAGE is set in .env.dev)
+    image: ${ENTERNFLIX_IMAGE:-enternflix:local-build}
     container_name: enternflix
-    env_file:
-      - .env
+    # Runtime env vars — injected into the container and used by entrypoint.sh
+    # to replace placeholder URLs in the JS bundle before the server starts.
+    # Run with: docker compose --env-file .env.dev up   (dev)
+    #       or: docker compose --env-file .env.bi8s up  (prod)
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - HOSTNAME=0.0.0.0
+      - NEXT_PUBLIC_CUSTOM_API_URL=${NEXT_PUBLIC_CUSTOM_API_URL}
+      - NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL=${NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL}
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL}
+      - NEXT_PUBLIC_APP_ENV=${NEXT_PUBLIC_APP_ENV:-}
+      - NEXT_PUBLIC_ENABLE_LOGGING=${NEXT_PUBLIC_ENABLE_LOGGING:-false}
+      - NEXT_PUBLIC_HTTP_TIMEOUT_MS=${NEXT_PUBLIC_HTTP_TIMEOUT_MS:-10000}
     ports:
       - "${PORT:-3000}:3000"
     restart: unless-stopped

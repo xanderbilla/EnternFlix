@@ -1,5 +1,16 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.25.0 - 2026-05-29
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.25.0
+Commit SHA: 07a4d5644a2b08da6bf895382738f7acbe222736
+
+Changes:
+- fix: remove hardcoded S3 fallback and fix compose build args (07a4d56)
+- fix: correct runtime URL injection and env configuration (0b2ce01)
+
 ## v0.24.0 - 2026-05-29
 
 Environment: dev

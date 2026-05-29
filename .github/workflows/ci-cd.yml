@@ -2,14 +2,14 @@ name: CI/CD
 
 on:
   push:
-    branches: [dev, prod]
+    branches: [dev, bi8s]
     paths-ignore:
       - "docs/**"
       - "**.md"
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/PULL_REQUEST_TEMPLATE/**"
   pull_request:
-    branches: [dev, prod]
+    branches: [dev, bi8s]
     paths-ignore:
       - "docs/**"
       - "**.md"
@@ -61,9 +61,9 @@ jobs:
           BRANCH="${GITHUB_REF_NAME}"
           case "$BRANCH" in
             dev)  ENVIRONMENT=dev ;;
-            prod) ENVIRONMENT=prod ;;
+            bi8s) ENVIRONMENT=bi8s ;;
             *)
-              echo "::error::Unsupported branch '$BRANCH'. Pipeline only runs for dev/prod." >&2
+              echo "::error::Unsupported branch '$BRANCH'. Pipeline only runs for dev/bi8s." >&2
               exit 1
               ;;
           esac
@@ -187,10 +187,11 @@ jobs:
     needs: [setup, lint, format, typecheck, test]
     runs-on: ubuntu-latest
     env:
-      NEXT_PUBLIC_CUSTOM_API_URL: ${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_API_URL }}
-      NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL: ${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL }}
-      NEXT_PUBLIC_SITE_URL: ${{ vars.BUILD_NEXT_PUBLIC_SITE_URL }}
-      NEXT_PUBLIC_IMAGE_HOSTS: ${{ vars.BUILD_NEXT_PUBLIC_IMAGE_HOSTS }}
+      # No NEXT_PUBLIC_CUSTOM_* vars here — the Docker image uses placeholder
+      # values at build time; real URLs are injected at container start.
+      # NEXT_PUBLIC_IMAGE_HOSTS lists all real CDN/API hosts so next/image
+      # remotePatterns and CSP headers cover both dev and bi8s at build time.
+      NEXT_PUBLIC_IMAGE_HOSTS: api.emm4bi8s.dev,api-dev.emm4bi8s.dev,cdn.emm4bi8s.dev,cdn-dev.emm4bi8s.dev
       NEXT_PUBLIC_APP_VERSION: v${{ needs.setup.outputs.version }}
       NEXT_PUBLIC_APP_ENV: ${{ needs.setup.outputs.environment }}
       NEXT_TELEMETRY_DISABLED: "1"
@@ -202,8 +203,6 @@ jobs:
           cache: npm
       - name: Validate required build env
         run: |
-          : "${NEXT_PUBLIC_CUSTOM_API_URL:?BUILD_NEXT_PUBLIC_CUSTOM_API_URL must be set as a GitHub Actions variable}"
-          : "${NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL:?BUILD_NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL must be set as a GitHub Actions variable}"
           : "${NEXT_PUBLIC_APP_VERSION:?Computed app version is missing}"
       - run: npm ci --no-audit --no-fund
       - run: npm run build
@@ -221,8 +220,10 @@ jobs:
       contents: read
     env:
       AWS_REGION: ${{ vars.AWS_REGION }}
-      ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-      ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
+      ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+      ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+      IMAGE_NAME_DEV: ${{ secrets.IMAGE_NAME_DEV }}
+      IMAGE_NAME_PROD: ${{ secrets.IMAGE_NAME_PROD }}
       ENVIRONMENT: ${{ needs.setup.outputs.environment }}
       VERSION: ${{ needs.setup.outputs.version }}
     outputs:
@@ -234,8 +235,10 @@ jobs:
       - name: Validate required CI variables
         run: |
           : "${AWS_REGION:?AWS_REGION repository variable must be set}"
-          : "${ECR_REPOSITORY:?ECR_REPOSITORY repository variable must be set}"
-          : "${ECR_REGISTRY:?ECR_REGISTRY repository variable must be set}"
+          : "${ECR_REPOSITORY:?ECR_REPOSITORY secret must be set}"
+          : "${ECR_REGISTRY:?ECR_REGISTRY secret must be set}"
+          : "${IMAGE_NAME_DEV:?IMAGE_NAME_DEV secret must be set}"
+          : "${IMAGE_NAME_PROD:?IMAGE_NAME_PROD secret must be set}"
           if [ -z "${{ secrets.AWS_ACCESS_KEY_ID }}" ] || [ -z "${{ secrets.AWS_SECRET_ACCESS_KEY }}" ]; then
             echo "::error::AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY secrets must be set" >&2
             exit 1
@@ -267,8 +270,13 @@ jobs:
         id: tags
         run: |
           BASE="${ECR_REGISTRY}/${ECR_REPOSITORY}"
-          VERSIONED_TAG="efx-image-${ENVIRONMENT}-v${VERSION}"
-          LATEST_TAG="efx-image-${ENVIRONMENT}-latest"
+          if [ "$ENVIRONMENT" = "bi8s" ]; then
+            IMAGE_BASE="${IMAGE_NAME_PROD}"
+          else
+            IMAGE_BASE="${IMAGE_NAME_DEV}"
+          fi
+          VERSIONED_TAG="${IMAGE_BASE}-v${VERSION}"
+          LATEST_TAG="${IMAGE_BASE}-latest"
           {
             echo "versioned_tag=${VERSIONED_TAG}"
             echo "latest_tag=${LATEST_TAG}"
@@ -288,10 +296,7 @@ jobs:
             ${{ steps.tags.outputs.image_versioned }}
             ${{ steps.tags.outputs.image_latest }}
           build-args: |
-            NEXT_PUBLIC_CUSTOM_API_URL=${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_API_URL }}
-            NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL=${{ vars.BUILD_NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL }}
-            NEXT_PUBLIC_SITE_URL=${{ vars.BUILD_NEXT_PUBLIC_SITE_URL }}
-            NEXT_PUBLIC_IMAGE_HOSTS=${{ vars.BUILD_NEXT_PUBLIC_IMAGE_HOSTS }}
+            NEXT_PUBLIC_IMAGE_HOSTS=api.emm4bi8s.dev,api-dev.emm4bi8s.dev,cdn.emm4bi8s.dev,cdn-dev.emm4bi8s.dev
             NEXT_PUBLIC_HTTP_TIMEOUT_MS=10000
             NEXT_PUBLIC_ENABLE_LOGGING=false
             NEXT_PUBLIC_APP_VERSION=v${{ env.VERSION }}
@@ -299,20 +304,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Verify image tag matches app version
+      - name: Verify image tag contains app version
         run: |
-          EXPECTED="efx-image-${ENVIRONMENT}-v${VERSION}"
-          if [ "${{ steps.tags.outputs.versioned_tag }}" != "$EXPECTED" ]; then
-            echo "::error::Docker tag '${{ steps.tags.outputs.versioned_tag }}' does not match app version '$EXPECTED'"
+          if ! echo "${{ steps.tags.outputs.versioned_tag }}" | grep -qF "v${VERSION}"; then
+            echo "::error::Docker tag does not contain app version 'v${VERSION}'"
             exit 1
           fi
 
       - name: Image summary
         run: |
           {
-            echo "## Pushed image"
-            echo "- ${{ steps.tags.outputs.image_versioned }}"
-            echo "- ${{ steps.tags.outputs.image_latest }}"
+            echo "## Docker image pushed"
+            echo "- environment: ${ENVIRONMENT}"
+            echo "- version: v${VERSION}"
           } >> "$GITHUB_STEP_SUMMARY"
 
   # ---------------------------------------------------------------------------
@@ -473,7 +477,7 @@ jobs:
       - name: Trigger Amplify build with version
         if: env.AMPLIFY_APP_ID != ''
         run: |
-          BRANCH_NAME=$([ "$ENVIRONMENT" = "prod" ] && echo "prod" || echo "dev")
+          BRANCH_NAME=$([ "$ENVIRONMENT" = "bi8s" ] && echo "bi8s" || echo "dev")
 
           # Poll until no RUNNING/PENDING jobs remain (Amplify auto-builds on push
           # can re-queue immediately after a stop, so we keep retrying).
@@ -518,6 +522,6 @@ jobs:
             echo "## Deployed"
             echo "- env: ${ENVIRONMENT}"
             echo "- version: v${VERSION}"
-            echo "- image: efx-image-${ENVIRONMENT}-v${VERSION}"
+            echo "- version: v${VERSION}"
             [ -n "$AMPLIFY_APP_ID" ] && echo "- amplify: triggered" || echo "- amplify: not configured (set AMPLIFY_APP_ID secret)"
           } >> "$GITHUB_STEP_SUMMARY"

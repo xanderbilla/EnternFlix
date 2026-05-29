@@ -11,12 +11,20 @@ RUN npm ci --no-audit --no-fund
 
 FROM --platform=$BUILDPLATFORM ${NODE_IMAGE} AS builder
 WORKDIR /app
-ARG NEXT_PUBLIC_CUSTOM_API_URL
-ARG NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL
-ARG NEXT_PUBLIC_SITE_URL
+# ---------------------------------------------------------------------------
+# Build-time placeholder values. Real URLs are injected at container startup
+# by entrypoint.sh so a single image works across all environments.
+# The placeholders are valid URLs so next.config.js can parse them.
+# ---------------------------------------------------------------------------
+ARG NEXT_PUBLIC_CUSTOM_API_URL=https://bi8s-placeholder-api.local/v1/
+ARG NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL=https://bi8s-placeholder-cdn.local/
+ARG NEXT_PUBLIC_SITE_URL=https://bi8s-placeholder-site.local
 ARG NEXT_PUBLIC_ENABLE_LOGGING=false
 ARG NEXT_PUBLIC_HTTP_TIMEOUT_MS=10000
-ARG NEXT_PUBLIC_IMAGE_HOSTS=
+# All real CDN and API hosts from every environment are listed here so that
+# next/image remotePatterns and CSP headers (resolved at build time) cover
+# both dev and bi8s at runtime.
+ARG NEXT_PUBLIC_IMAGE_HOSTS=api.emm4bi8s.dev,api-dev.emm4bi8s.dev,cdn.emm4bi8s.dev,cdn-dev.emm4bi8s.dev
 ARG NEXT_PUBLIC_APP_VERSION=
 ARG NEXT_PUBLIC_APP_ENV=
 ENV NEXT_PUBLIC_CUSTOM_API_URL=$NEXT_PUBLIC_CUSTOM_API_URL \
@@ -47,8 +55,10 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Runtime entrypoint: replaces placeholder URLs with real env var values
+COPY --chmod=755 entrypoint.sh /entrypoint.sh
 USER nextjs
 EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
     CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
-CMD ["node", "server.js"]
+ENTRYPOINT ["/entrypoint.sh"]

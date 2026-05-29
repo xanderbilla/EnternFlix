@@ -1,5 +1,18 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.24.0 - 2026-05-29
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.24.0
+Commit SHA: 382c00ca023c9f030d98ca22cdbc423e2de4df47
+
+Changes:
+- fix(ci): add placeholder URL vars to build job env (382c00c)
+- ci: switch to paths allowlist trigger, add app_env output for NEXT_PUBLIC_APP_ENV (bb423e2)
+- chore: remove production environment variables from .env.production file (43b6c02)
+- feat: update CI/CD workflow and Dockerfile for bi8s environment support, add entrypoint script for runtime variable injection (1b6b816)
+
 ## v0.23.0 - 2026-05-28
 
 Environment: dev

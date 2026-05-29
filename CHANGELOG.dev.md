@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.26.0 - 2026-05-29
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.26.0
+Commit SHA: 8f4c2ce314d4364970c41ea08e61215ee8175cea
+
+Changes:
+- fix(entrypoint): patch remotePatterns hostnames in server bundle for next/image (8f4c2ce)
+
 ## v0.25.0 - 2026-05-29
 
 Environment: dev

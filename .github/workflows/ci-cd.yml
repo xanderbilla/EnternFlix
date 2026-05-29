@@ -3,18 +3,36 @@ name: CI/CD
 on:
   push:
     branches: [dev, bi8s]
-    paths-ignore:
-      - "docs/**"
-      - "**.md"
-      - ".github/ISSUE_TEMPLATE/**"
-      - ".github/PULL_REQUEST_TEMPLATE/**"
+    paths:
+      - "src/**"
+      - "public/**"
+      - "scripts/**"
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.js"
+      - "**/*.json"
+      - "Dockerfile"
+      - "entrypoint.sh"
+      - "docker-compose.yml"
+      - ".env.dev"
+      - ".env.bi8s"
+      - ".github/workflows/**"
   pull_request:
     branches: [dev, bi8s]
-    paths-ignore:
-      - "docs/**"
-      - "**.md"
-      - ".github/ISSUE_TEMPLATE/**"
-      - ".github/PULL_REQUEST_TEMPLATE/**"
+    paths:
+      - "src/**"
+      - "public/**"
+      - "scripts/**"
+      - "**/*.ts"
+      - "**/*.tsx"
+      - "**/*.js"
+      - "**/*.json"
+      - "Dockerfile"
+      - "entrypoint.sh"
+      - "docker-compose.yml"
+      - ".env.dev"
+      - ".env.bi8s"
+      - ".github/workflows/**"
   workflow_dispatch:
     inputs:
       bump:
@@ -45,6 +63,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       environment: ${{ steps.env.outputs.environment }}
+      app_env: ${{ steps.env.outputs.app_env }}
       version: ${{ steps.version.outputs.version }}
       version_tag: ${{ steps.version.outputs.version_tag }}
       previous_version: ${{ steps.version.outputs.previous_version }}
@@ -60,8 +79,8 @@ jobs:
         run: |
           BRANCH="${GITHUB_REF_NAME}"
           case "$BRANCH" in
-            dev)  ENVIRONMENT=dev ;;
-            bi8s) ENVIRONMENT=bi8s ;;
+            dev)  ENVIRONMENT=dev;  APP_ENV=dev  ;;
+            bi8s) ENVIRONMENT=bi8s; APP_ENV=prod ;;
             *)
               echo "::error::Unsupported branch '$BRANCH'. Pipeline only runs for dev/bi8s." >&2
               exit 1
@@ -73,7 +92,8 @@ jobs:
             RELEASE=false
           fi
           echo "environment=${ENVIRONMENT}" >> "$GITHUB_OUTPUT"
-          echo "release=${RELEASE}" >> "$GITHUB_OUTPUT"
+          echo "app_env=${APP_ENV}"         >> "$GITHUB_OUTPUT"
+          echo "release=${RELEASE}"         >> "$GITHUB_OUTPUT"
 
       - name: Determine version
         id: version
@@ -193,7 +213,7 @@ jobs:
       # remotePatterns and CSP headers cover both dev and bi8s at build time.
       NEXT_PUBLIC_IMAGE_HOSTS: api.emm4bi8s.dev,api-dev.emm4bi8s.dev,cdn.emm4bi8s.dev,cdn-dev.emm4bi8s.dev
       NEXT_PUBLIC_APP_VERSION: v${{ needs.setup.outputs.version }}
-      NEXT_PUBLIC_APP_ENV: ${{ needs.setup.outputs.environment }}
+      NEXT_PUBLIC_APP_ENV: ${{ needs.setup.outputs.app_env }}
       NEXT_TELEMETRY_DISABLED: "1"
     steps:
       - uses: actions/checkout@v4
@@ -300,7 +320,7 @@ jobs:
             NEXT_PUBLIC_HTTP_TIMEOUT_MS=10000
             NEXT_PUBLIC_ENABLE_LOGGING=false
             NEXT_PUBLIC_APP_VERSION=v${{ env.VERSION }}
-            NEXT_PUBLIC_APP_ENV=${{ env.ENVIRONMENT }}
+            NEXT_PUBLIC_APP_ENV=${{ needs.setup.outputs.app_env }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 

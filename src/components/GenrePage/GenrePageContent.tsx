@@ -47,6 +47,7 @@ export default function GenrePageContent({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useInfiniteDiscoverByAttribute(
     genreId,
     contentType,
@@ -157,6 +158,7 @@ export default function GenrePageContent({
             columns={6}
             disableAnimation={true}
             fullWidth={true}
+            isLoading={isLoading}
           />
           <div ref={loadMoreRef} className="h-px" />
         </div>

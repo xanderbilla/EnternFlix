@@ -124,7 +124,7 @@ export default function SearchResults({
       )}
 
       {/* Static content grid (Explore/Cast dialog style), responsive up to 6 columns */}
-      {activeSearchRes.length > 0 && (
+      {(activeSearchRes.length > 0 || (isLoading && showContent)) && (
         <section>
           <MovieGrid
             movies={activeSearchRes}
@@ -134,6 +134,7 @@ export default function SearchResults({
             fullWidth={true}
             eagerLoadCount={6}
             onCardHover={onCardHover}
+            isLoading={isLoading && activeSearchRes.length === 0}
           />
         </section>
       )}

@@ -43,6 +43,7 @@ export default function BrowseCollectionPageContent({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    isLoading,
   } = useInfiniteDiscover(mode, contentType, true, selectedSort || undefined);
 
   const {
@@ -143,6 +144,7 @@ export default function BrowseCollectionPageContent({
             columns={6}
             disableAnimation={true}
             fullWidth={true}
+            isLoading={isLoading}
           />
           {/* Infinite scroll trigger */}
           <div ref={loadMoreRef} className="h-px" />

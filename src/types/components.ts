@@ -339,6 +339,7 @@ export interface MovieGridProps {
   fullWidth?: boolean;
   eagerLoadCount?: number;
   onCardHover?: () => void;
+  isLoading?: boolean;
 }
 
 export interface DialogRendererProps {

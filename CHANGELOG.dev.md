@@ -1,5 +1,27 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.28.0 - 2026-05-30
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.28.0
+Commit SHA: 2dfa9e637cc2291a045beb3f47a0ec8bf48f9939
+
+Changes:
+- fix(deps,format): add sonner to dependencies and fix apiErrorToast formatting (2dfa9e6)
+- test(env,logger): update mocks and tests for logLevel config (740abaa)
+- style(banner): reformat useBanner destructure for readability (efc95b1)
+- feat(logger): replace binary flag with LEVEL_RANK level-order filter (62f707f)
+- feat(env): replace enableLogging with NEXT_PUBLIC_LOG_LEVEL level config (ff3726f)
+- fix(genre): hide genre button until genres have loaded (799da24)
+- fix(banner): cap retries at 3 total calls and show info toast on failure (ec07ed2)
+- fix(ui): soften image fallback background to zinc-800/40 (4cbb22f)
+- feat(skeleton): pass isLoading to grids in browse, genre, and search pages (8b68578)
+- feat(skeleton): wire skeleton into MovieGrid and MovieList (f179c67)
+- feat(skeleton): add MovieListSkeleton, MovieGridSkeleton, and isLoading prop type (5bcd569)
+- fix(playback): suppress noisy network error logs (9f6dbf9)
+- feat(toast): add sonner Toaster and apiErrorToast utility (c9ea682)
+
 ## v0.27.0 - 2026-05-30
 
 Environment: dev

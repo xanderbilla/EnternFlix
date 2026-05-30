@@ -22,23 +22,24 @@ describe("config", () => {
     expect(config.isDev).toBe(false);
   });
 
-  it("readBool accepts 'true' and '1' as true, everything else as false", async () => {
+  it("parses logLevel from NEXT_PUBLIC_LOG_LEVEL", async () => {
     (process.env as Record<string, string>).NODE_ENV = "production";
-    process.env.NEXT_PUBLIC_ENABLE_LOGGING = "1";
+    process.env.NEXT_PUBLIC_LOG_LEVEL = "warn";
     process.env.NEXT_PUBLIC_CUSTOM_API_URL = "https://api";
     process.env.NEXT_PUBLIC_CUSTOM_IMAGE_BASE_URL = "https://cdn";
     let mod = await import("./env");
-    expect(mod.config.enableLogging).toBe(true);
+    expect(mod.config.logLevel).toBe("warn");
 
     vi.resetModules();
-    process.env.NEXT_PUBLIC_ENABLE_LOGGING = "false";
+    process.env.NEXT_PUBLIC_LOG_LEVEL = "debug";
     mod = await import("./env");
-    expect(mod.config.enableLogging).toBe(false);
+    expect(mod.config.logLevel).toBe("debug");
 
     vi.resetModules();
-    delete process.env.NEXT_PUBLIC_ENABLE_LOGGING;
+    delete process.env.NEXT_PUBLIC_LOG_LEVEL;
     mod = await import("./env");
-    expect(mod.config.enableLogging).toBe(false);
+    // production default when unset is "error"
+    expect(mod.config.logLevel).toBe("error");
   });
 
   it("exposes the configured custom API base URLs", async () => {

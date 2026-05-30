@@ -6,7 +6,7 @@ vi.mock("@/lib/env/env", () => ({
     isProd: false,
     isDev: false,
     isTest: true,
-    enableLogging: false,
+    logLevel: "off",
     http: { timeoutMs: 5000 },
     customApi: {
       baseUrl: "https://api.example.com",

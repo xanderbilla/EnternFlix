@@ -6,7 +6,7 @@ vi.mock("@/lib/env/env", () => ({
     isProd: false,
     isDev: false,
     isTest: true,
-    enableLogging: false,
+    logLevel: "off",
     customApi: {
       baseUrl: "https://api.example.test",
       imageBaseUrl: "https://cdn.example.test",

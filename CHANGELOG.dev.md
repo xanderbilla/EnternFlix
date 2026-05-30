@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.29.0 - 2026-05-30
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.29.0
+Commit SHA: 5e86fd2417b4497b1d97d3b08d62b81a071016f9
+
+Changes:
+- fix(config): pin server port to 8443 across dev, start, Docker, and compose (5e86fd2)
+
 ## v0.28.0 - 2026-05-30
 
 Environment: dev

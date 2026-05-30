@@ -1,6 +1,7 @@
 "use client";
 
 import RemoteImage from "@/components/UI/RemoteImage";
+import MovieGridSkeleton from "@/components/UI/MovieGridSkeleton";
 import { Movie } from "@/types/movie";
 import { MovieGridProps } from "@/types/components";
 import {
@@ -29,8 +30,13 @@ function MovieGrid({
   fullWidth = false,
   eagerLoadCount = 0,
   onCardHover,
+  isLoading = false,
 }: MovieGridProps) {
   const handleKeyPress = useKeyboardHandler();
+
+  if (isLoading) {
+    return <MovieGridSkeleton columns={columns} fullWidth={fullWidth} />;
+  }
 
   const gridCols =
     {
@@ -56,7 +62,7 @@ function MovieGrid({
         }`}
       >
         <button
-          className={`w-full h-full border-0 p-0 cursor-pointer block rounded overflow-hidden relative${imageLoaded ? "" : " bg-zinc-800"}`}
+          className={`w-full h-full border-0 p-0 cursor-pointer block rounded overflow-hidden relative${imageLoaded ? "" : " bg-zinc-800/40"}`}
           onClick={() => onMovieClick(movie.id)}
           onMouseEnter={onCardHover}
           aria-label={`View details for ${movie?.title || "this title"}`}

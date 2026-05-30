@@ -16,6 +16,7 @@ import { useDialogBodyScroll } from "@/hooks/ui/useDialogBodyScroll";
 import { useBodyOverflow } from "@/hooks/ui/useBodyOverflow";
 import { useHoverState } from "@/hooks/ui/useHoverState";
 import { useRouter } from "next/navigation";
+import MovieListSkeleton from "@/components/MovieList/MovieListSkeleton";
 import {
   fetchFreshExploreMovies,
   getDiscoverNavigation,
@@ -30,7 +31,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   const [isCompactViewport, setIsCompactViewport] = useState(false);
 
   const useHook = HOOK_MAP[hookName];
-  const { data: response, error } = useHook?.() || {};
+  const { data: response, error, isLoading } = useHook?.() || {};
   const {
     dialogState,
     dialogStack,
@@ -141,6 +142,10 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
 
   if (!useHook) {
     return null;
+  }
+
+  if (isLoading) {
+    return <MovieListSkeleton title={title} />;
   }
 
   if (error) {

@@ -49,7 +49,12 @@ const Banner = () => {
   const isFavoritesPage = pathname.includes("/favorites");
 
   // retry: false disables TanStack's own retry loop — we handle retries manually below
-  const { data: movie, error, isLoading, refetch } = useBanner("all", { retry: false });
+  const {
+    data: movie,
+    error,
+    isLoading,
+    refetch,
+  } = useBanner("all", { retry: false });
 
   useEffect(() => {
     // Still fetching or data is already good — nothing to do

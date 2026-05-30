@@ -168,7 +168,7 @@ export default function MovieCardHoverOverlay({
           sizes="(max-width: 768px) 320px, (max-width: 1024px) 380px, 420px"
           src={backdropUrl}
           alt={data?.title || "Movie backdrop"}
-          fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 bg-zinc-800 rounded-md"
+          fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 bg-zinc-800/40 rounded-md"
         />
 
         {/* Video Player */}

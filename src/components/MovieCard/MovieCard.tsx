@@ -109,7 +109,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
     >
       <button
         onClick={handleTitleDialog}
-        className={`relative w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden${imageLoaded ? "" : " bg-zinc-800"}`}
+        className={`relative w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden${imageLoaded ? "" : " bg-zinc-800/40"}`}
         aria-label={`View details for ${data?.title || "this title"}`}
       >
         <RemoteImage
@@ -123,7 +123,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
           priority={isFirst}
           placeholder="empty"
           onLoad={() => setImageLoaded(true)}
-          fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base bg-zinc-800 rounded-md"
+          fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base bg-zinc-800/40 rounded-md"
         />
       </button>
 

@@ -10,7 +10,7 @@ type RemoteImageProps = Omit<ImageProps, "src" | "alt"> & {
 };
 
 const DEFAULT_FALLBACK_CLASS =
-  "w-full h-full flex items-center justify-center text-gray-400 text-sm bg-zinc-800 rounded-md";
+  "w-full h-full flex items-center justify-center text-gray-400 text-sm bg-zinc-800/40 rounded-md";
 
 export default function RemoteImage({
   src,

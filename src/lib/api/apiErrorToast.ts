@@ -55,9 +55,7 @@ const NETWORK_ERROR_TOAST: ToastEntry = {
 };
 
 export interface ApiErrorToastOptions {
-
   status?: number;
-
   suppress?: boolean;
 }
 

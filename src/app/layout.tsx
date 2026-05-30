@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
+import { Toaster } from "sonner";
 import QueryProvider from "@/lib/query/QueryProvider";
 import { VideoProvider } from "@/contexts/VideoContext";
 import { TransitionProvider } from "@/contexts/TransitionContext";
@@ -117,6 +118,14 @@ export default function RootLayout({
             <TransitionProvider>{children}</TransitionProvider>
           </VideoProvider>
         </QueryProvider>
+        <Toaster
+          position="bottom-right"
+          theme="dark"
+          richColors
+          toastOptions={{
+            style: { background: "#27272a" },
+          }}
+        />
       </body>
     </html>
   );

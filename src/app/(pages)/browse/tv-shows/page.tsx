@@ -40,8 +40,6 @@ export default async function TvShowsPage() {
             hookName: "recentlyAddedTvShows",
           },
           { title: "Latest TV Shows", hookName: "latestTvShows" },
-          { title: "Trending TV Shows", hookName: "trendingTvShows" },
-          { title: "Popular TV Shows", hookName: "popularTvShows" },
         ]}
       />
     </HydrationBoundary>

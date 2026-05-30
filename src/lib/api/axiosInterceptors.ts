@@ -2,9 +2,19 @@ import { AxiosError, AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import { logger } from "@/lib/logger/logger";
 import { HTTP } from "@/constants/common";
 
+// Extend axios config so callers can opt out of network-error console logging
+// for exploratory / fallback requests.
+declare module "axios" {
+  interface AxiosRequestConfig {
+    _suppressNetworkErrorLog?: boolean;
+  }
+}
+
 /** Extend config metadata so we can attach a request start timestamp. */
 interface TimedAxiosRequestConfig extends InternalAxiosRequestConfig {
   _startMs?: number;
+  /** Set to true on exploratory/fallback requests to suppress network-error console noise. */
+  _suppressNetworkErrorLog?: boolean;
 }
 
 export function configureRequestInterceptor(instance: AxiosInstance): void {
@@ -56,7 +66,9 @@ export function configureResponseInterceptor(
       } else if (status === 429) {
         logger.warn(`[${apiName}] rate limited`, cfg?.url);
       } else if (!error.response) {
-        logger.error(`[${apiName}] network error`, cfg?.url);
+        if (!cfg?._suppressNetworkErrorLog) {
+          logger.error(`[${apiName}] network error`, cfg?.url);
+        }
       }
       return Promise.reject(error);
     },

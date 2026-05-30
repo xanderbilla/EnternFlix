@@ -99,6 +99,8 @@ const MovieCard: React.FC<MovieCardProps> = ({
     return getPositionClass(isFirst || false, isLast || false);
   };
 
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <div
       ref={cardRef}
@@ -107,7 +109,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
     >
       <button
         onClick={handleTitleDialog}
-        className="relative w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden"
+        className={`relative w-full h-full border-0 p-0 cursor-pointer block rounded-md overflow-hidden${imageLoaded ? "" : " bg-zinc-800"}`}
         aria-label={`View details for ${data?.title || "this title"}`}
       >
         <RemoteImage
@@ -120,6 +122,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
           loading={isFirst ? "eager" : "lazy"}
           priority={isFirst}
           placeholder="empty"
+          onLoad={() => setImageLoaded(true)}
           fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 text-sm md:text-base bg-zinc-800 rounded-md"
         />
       </button>

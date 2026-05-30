@@ -148,19 +148,7 @@ const MovieList: React.FC<MovieListProps> = ({ hookName, title }) => {
   }
 
   if (!movies || movies.length === 0) {
-    return (
-      <div className="mt-4 space-y-4 px-4 md:px-12">
-        <div className="h-5 w-40 rounded bg-zinc-800 animate-pulse" />
-        <div className="flex gap-2 overflow-hidden">
-          {Array.from({ length: 7 }).map((_, i) => (
-            <div
-              key={i}
-              className="flex-none w-[130px] sm:w-[160px] md:w-[200px] lg:w-[240px] aspect-video rounded bg-zinc-800 animate-pulse"
-            />
-          ))}
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

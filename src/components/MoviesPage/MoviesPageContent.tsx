@@ -113,6 +113,7 @@ export default function MoviesPageContent({
                 alt={heroTitle}
                 fill
                 priority
+                loading="eager"
                 sizes="100vw"
                 className="absolute inset-0 h-full w-full object-cover object-center"
               />

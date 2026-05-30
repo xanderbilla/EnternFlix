@@ -18,7 +18,7 @@ import {
   DynamicMovieCardActionButtons as MovieCardActionButtons,
   DynamicMovieCardMetadata as MovieCardMetadata,
 } from "@/utils/dynamicImports";
-import { memo } from "react";
+import { memo, useState } from "react";
 
 function MovieGrid({
   movies,
@@ -45,6 +45,7 @@ function MovieGrid({
   const MovieCardItem = ({ movie, index }: { movie: Movie; index: number }) => {
     const backdropUrl = getImageUrl(movie?.backdropPath, "w780");
     const positionClass = getCardPositionClass(index, columns);
+    const [imageLoaded, setImageLoaded] = useState(false);
 
     return (
       <div
@@ -55,7 +56,7 @@ function MovieGrid({
         }`}
       >
         <button
-          className="w-full h-full border-0 p-0 cursor-pointer block rounded overflow-hidden relative"
+          className={`w-full h-full border-0 p-0 cursor-pointer block rounded overflow-hidden relative${imageLoaded ? "" : " bg-zinc-800"}`}
           onClick={() => onMovieClick(movie.id)}
           onMouseEnter={onCardHover}
           aria-label={`View details for ${movie?.title || "this title"}`}
@@ -67,6 +68,7 @@ function MovieGrid({
             width={780}
             height={439}
             loading={index < eagerLoadCount ? "eager" : "lazy"}
+            onLoad={() => setImageLoaded(true)}
             fallbackClassName="w-full h-full flex items-center justify-center text-gray-400 text-sm bg-gray-800 rounded"
           />
         </button>

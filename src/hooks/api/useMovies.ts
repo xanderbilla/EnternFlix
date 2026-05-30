@@ -290,9 +290,10 @@ export const useGenresAttributes = (contentType: "movie" | "tv") =>
     queryKey: queryKeys.attributesGenres(contentType),
     staleTime: Infinity,
     queryFn: async () => {
-      const fetchAttributeItems = async (type: string) => {
+      const fetchAttributeItems = async (type: string, suppressLog = false) => {
         const { data } = await customAxios.get<AttributesResponse>(
           requests.fetchAttributes(type),
+          suppressLog ? { _suppressNetworkErrorLog: true } : undefined,
         );
 
         const payload = data.data;
@@ -312,20 +313,24 @@ export const useGenresAttributes = (contentType: "movie" | "tv") =>
         return [];
       };
 
-      const [genres, upperGenre, lowerGenre] = await Promise.allSettled([
-        fetchAttributeItems("genres"),
-        fetchAttributeItems("GENRE"),
-        fetchAttributeItems("genre"),
-      ]);
-
-      const allAttributes =
-        (genres.status === "fulfilled" && genres.value.length > 0
-          ? genres.value
-          : null) ??
-        (upperGenre.status === "fulfilled" && upperGenre.value.length > 0
-          ? upperGenre.value
-          : null) ??
-        (lowerGenre.status === "fulfilled" ? lowerGenre.value : []);
+      // Try each key variant in order, short-circuiting on the first success.
+      // All calls use _suppressNetworkErrorLog so exploratory failures stay out
+      // of the console; only a genuine server error (5xx) surfaces as a log.
+      let allAttributes: ContentAttribute[] = [];
+      for (const [index, type] of (
+        ["genres", "GENRE", "genre"] as const
+      ).entries()) {
+        try {
+          const items = await fetchAttributeItems(type, true);
+          if (items.length > 0) {
+            allAttributes = items;
+            break;
+          }
+        } catch {
+          // Last variant exhausted — stay with empty array
+          if (index === 2) allAttributes = [];
+        }
+      }
 
       const expectedContentType = contentType === "movie" ? "movie" : "tv";
 

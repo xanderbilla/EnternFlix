@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.27.0 - 2026-05-30
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.27.0
+Commit SHA: 3251203f4b4e71aea684d754b30f8567f87a1511
+
+Changes:
+- feat(ui): remove skeletons, add per-card bg-zinc-800 with onLoad fade (3251203)
+
 ## v0.26.0 - 2026-05-29
 
 Environment: dev

@@ -140,11 +140,15 @@ export const useRandomContent = () => {
   });
 };
 
-export const useBanner = (type: string = "all") =>
+export const useBanner = (
+  type: string = "all",
+  options?: { retry?: boolean | number },
+) =>
   useQuery<Movie, Error>({
     queryKey: queryKeys.banner(type),
     staleTime: STALE_TIMES.CONTENT,
     placeholderData: keepPreviousData,
+    ...(options?.retry !== undefined && { retry: options.retry }),
     queryFn: async () => {
       const { data } = await customAxios.get<MovieResponse>(
         requests.fetchBanner(type),

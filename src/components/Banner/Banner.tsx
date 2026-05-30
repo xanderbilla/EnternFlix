@@ -14,6 +14,7 @@ import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText, getContentRating } from "@/utils/contentHelpers";
 import { config } from "@/lib/env/env";
+import { toast } from "sonner";
 import { useBanner } from "@/hooks/api/useMovies";
 import { usePlayback } from "@/hooks/api/usePlayback";
 import { DynamicBannerContent as BannerContent } from "@/utils/dynamicImports";
@@ -30,6 +31,8 @@ const Banner = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
+  const retryCount = useRef(0);
+  const retryScheduled = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const {
@@ -45,13 +48,33 @@ const Banner = () => {
 
   const isFavoritesPage = pathname.includes("/favorites");
 
-  const { data: movie, error, isLoading, refetch } = useBanner("all");
+  // retry: false disables TanStack's own retry loop — we handle retries manually below
+  const { data: movie, error, isLoading, refetch } = useBanner("all", { retry: false });
 
   useEffect(() => {
-    if (!isLoading && (error || !movie?.backdropPath)) {
-      const timer = setTimeout(() => refetch(), 3000);
-      return () => clearTimeout(timer);
+    // Still fetching or data is already good — nothing to do
+    if (isLoading || (movie?.backdropPath && !error)) return;
+    // A retry timer is already pending — don't stack another one
+    if (retryScheduled.current) return;
+
+    if (retryCount.current < 2) {
+      retryScheduled.current = true;
+      const timer = setTimeout(() => {
+        retryCount.current += 1;
+        retryScheduled.current = false;
+        refetch();
+      }, 3000);
+      return () => {
+        clearTimeout(timer);
+        retryScheduled.current = false;
+      };
     }
+
+    // All 3 retries exhausted — inform the user once
+    toast.info("Featured content unavailable right now.", {
+      description: "Check back in a moment.",
+      duration: 5000,
+    });
   }, [isLoading, error, movie?.backdropPath, refetch]);
 
   const contentType = movie?.contentType === "TV" ? "tv" : "movie";
@@ -141,12 +164,7 @@ const Banner = () => {
   }
 
   if (isLoading || error || !movie?.backdropPath) {
-    return (
-      <div
-        className="relative h-[70vh] sm:h-[80vh] md:h-[92vh] lg:h-[100vh] bg-zinc-900"
-        aria-hidden="true"
-      />
-    );
+    return null;
   }
 
   const movieTitle = movie.title ?? "Untitled";

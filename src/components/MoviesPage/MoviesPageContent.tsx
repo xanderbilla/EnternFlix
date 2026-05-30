@@ -134,32 +134,20 @@ export default function MoviesPageContent({
               {pageTitle}
             </h1>
 
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => setIsGenresOpen((current) => !current)}
-                className="flex items-center gap-2 border border-white/70 bg-black/65 px-2.5 py-1.5 text-white font-medium text-[13px] md:text-sm leading-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
-                aria-label="Select genre"
-              >
-                <span>{selectedGenreLabel}</span>
-                <span className="inline-block h-0 w-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-current" />
-              </button>
+            {!isGenresLoading && !isGenresError && genreOptions.length > 0 && (
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsGenresOpen((current) => !current)}
+                  className="flex items-center gap-2 border border-white/70 bg-black/65 px-2.5 py-1.5 text-white font-medium text-[13px] md:text-sm leading-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+                  aria-label="Select genre"
+                >
+                  <span>{selectedGenreLabel}</span>
+                  <span className="inline-block h-0 w-0 border-l-[4px] border-r-[4px] border-t-[5px] border-l-transparent border-r-transparent border-t-current" />
+                </button>
 
-              {isGenresOpen && (
-                <div className="absolute left-0 top-full -mt-px w-[min(90vw,560px)] max-h-80 overflow-y-auto rounded-[2px] border border-zinc-700 bg-black/95 p-2.5 shadow-xl z-30">
-                  {isGenresLoading ? (
-                    <div className="px-2 py-1 text-zinc-400 text-[12px] md:text-[13px]">
-                      Loading genres...
-                    </div>
-                  ) : isGenresError ? (
-                    <div className="px-2 py-1 text-red-300 text-[12px] md:text-[13px]">
-                      Failed to load genres
-                    </div>
-                  ) : genreOptions.length === 0 ? (
-                    <div className="px-2 py-1 text-zinc-400 text-[12px] md:text-[13px]">
-                      No genres
-                    </div>
-                  ) : (
+                {isGenresOpen && (
+                  <div className="absolute left-0 top-full -mt-px w-[min(90vw,560px)] max-h-80 overflow-y-auto rounded-[2px] border border-zinc-700 bg-black/95 p-2.5 shadow-xl z-30">
                     <div className="grid grid-cols-1 gap-x-3 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
                       <button
                         type="button"
@@ -187,10 +175,10 @@ export default function MoviesPageContent({
                         </button>
                       ))}
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           <div className="absolute bottom-4 md:bottom-6 lg:bottom-8 left-0 right-0 z-20 px-4 sm:px-6 md:px-16">

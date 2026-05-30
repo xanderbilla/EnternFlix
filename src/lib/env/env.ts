@@ -15,13 +15,14 @@
  */
 
 type AppEnv = "development" | "test" | "production";
+type LogLevel = "debug" | "info" | "warn" | "error" | "off";
 
 interface AppConfig {
   appEnv: AppEnv;
   isProd: boolean;
   isDev: boolean;
   isTest: boolean;
-  enableLogging: boolean;
+  logLevel: LogLevel;
   app: {
     // CI-injected build version, e.g. "v1.4.2". Empty string in local dev.
     version: string;
@@ -54,11 +55,6 @@ function withDefault(value: string | undefined, fallback: string): string {
   return value && value.length > 0 ? value : fallback;
 }
 
-function parseBool(value: string | undefined, fallback: boolean): boolean {
-  if (value === undefined) return fallback;
-  return value === "true" || value === "1";
-}
-
 function parseInteger(value: string | undefined, fallback: number): number {
   if (!value) return fallback;
   const n = Number.parseInt(value, 10);
@@ -73,6 +69,18 @@ function parseList(value: string | undefined): string[] {
     .filter(Boolean);
 }
 
+const VALID_LOG_LEVELS: LogLevel[] = ["debug", "info", "warn", "error", "off"];
+
+function parseLogLevel(
+  value: string | undefined,
+  fallback: LogLevel,
+): LogLevel {
+  if (value && (VALID_LOG_LEVELS as string[]).includes(value)) {
+    return value as LogLevel;
+  }
+  return fallback;
+}
+
 const nodeEnv = (process.env.NODE_ENV ?? "development") as AppEnv;
 
 export const config: AppConfig = {
@@ -80,9 +88,9 @@ export const config: AppConfig = {
   isProd: nodeEnv === "production",
   isDev: nodeEnv === "development",
   isTest: nodeEnv === "test",
-  enableLogging: parseBool(
-    process.env.NEXT_PUBLIC_ENABLE_LOGGING,
-    nodeEnv !== "production",
+  logLevel: parseLogLevel(
+    process.env.NEXT_PUBLIC_LOG_LEVEL,
+    nodeEnv === "production" ? "error" : "debug",
   ),
   app: {
     version: withDefault(process.env.NEXT_PUBLIC_APP_VERSION, ""),
@@ -109,4 +117,4 @@ export const config: AppConfig = {
   },
 };
 
-export type { AppConfig, AppEnv };
+export type { AppConfig, AppEnv, LogLevel };

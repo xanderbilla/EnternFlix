@@ -14,6 +14,7 @@ export const usePlayback = (
     queryFn: async () => {
       const response = await customAxios.get<PlaybackResponse>(
         requests.fetchPlayback(contentType, contentId),
+        { _suppressNetworkErrorLog: true },
       );
       if (!response.data.data) {
         throw new Error("Playback data unavailable");

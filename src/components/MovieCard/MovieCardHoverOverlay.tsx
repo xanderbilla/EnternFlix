@@ -38,13 +38,13 @@ export default function MovieCardHoverOverlay({
   const getVideoUrl = useCallback((assets?: Asset[]): string | null => {
     if (!assets || assets.length === 0) return null;
 
-    const priority: AssetType[] = ["TRAILER", "TEASER", "CLIP", "PROMO", "BTS"];
+    const priority: AssetType[] = ["CLIP", "TEASER", "TRAILER", "PROMO", "BTS"];
 
     for (const assetType of priority) {
       const asset = assets.find((a) => a.type === assetType);
       if (asset && asset.keys.length > 0) {
         const randomIndex = Math.floor(Math.random() * asset.keys.length);
-        return constructVideoUrl(asset.keys[randomIndex]);
+        return constructVideoUrl(asset.keys[randomIndex].value);
       }
     }
 

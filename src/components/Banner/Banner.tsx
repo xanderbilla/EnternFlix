@@ -13,7 +13,8 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText, getContentRating } from "@/utils/contentHelpers";
-import { config } from "@/lib/env/env";
+import { constructVideoUrl } from "@/utils/videoHelpers";
+import type { Asset, AssetType } from "@/types/movie";
 import { toast } from "sonner";
 import { useBanner } from "@/hooks/api/useMovies";
 import { usePlayback } from "@/hooks/api/usePlayback";
@@ -89,6 +90,19 @@ const Banner = () => {
     !!movie?.id,
   );
 
+  const getVideoUrl = useCallback((assets?: Asset[]): string | null => {
+    if (!assets || assets.length === 0) return null;
+    const priority: AssetType[] = ["CLIP", "TEASER", "TRAILER", "PROMO", "BTS"];
+    for (const assetType of priority) {
+      const asset = assets.find((a) => a.type === assetType);
+      if (asset && asset.keys.length > 0) {
+        const randomIndex = Math.floor(Math.random() * asset.keys.length);
+        return constructVideoUrl(asset.keys[randomIndex].value);
+      }
+    }
+    return null;
+  }, []);
+
   useEffect(() => {
     if (!movie) return;
 
@@ -102,12 +116,11 @@ const Banner = () => {
       setShowContentRating(true);
     }, 1000);
 
-    const rawVideoPath = playback?.playback?.preview?.video ?? null;
-    const videoSrc = rawVideoPath
-      ? rawVideoPath.startsWith("http")
-        ? rawVideoPath
-        : `${config.customApi.imageBaseUrl}${rawVideoPath.startsWith("/") ? rawVideoPath.slice(1) : rawVideoPath}`
-      : null;
+    const previewPath = playback?.playback?.preview?.video;
+    const videoSrc = previewPath
+      ? constructVideoUrl(previewPath)
+      : getVideoUrl(movie.assets);
+
     if (videoSrc) {
       const videoTimer = setTimeout(() => {
         setVideoUrl(videoSrc);
@@ -120,7 +133,7 @@ const Banner = () => {
     }
 
     return () => clearTimeout(contentRatingTimer);
-  }, [movie, playback]);
+  }, [movie, playback, getVideoUrl]);
 
   useEffect(() => {
     if (videoRef.current) {

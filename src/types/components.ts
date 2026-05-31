@@ -437,6 +437,7 @@ export interface DialogHeaderProps {
   isLoading?: boolean;
   verified?: boolean;
   gender?: string;
+  roles?: string[];
 }
 
 export interface CastDialogHeaderProps {
@@ -448,6 +449,7 @@ export interface CastDialogHeaderProps {
   isLoading?: boolean;
   verified?: boolean;
   gender?: string;
+  roles?: string[];
 }
 
 export interface SimpleDialogHeaderProps {

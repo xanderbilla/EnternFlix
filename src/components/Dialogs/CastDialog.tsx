@@ -55,6 +55,7 @@ export default function CastDialog({
             isLoading={!personData}
             verified={personData?.verified}
             gender={personData?.gender}
+            roles={personData?.roles}
           />
           <CastInfo
             castId={castId}

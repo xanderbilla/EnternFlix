@@ -14,6 +14,7 @@ export default function DialogHeader({
   isLoading = false,
   verified,
   gender,
+  roles,
 }: DialogHeaderProps) {
   if (variant === "cast") {
     return (
@@ -26,6 +27,7 @@ export default function DialogHeader({
         isLoading={isLoading}
         verified={verified}
         gender={gender}
+        roles={roles}
       />
     );
   }

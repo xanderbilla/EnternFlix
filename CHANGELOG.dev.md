@@ -1,5 +1,24 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.30.0 - 2026-05-31
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.30.0
+Commit SHA: fa4bdfebd9546a5f894d21a74b46f4cd051a5ff3
+
+Changes:
+- style(icons): apply prettier formatting to SVG icon components (fa4bdfe)
+- fix(banner): use playback preview with asset fallback for video URL (969cb23)
+- fix(video): use AssetKey.value and CLIP-first asset priority order (d424458)
+- feat(cast-info): reorder fields and add aliases, career, measurements (c673e09)
+- feat(types): update Movie, Asset, and Person schema to match API (08d2610)
+- feat(cast-dialog): add role icons and tooltips to dialog header (8507d2d)
+- feat(ui): add reusable CSS-only Tooltip component (bdffc23)
+- feat(icons): add PerformerIcon and ContentCreatorIcon SVG components (d630f0a)
+- fix(search): prevent input reset while typing on /search page (99c3173)
+- chore(docker): normalize container port from 8443 to 3000 (4a1e525)
+
 ## v0.29.0 - 2026-05-30
 
 Environment: dev

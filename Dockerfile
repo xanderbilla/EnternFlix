@@ -48,7 +48,7 @@ ENV NODE_ENV=production \
     NEXT_TELEMETRY_DISABLED=1 \
     NEXT_PUBLIC_APP_VERSION=$NEXT_PUBLIC_APP_VERSION \
     NEXT_PUBLIC_APP_ENV=$NEXT_PUBLIC_APP_ENV \
-    PORT=8443 \
+    PORT=3000 \
     HOSTNAME=0.0.0.0
 RUN addgroup --system --gid 1001 nodejs \
     && adduser --system --uid 1001 nextjs
@@ -58,7 +58,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 # Runtime entrypoint: replaces placeholder URLs with real env var values
 COPY --chmod=755 entrypoint.sh /entrypoint.sh
 USER nextjs
-EXPOSE 8443
+EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost:8443/ || exit 1
+    CMD wget --quiet --tries=1 --spider http://localhost:3000/ || exit 1
 ENTRYPOINT ["/entrypoint.sh"]

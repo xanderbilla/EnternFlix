@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev --port 8443",
     "build": "next build",
-    "start": "PORT=8443 HOSTNAME=localhost node .next/standalone/server.js",
+    "start": "PORT=8443 node .next/standalone/server.js",
     "lint": "eslint \"src/**/*.{ts,tsx}\" --max-warnings=0",
     "lint:fix": "eslint \"src/**/*.{ts,tsx}\" --fix",
     "a11y:qa": "npm run lint && npm run typecheck",
@@ -22,7 +22,7 @@
     "version:bump": "node scripts/version-bump.mjs",
     "ci": "npm run lint && npm run format:check && npm run typecheck && npm run test && npm run build",
     "docker:build": "docker build -t enternflix:latest .",
-    "docker:run": "docker run --rm -p 8443:8443 --env-file .env.local --name enternflix enternflix:latest",
+    "docker:run": "docker run --rm -p 3000:3000 --env-file .env.local --name enternflix enternflix:latest",
     "docker:up": "docker compose up --build -d",
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f web"

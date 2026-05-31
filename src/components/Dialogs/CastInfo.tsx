@@ -87,6 +87,32 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
 
               {/* Right Column - Quick Info */}
               <div>
+                {personData.aliases && personData.aliases.length > 0 && (
+                  <div className="text-sm mb-2">
+                    <span className="text-gray-400">Also Known As: </span>
+                    <span className="text-white/80">
+                      {personData.aliases.slice(0, 4).map((alias, index) => (
+                        <span key={alias}>
+                          {alias}
+                          {index <
+                            Math.min(personData.aliases!.length, 4) - 1 && ", "}
+                        </span>
+                      ))}
+                      {personData.aliases.length > 4 && (
+                        <>
+                          {", "}
+                          <button
+                            onClick={handleScrollToAbout}
+                            className="italic hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
+                          >
+                            more
+                          </button>
+                        </>
+                      )}
+                    </span>
+                  </div>
+                )}
+
                 {personData.careerStatus && (
                   <div className="text-sm mb-2">
                     <span className="text-gray-400">Career Status: </span>
@@ -95,6 +121,46 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                     </span>
                   </div>
                 )}
+
+                {(personData.debutYear ?? personData.career?.startYear) && (
+                  <div className="text-sm mb-2">
+                    <span className="text-gray-400">Debut Year: </span>
+                    <span className="text-white/80">
+                      {personData.debutYear ?? personData.career?.startYear}
+                    </span>
+                  </div>
+                )}
+
+                {personData.career?.previousProfession && (
+                  <div className="text-sm mb-2">
+                    <span className="text-gray-400">Previous Profession: </span>
+                    <span className="text-white/80">
+                      {personData.career.previousProfession}
+                    </span>
+                  </div>
+                )}
+
+                {personData.career?.knownFor &&
+                  personData.career.knownFor.length > 0 && (
+                    <div className="text-sm mb-2">
+                      <span className="text-gray-400">Known For: </span>
+                      <span className="text-white/80">
+                        {personData.career.knownFor.slice(0, 5).join(", ")}
+                        {personData.career.knownFor.length > 5 && (
+                          <>
+                            {", "}
+                            <button
+                              onClick={handleScrollToAbout}
+                              className="italic hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
+                            >
+                              more
+                            </button>
+                          </>
+                        )}
+                      </span>
+                    </div>
+                  )}
+
                 {personData.tags && personData.tags.length > 0 && (
                   <div className="text-sm">
                     <span className="text-gray-400">Tags: </span>
@@ -132,6 +198,15 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
               </h2>
 
               <div className="space-y-2">
+                {personData.aliases && personData.aliases.length > 0 && (
+                  <div className="text-sm">
+                    <span className="text-gray-400">Also Known As: </span>
+                    <span className="text-white/80">
+                      {personData.aliases.join(", ")}
+                    </span>
+                  </div>
+                )}
+
                 {formattedBirthDate && (
                   <div className="text-sm">
                     <span className="text-gray-400">Birth Date: </span>
@@ -166,11 +241,20 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                   </div>
                 )}
 
-                {personData.debutYear && (
+                {personData.weight && (
                   <div className="text-sm">
-                    <span className="text-gray-400">Debut Year: </span>
+                    <span className="text-gray-400">Weight: </span>
                     <span className="text-white/80">
-                      {personData.debutYear}
+                      {personData.weight} kg
+                    </span>
+                  </div>
+                )}
+
+                {personData.stageName && (
+                  <div className="text-sm">
+                    <span className="text-gray-400">Stage Name: </span>
+                    <span className="text-white/80">
+                      {personData.stageName}
                     </span>
                   </div>
                 )}
@@ -188,7 +272,9 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                   personData.measurements?.waist ||
                   personData.measurements?.hips) && (
                   <div className="text-sm">
-                    <span className="text-gray-400">Measurements: </span>
+                    <span className="text-gray-400">
+                      {`Measurements${personData.measurements?.unit ? ` (${personData.measurements.unit})` : ""}: `}
+                    </span>
                     <span className="text-white/80">
                       {[
                         personData.measurements.bust &&
@@ -251,6 +337,16 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                             {index < personData.specialties!.length - 1 && ", "}
                           </span>
                         ))}
+                      </span>
+                    </div>
+                  )}
+
+                {personData.career?.knownFor &&
+                  personData.career.knownFor.length > 0 && (
+                    <div className="text-sm">
+                      <span className="text-gray-400">Known For: </span>
+                      <span className="text-white/80">
+                        {personData.career.knownFor.join(", ")}
                       </span>
                     </div>
                   )}

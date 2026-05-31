@@ -23,6 +23,7 @@ export function useNavbarSearch() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const prevPathnameRef = useRef(pathname);
   const queryFromUrl = (searchParams.get("q") ?? "").trim();
   const scopeFromUrl = normalizeScope(searchParams.get("in"));
   const [isSearchOpen, setIsSearchOpen] = useState(
@@ -32,12 +33,20 @@ export function useNavbarSearch() {
   const [selectedScope, setSelectedScope] = useState<SearchScope>(scopeFromUrl);
 
   useEffect(() => {
-    // Sync local state when URL params change (e.g. back/forward navigation or
-    // a direct link). Calling setState inside useEffect is intentional here —
-    // URL params are the authoritative source of truth and we must mirror them
-    // into controlled inputs after the navigation commits.
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSearchValue(queryFromUrl);
+    const prevPathname = prevPathnameRef.current;
+    prevPathnameRef.current = pathname;
+
+    // On /search the input drives the URL (via debounce), not the other way
+    // around. Syncing searchValue from queryFromUrl while already on /search
+    // would overwrite keystrokes typed ahead of the debounce and reset the
+    // cursor. Only sync when arriving at /search from another page, or when
+    // navigating on any other page (back/forward, direct links).
+    const arrivedAtSearch =
+      pathname === "/search" && prevPathname !== "/search";
+    if (pathname !== "/search" || arrivedAtSearch) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSearchValue(queryFromUrl);
+    }
     setSelectedScope(scopeFromUrl);
 
     if (pathname === "/search" && queryFromUrl) {

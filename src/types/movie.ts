@@ -26,9 +26,14 @@ export interface Audit {
 
 export type AssetType = "TRAILER" | "TEASER" | "CLIP" | "PROMO" | "BTS";
 
+export interface AssetKey {
+  id: string;
+  value: string;
+}
+
 export interface Asset {
   type: AssetType;
-  keys: string[];
+  keys: AssetKey[];
 }
 
 export interface Movie {
@@ -59,6 +64,11 @@ export interface Movie {
   status?: string;
   tagline?: string;
   studios?: Studio[];
+  stats?: {
+    totalViews?: number;
+    totalLikes?: number;
+    averageRating?: number;
+  };
 
   audit?: Audit;
 }
@@ -67,6 +77,7 @@ export interface Person {
   id: string;
   contentType: "PERSON";
   name: string;
+  legalName?: string;
   roles: string[];
   stageName?: string;
   bio?: string;
@@ -75,12 +86,14 @@ export interface Person {
   nationality?: string;
   gender?: string;
   height?: number;
+  weight?: number;
   verified: boolean;
   active: boolean;
   debutYear?: number;
   careerStatus?: string;
   profilePath?: string;
   backdropPath?: string;
+  aliases?: string[];
   measurements?: {
     bust?: number;
     waist?: number;
@@ -89,6 +102,30 @@ export interface Person {
     bodyType?: string;
     eyeColor?: string;
     hairColor?: string;
+  };
+  career?: {
+    startYear?: number;
+    previousProfession?: string;
+    knownFor?: string[];
+  };
+  socialPresence?: Array<{
+    platformId: string;
+    platform: string;
+    username: string;
+    verified: boolean;
+    available: boolean;
+  }>;
+  stats?: {
+    totalProductions?: number | null;
+    totalViews?: number | null;
+    subscriberCount?: number | null;
+    followersCount?: number | null;
+    averageRating?: number | null;
+  };
+  sourceMetadata?: {
+    confidenceScore?: number;
+    sources?: string[];
+    notes?: string;
   };
   tags?: Tag[];
   categories?: Tag[];

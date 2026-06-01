@@ -81,8 +81,18 @@ const requests = {
 
     return `c/search?${params.join("&")}`;
   },
-  fetchPlayback: (contentType: string, contentId: string) =>
-    `c/play/${encPath(contentType.toLowerCase())}/${encPath(contentId)}`,
+  fetchPlayback: (
+    contentType: string,
+    contentId: string,
+    seasonId?: string | null,
+    episodeId?: string | null,
+  ) => {
+    const base = `c/play/${encPath(contentType.toLowerCase())}/${encPath(contentId)}`;
+    if (contentType.toLowerCase() === "tv" && seasonId && episodeId) {
+      return `${base}?season=${encQuery(seasonId)}&episode=${encQuery(episodeId)}`;
+    }
+    return base;
+  },
 };
 
 export default requests;

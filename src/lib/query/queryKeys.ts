@@ -7,8 +7,19 @@ export const queryKeys = {
   person: (id: string) => ["person", id] as const,
   personMovies: (id: string, type: string) =>
     ["personMovies", id, type] as const,
-  playback: (contentType: string, contentId: string) =>
-    ["playback", contentType, contentId] as const,
+  playback: (
+    contentType: string,
+    contentId: string,
+    seasonId?: string | null,
+    episodeId?: string | null,
+  ) =>
+    [
+      "playback",
+      contentType,
+      contentId,
+      seasonId ?? null,
+      episodeId ?? null,
+    ] as const,
 
   search: (
     query: string,

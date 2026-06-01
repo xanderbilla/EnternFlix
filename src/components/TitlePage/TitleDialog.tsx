@@ -29,7 +29,8 @@ export default function TitleDialog({
         onOpenCastDialog(idOrName, title, undefined, 10001);
       } else {
         // Navigate to genre page instead of opening discover dialog
-        router.push(`/browse/genre/${idOrName}`);
+        const qs = title ? `?name=${encodeURIComponent(title)}` : "";
+        router.push(`/browse/genre/${idOrName}${qs}`);
         onClose();
       }
     },

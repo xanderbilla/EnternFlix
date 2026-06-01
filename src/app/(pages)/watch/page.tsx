@@ -9,7 +9,12 @@ import { fetchTitleData } from "@/services/content/titleContent";
 const getTitle = cache(fetchTitleData);
 
 interface WatchPageProps {
-  searchParams: Promise<{ id?: string; type?: string }>;
+  searchParams: Promise<{
+    id?: string;
+    type?: string;
+    season?: string;
+    episode?: string;
+  }>;
 }
 
 const BASE_KEYWORDS = ["watch", "stream", "movie", "tv show"];
@@ -49,6 +54,8 @@ export default async function WatchPage({ searchParams }: WatchPageProps) {
   const id = params.id ?? null;
   const type =
     params.type === "movie" || params.type === "tv" ? params.type : null;
+  const seasonId = params.season ?? null;
+  const episodeId = params.episode ?? null;
 
   if (!id || !type) {
     notFound();
@@ -65,7 +72,12 @@ export default async function WatchPage({ searchParams }: WatchPageProps) {
   return (
     <>
       {titleJsonLd ? <JsonLd data={titleJsonLd} id="title-jsonld" /> : null}
-      <WatchPageContent contentId={id} contentType={type} />
+      <WatchPageContent
+        contentId={id}
+        contentType={type}
+        seasonId={seasonId}
+        episodeId={episodeId}
+      />
     </>
   );
 }

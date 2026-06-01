@@ -1,6 +1,7 @@
 "use client";
 
 import type { EpisodeItemProps } from "@/types/components";
+import { useTransition } from "@/contexts/TransitionContext";
 import { memo } from "react";
 
 export default function EpisodeItem({
@@ -8,9 +9,26 @@ export default function EpisodeItem({
   index,
   showAllEpisodes,
   hasBorder,
+  contentId,
 }: EpisodeItemProps) {
+  const { navigateWithTransition } = useTransition();
+
+  const handleClick = () => {
+    if (contentId && episode.seasonId && episode.episodeId) {
+      navigateWithTransition(
+        `/watch?id=${contentId}&type=tv&season=${episode.seasonId}&episode=${episode.episodeId}`,
+      );
+    }
+  };
+
   return (
     <div
+      role="button"
+      tabIndex={0}
+      onClick={handleClick}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") handleClick();
+      }}
       className={`flex items-center gap-4 p-4 cursor-pointer hover:bg-white/5 hover:rounded-md transition-all duration-300 ease-out ${
         hasBorder ? "border-b border-white/20" : ""
       }`}

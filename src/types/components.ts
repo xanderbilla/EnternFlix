@@ -49,6 +49,8 @@ export interface IconProps {
 export interface WatchPageContentProps {
   contentId: string;
   contentType: "movie" | "tv";
+  seasonId?: string | null;
+  episodeId?: string | null;
 }
 
 export interface MoviesPageContentProps {
@@ -376,6 +378,7 @@ export interface EpisodeItemProps {
   index: number;
   showAllEpisodes: boolean;
   hasBorder: boolean;
+  contentId?: string;
 }
 
 export interface CastDialogProps {

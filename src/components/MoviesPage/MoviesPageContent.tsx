@@ -166,7 +166,7 @@ export default function MoviesPageContent({
                           onClick={() => {
                             setIsGenresOpen(false);
                             router.push(
-                              `/browse/genre/${genre.id}?type=${contentType}`,
+                              `/browse/genre/${genre.id}?type=${contentType}&name=${encodeURIComponent(genre.name)}`,
                             );
                           }}
                           className="text-left px-2 py-0.5 text-[12px] md:text-[13px] leading-5 text-white/90 hover:text-white hover:underline hover:underline-offset-4 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"

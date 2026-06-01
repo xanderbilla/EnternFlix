@@ -11,6 +11,7 @@ import {
 } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useVideo } from "@/contexts/VideoContext";
 import { getImageUrl } from "@/utils/movieHelpers";
 import { truncateText, getContentRating } from "@/utils/contentHelpers";
 import { constructVideoUrl } from "@/utils/videoHelpers";
@@ -35,6 +36,9 @@ const Banner = () => {
   const retryCount = useRef(0);
   const retryScheduled = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const wasPlayingRef = useRef(false);
+
+  const { shouldPauseBanner } = useVideo();
 
   const {
     dialogState,
@@ -140,6 +144,22 @@ const Banner = () => {
       videoRef.current.muted = isMuted;
     }
   }, [isMuted]);
+
+  // Pause video and show backdrop when a dialog is open; resume when closed
+  useEffect(() => {
+    if (!videoRef.current || !videoUrl) return;
+    if (shouldPauseBanner) {
+      wasPlayingRef.current = !videoRef.current.paused;
+      videoRef.current.pause();
+      setIsVideoPlaying(false);
+    } else {
+      if (wasPlayingRef.current && !videoEnded) {
+        videoRef.current.play().catch(() => {});
+        setIsVideoPlaying(true);
+      }
+      wasPlayingRef.current = false;
+    }
+  }, [shouldPauseBanner, videoUrl, videoEnded]);
 
   // React Compiler cannot preserve these memoizations because `openInfoDialog`
   // is sourced from context (compiler bails on context-derived callables).

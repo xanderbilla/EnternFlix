@@ -111,7 +111,7 @@ export default function DialogAboutSection({
                 <span key={`${company.id}-${index}`}>
                   <button
                     onClick={() =>
-                      onExploreClick?.(company.name, company.name, false)
+                      onExploreClick?.(company.id, company.name, false)
                     }
                     className="hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
                   >

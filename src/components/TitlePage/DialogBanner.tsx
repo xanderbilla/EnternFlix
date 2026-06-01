@@ -79,6 +79,7 @@ const DialogBanner: React.FC<DialogBannerProps> = ({
             selectedSeason={selectedSeason}
             numberOfSeasons={numberOfSeasons}
             onSeasonChange={setSelectedSeason}
+            contentId={data?.id}
           />
         )}
 

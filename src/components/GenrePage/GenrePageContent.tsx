@@ -40,6 +40,9 @@ export default function GenrePageContent({
     ? rawSort
     : "";
 
+  // Name passed by the caller (info dialog, discover dialog, movies page) via ?name=
+  const nameFromUrl = searchParams.get("name") ?? "";
+
   const genreQueryType = contentType === "all" ? "movie" : contentType;
   const { data: genres } = useGenresAttributes(genreQueryType);
   const {
@@ -105,57 +108,72 @@ export default function GenrePageContent({
     openInfoDialog(movieId.toString(), 10000);
   };
 
-  const genreName = useMemo(
+  const genreNameFromList = useMemo(
     () => genres?.find((genre) => genre.id === genreId)?.name ?? "",
     [genres, genreId],
   );
 
+  // Priority: URL ?name= param (from info/discover dialog) → genres API list → movies metadata fallback
+  const genreName = useMemo(() => {
+    if (nameFromUrl) return nameFromUrl;
+    if (genreNameFromList) return genreNameFromList;
+    for (const movie of movies) {
+      const sources = [
+        ...(movie.genres ?? []),
+        ...(movie.tags ?? []),
+        ...(movie.moodTags ?? []),
+        ...(movie.casts ?? []),
+        ...(movie.studios ?? []),
+      ];
+      const match = sources.find((item) => item.id === genreId);
+      if (match) return match.name;
+    }
+    return "";
+  }, [nameFromUrl, genreNameFromList, genreId, movies]);
+
   return (
     <PageLayout showBanner={false} reserveTopPaddingWhenNoBanner={false}>
       <section className="relative z-10 pt-16 md:pt-[72px] pb-8 md:pb-12 bg-zinc-900 min-h-screen">
-        {genreName && (
-          <div className="sticky top-16 md:top-[72px] z-20 flex min-h-[68px] items-center px-4 sm:px-6 md:px-16 py-3 bg-zinc-900 transition duration-500">
-            <div className="flex items-center gap-2 text-white/70">
-              {contentType !== "all" && (
-                <>
-                  <Link
-                    href={
-                      contentType === "tv"
-                        ? "/browse/tv-shows"
-                        : "/browse/movies"
-                    }
-                    className="text-zinc-400 text-[13px] md:text-[16px] font-normal leading-none hover:text-zinc-200 transition-colors"
-                  >
-                    {contentType === "tv" ? "TV Shows" : "Movies"}
-                  </Link>
-                  <span className="text-zinc-400 text-[13px] md:text-[16px] font-normal leading-none">
-                    &gt;
-                  </span>
-                </>
-              )}
-              <h1 className="text-white text-lg sm:text-xl md:text-[22px] lg:text-[30px] font-medium leading-none">
-                {genreName}
-              </h1>
-            </div>
-
-            <div className="ml-auto">
-              <SortDropdown
-                value={selectedSort}
-                options={DISCOVER_SORT_OPTIONS}
-                onChange={handleSortChange}
-                buttonLabel="Sort By Title"
-                ariaLabel="Sort genre titles"
-                showOptionIcon={false}
-              />
-            </div>
+        <div className="sticky top-16 md:top-[72px] z-20 flex min-h-[68px] items-center px-4 sm:px-6 md:px-16 py-3 bg-zinc-900 transition duration-500">
+          <div className="flex items-center gap-2 text-white/70">
+            {contentType !== "all" && (
+              <>
+                <Link
+                  href={
+                    contentType === "tv" ? "/browse/tv-shows" : "/browse/movies"
+                  }
+                  className="text-zinc-400 text-[13px] md:text-[16px] font-normal leading-none hover:text-zinc-200 transition-colors"
+                >
+                  {contentType === "tv" ? "TV Shows" : "Movies"}
+                </Link>
+                <span className="text-zinc-400 text-[13px] md:text-[16px] font-normal leading-none">
+                  &gt;
+                </span>
+              </>
+            )}
+            <h1 className="text-white text-lg sm:text-xl md:text-[22px] lg:text-[30px] font-medium leading-none">
+              {genreName}
+            </h1>
           </div>
-        )}
+
+          <div className="ml-auto">
+            <SortDropdown
+              value={selectedSort}
+              options={DISCOVER_SORT_OPTIONS}
+              onChange={handleSortChange}
+              buttonLabel="Sort By Title"
+              ariaLabel="Sort genre titles"
+              showOptionIcon={false}
+            />
+          </div>
+        </div>
 
         <div className="px-4 sm:px-6 md:px-16">
           <MovieGrid
             movies={movies}
             onMovieClick={handleMovieClick}
             columns={6}
+            disableHover={true}
             disableAnimation={true}
             fullWidth={true}
             isLoading={isLoading}

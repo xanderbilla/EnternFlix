@@ -8,12 +8,14 @@ export const usePlayback = (
   contentType: "movie" | "tv",
   contentId: string,
   enabled: boolean = true,
+  seasonId?: string | null,
+  episodeId?: string | null,
 ) => {
   return useQuery<PlaybackResponse["data"]>({
-    queryKey: queryKeys.playback(contentType, contentId),
+    queryKey: queryKeys.playback(contentType, contentId, seasonId, episodeId),
     queryFn: async () => {
       const response = await customAxios.get<PlaybackResponse>(
-        requests.fetchPlayback(contentType, contentId),
+        requests.fetchPlayback(contentType, contentId, seasonId, episodeId),
         { _suppressNetworkErrorLog: true },
       );
       if (!response.data.data) {

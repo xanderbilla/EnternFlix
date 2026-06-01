@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 const SEARCH_RETURN_PATH_KEY = "enternflix-navbar-search-return-path";
@@ -22,6 +22,7 @@ export function useNavbarSearch() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const prevPathnameRef = useRef(pathname);
   const queryFromUrl = (searchParams.get("q") ?? "").trim();
@@ -107,7 +108,9 @@ export function useNavbarSearch() {
       const params = new URLSearchParams(searchParams.toString());
       params.set("q", trimmedQuery);
       params.set("in", selectedScope === "people" ? "people" : "all");
-      router.replace(`/search?${params.toString()}`);
+      startTransition(() => {
+        router.replace(`/search?${params.toString()}`);
+      });
     }, 350);
 
     return () => {
@@ -116,12 +119,12 @@ export function useNavbarSearch() {
   }, [
     isSearchOpen,
     pathname,
-    queryFromUrl,
     router,
     searchParams,
     searchValue,
     selectedScope,
     scopeFromUrl,
+    startTransition,
   ]);
 
   const handleSearchOpen = useCallback(() => {

@@ -22,11 +22,15 @@ import VideoPlayerStyles from "./VideoPlayerStyles";
 interface WatchPageContentProps {
   contentId: string;
   contentType: "movie" | "tv";
+  seasonId?: string | null;
+  episodeId?: string | null;
 }
 
 export default function WatchPageContent({
   contentId,
   contentType,
+  seasonId,
+  episodeId,
 }: WatchPageContentProps) {
   const router = useRouter();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,6 +43,8 @@ export default function WatchPageContent({
     contentType,
     contentId,
     true,
+    seasonId,
+    episodeId,
   );
 
   const { isLoading, error, showVideo, handleManifestParsed, handleError } =

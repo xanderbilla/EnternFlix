@@ -54,10 +54,13 @@ export interface DialogEpisodesListProps {
   selectedSeason: number;
   numberOfSeasons: number;
   onSeasonChange: (season: number) => void;
+  contentId?: string;
 }
 
 export interface DialogEpisode {
   id: number;
+  seasonId?: string;
+  episodeId?: string;
   title: string;
   duration: string;
   description: string;

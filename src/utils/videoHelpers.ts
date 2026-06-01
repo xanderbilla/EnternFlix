@@ -72,6 +72,20 @@ export function constructVideoUrl(basePath: string, baseUrl?: string): string {
   return `${normalizedBase}${path}`;
 }
 
+/**
+ * Appends a `_ctx` query param to a video URL so that different player
+ * surfaces (banner, dialog, hover) always have distinct URLs.  Browsers
+ * share a single media resource — including its current playback position —
+ * when two <video> elements have identical `src` values.  A unique context
+ * suffix forces the browser to treat each surface as a separate resource,
+ * preventing playback-time sync between unrelated players.
+ */
+export function withVideoContext(url: string, ctx: string): string {
+  if (!url) return url;
+  const separator = url.includes("?") ? "&" : "?";
+  return `${url}${separator}_ctx=${ctx}`;
+}
+
 export function isHLSSupported(): boolean {
   if (typeof window === "undefined") return false;
 

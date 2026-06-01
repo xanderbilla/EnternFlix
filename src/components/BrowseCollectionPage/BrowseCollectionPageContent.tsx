@@ -142,6 +142,7 @@ export default function BrowseCollectionPageContent({
             movies={movies}
             onMovieClick={handleMovieClick}
             columns={6}
+            disableHover={true}
             disableAnimation={true}
             fullWidth={true}
             isLoading={isLoading}

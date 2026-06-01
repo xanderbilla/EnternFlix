@@ -130,6 +130,7 @@ export default function SearchResults({
             movies={activeSearchRes}
             onMovieClick={handleMovieClick}
             columns={6}
+            disableHover={true}
             disableAnimation={true}
             fullWidth={true}
             eagerLoadCount={6}

@@ -24,7 +24,10 @@ export default function DiscoverDialog({
 
   const handleViewAll = () => {
     if (attributeId) {
-      router.push(`/browse/genre/${attributeId}`);
+      const nameParam = attributeName
+        ? `?name=${encodeURIComponent(attributeName)}`
+        : "";
+      router.push(`/browse/genre/${attributeId}${nameParam}`);
       onClose();
     }
   };

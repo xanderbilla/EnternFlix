@@ -12,6 +12,7 @@ function DialogEpisodesList({
   selectedSeason,
   numberOfSeasons,
   onSeasonChange,
+  contentId,
 }: DialogEpisodesListProps) {
   const [showAllEpisodes, setShowAllEpisodes] = useState(false);
 
@@ -40,9 +41,10 @@ function DialogEpisodesList({
         index={index}
         showAllEpisodes={showAllEpisodes}
         hasBorder={index < displayedEpisodes.length - 1}
+        contentId={contentId}
       />
     ),
-    [displayedEpisodes.length, showAllEpisodes],
+    [displayedEpisodes.length, showAllEpisodes, contentId],
   );
 
   return (
@@ -81,6 +83,7 @@ function DialogEpisodesList({
                         ? episodes.length - 1
                         : Math.min(INITIAL_EPISODES_COUNT, episodes.length) - 1)
                     }
+                    contentId={contentId}
                   />
                 </div>
               );

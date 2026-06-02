@@ -120,7 +120,7 @@ const Banner = () => {
       setShowContentRating(true);
     }, 1000);
 
-    const previewPath = playback?.playback?.preview?.video;
+    const previewPath = playback?.preview?.url;
     const videoSrc = previewPath
       ? constructVideoUrl(previewPath)
       : getVideoUrl(movie.assets);

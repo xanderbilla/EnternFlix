@@ -58,7 +58,7 @@ export default function DialogVideoSection({
             isMuted={isMuted}
             videoRef={videoRef}
             data={data}
-            previewVideoPath={playbackData?.playback?.preview?.video}
+            previewVideoPath={playbackData?.preview?.url}
             onVideoEnded={handleVideoEnded}
             onVideoLoaded={handleVideoLoaded}
           />

@@ -9,6 +9,7 @@ import { useControlFeedback } from "@/hooks/video/useControlFeedback";
 import { useControlsVisibility } from "@/hooks/video/useControlsVisibility";
 import { useVideoControls } from "@/hooks/video/useVideoControls";
 import { logger } from "@/lib/logger/logger";
+import { constructVideoUrl } from "@/utils/videoHelpers";
 import { useHLSPlayer } from "@/hooks/video/useHLSPlayer";
 import { useFullscreen } from "@/hooks/video/useFullscreen";
 import HLSVideoPlayer from "./HLSVideoPlayer";
@@ -69,8 +70,8 @@ export default function WatchPageContent({
   const { showControls, handleMouseMove, handleMouseLeave } =
     useControlsVisibility(isPlaying);
   const { currentSubtitle } = useSubtitles(
-    playbackData?.playback.subtitles.tracks || [],
-    playbackData?.playback.subtitles.defaultTrackId || null,
+    playbackData?.subtitles?.tracks || [],
+    playbackData?.subtitles?.defaultTrackId || null,
     currentTime,
   );
 
@@ -129,10 +130,12 @@ export default function WatchPageContent({
       />
 
       {/* Video Player */}
-      {playbackData && (
+      {playbackData?.streaming && (
         <HLSVideoPlayer
           ref={videoRef}
-          masterPlaylistUrl={playbackData.playback.streaming.masterPlaylist}
+          masterPlaylistUrl={constructVideoUrl(
+            playbackData.streaming.masterPlaylist,
+          )}
           showVideo={showVideo}
           onManifestParsed={handleManifestParsed}
           onError={handleError}

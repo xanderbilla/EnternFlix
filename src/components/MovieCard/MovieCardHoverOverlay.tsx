@@ -54,7 +54,7 @@ export default function MovieCardHoverOverlay({
   const videoUrl = useMemo(() => {
     if (!isHovered || !data) return null;
 
-    const previewVideoPath = playbackData?.playback?.preview?.video;
+    const previewVideoPath = playbackData?.preview?.url;
     if (previewVideoPath) {
       return constructVideoUrl(previewVideoPath);
     }

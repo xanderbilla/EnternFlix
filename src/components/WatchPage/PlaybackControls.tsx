@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { CSSProperties } from "react";
 import { formatTime } from "@/utils/videoHelpers";
 import ControlButton from "./ControlButton";
@@ -45,6 +46,12 @@ export default function PlaybackControls({
   onToggleFullscreen,
   onTriggerFeedback,
 }: PlaybackControlsProps) {
+  const [hoverProgress, setHoverProgress] = useState<{
+    leftPercent: number;
+    time: number;
+    visible: boolean;
+  }>({ leftPercent: 0, time: 0, visible: false });
+
   const currentProgress =
     duration > 0 ? Math.round((currentTime / duration) * 100) : 0;
   const ariaValueMax = duration > 0 ? Math.floor(duration) : 0;
@@ -82,16 +89,32 @@ export default function PlaybackControls({
     <div
       className={`absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6 lg:p-8 z-20 transition-opacity duration-300 ${
         showControls ? "opacity-100" : "opacity-0"
-      }`}
+      } ${isFullscreen ? "max-md:p-4" : ""}`}
     >
       {/* Progress bar with timestamp */}
       <div className="flex items-center gap-3 mb-4">
         <div
-          className="relative flex-1 h-1 bg-white/20 rounded-full cursor-pointer group"
+          className={`relative flex-1 bg-white/20 rounded-full cursor-pointer group ${
+            isFullscreen ? "h-1.5" : "h-1"
+          }`}
           onClick={(e) => {
             const rect = e.currentTarget.getBoundingClientRect();
             const pos = (e.clientX - rect.left) / rect.width;
             onSeek(pos * duration);
+          }}
+          onMouseMove={(e) => {
+            if (duration <= 0) return;
+            const rect = e.currentTarget.getBoundingClientRect();
+            const rawPos = (e.clientX - rect.left) / rect.width;
+            const clampedPos = Math.max(0, Math.min(1, rawPos));
+            setHoverProgress({
+              leftPercent: clampedPos * 100,
+              time: clampedPos * duration,
+              visible: true,
+            });
+          }}
+          onMouseLeave={() => {
+            setHoverProgress((prev) => ({ ...prev, visible: false }));
           }}
           role="slider"
           tabIndex={0}
@@ -103,6 +126,22 @@ export default function PlaybackControls({
           aria-describedby="playback-progress-help"
           onKeyDown={handleProgressKeyDown}
         >
+          {hoverProgress.visible && duration > 0 && (
+            <div
+              role="tooltip"
+              className="absolute bottom-full pb-2 pointer-events-none select-none z-30"
+              style={{
+                left: `${hoverProgress.leftPercent}%`,
+                transform: "translateX(-50%)",
+              }}
+            >
+              <div className="relative bg-zinc-200 text-zinc-900 text-[10px] sm:text-xs md:text-sm font-semibold rounded px-2 sm:px-2.5 py-0.5 sm:py-1 whitespace-nowrap shadow-md">
+                {formatTime(hoverProgress.time)}
+                <span className="absolute w-2 h-2 bg-zinc-200 rotate-45 top-full left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              </div>
+            </div>
+          )}
+
           <div
             className="h-full bg-white rounded-full relative transition-all duration-150 progress-fill"
             style={
@@ -134,6 +173,9 @@ export default function PlaybackControls({
             }}
             isActive={activeControl === "play"}
             title={isPlaying ? "Pause" : "Play"}
+            className={
+              isFullscreen ? "max-md:[&>svg]:w-10 max-md:[&>svg]:h-10" : ""
+            }
           >
             <PlayPauseIcon isPlaying={isPlaying} />
           </ControlButton>
@@ -146,6 +188,9 @@ export default function PlaybackControls({
             }}
             isActive={activeControl === "backward"}
             title="Rewind 10 seconds"
+            className={
+              isFullscreen ? "max-md:[&>svg]:w-10 max-md:[&>svg]:h-10" : ""
+            }
           >
             <BackwardIcon />
           </ControlButton>
@@ -158,6 +203,9 @@ export default function PlaybackControls({
             }}
             isActive={activeControl === "forward"}
             title="Forward 10 seconds"
+            className={
+              isFullscreen ? "max-md:[&>svg]:w-10 max-md:[&>svg]:h-10" : ""
+            }
           >
             <ForwardIcon />
           </ControlButton>
@@ -172,6 +220,9 @@ export default function PlaybackControls({
               onToggleMute();
             }}
             onVolumeChange={onVolumeChange}
+            buttonClassName={
+              isFullscreen ? "max-md:[&>svg]:w-10 max-md:[&>svg]:h-10" : ""
+            }
           />
         </div>
 
@@ -193,6 +244,9 @@ export default function PlaybackControls({
             }}
             isActive={activeControl === "fullscreen"}
             title="Toggle fullscreen"
+            className={
+              isFullscreen ? "max-md:[&>svg]:w-10 max-md:[&>svg]:h-10" : ""
+            }
           >
             <FullscreenIcon isFullscreen={isFullscreen} />
           </ControlButton>

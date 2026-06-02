@@ -17,7 +17,7 @@ import VideoHeader from "./VideoHeader";
 import SubtitleDisplay from "./SubtitleDisplay";
 import PlaybackControls from "./PlaybackControls";
 import PausedOverlay from "./PausedOverlay";
-import { LoadingState, ErrorState, ErrorPage } from "./VideoStates";
+import { LoadingState, ErrorState } from "./VideoStates";
 import VideoPlayerStyles from "./VideoPlayerStyles";
 
 interface WatchPageContentProps {
@@ -94,9 +94,9 @@ export default function WatchPageContent({
     onTriggerFeedback: triggerFeedback,
   });
 
-  if (isError) {
-    return <ErrorPage onBack={() => router.back()} />;
-  }
+  const hasPlaybackError = isError || !!error;
+  const errorMessage =
+    error || (isError ? "Playback is currently unavailable." : null);
 
   return (
     <div
@@ -112,25 +112,33 @@ export default function WatchPageContent({
       <VideoPlayerStyles />
 
       {/* Loading State */}
-      {isLoading && !error && <LoadingState />}
+      {isLoading && !hasPlaybackError && <LoadingState />}
 
       {/* Error State */}
-      {error && <ErrorState error={error} onBack={() => router.back()} />}
+      {hasPlaybackError && errorMessage && (
+        <ErrorState
+          error={errorMessage}
+          onBack={() => router.back()}
+          showBackButton={false}
+        />
+      )}
 
       {/* Paused Overlay */}
-      {!isPlaying && playbackData?.info && (
+      {!hasPlaybackError && !isPlaying && playbackData?.info && (
         <PausedOverlay info={playbackData.info} onPlay={handlePlayPause} />
       )}
 
       {/* Video Header */}
       <VideoHeader
         showControls={showControls}
+        forceVisible={hasPlaybackError}
+        isFullscreen={isFullscreen}
         onBack={() => router.back()}
         onReport={() => logger.info("Report playback issue")}
       />
 
       {/* Video Player */}
-      {playbackData?.streaming && (
+      {!hasPlaybackError && playbackData?.streaming && (
         <HLSVideoPlayer
           ref={videoRef}
           masterPlaylistUrl={constructVideoUrl(
@@ -148,28 +156,30 @@ export default function WatchPageContent({
       )}
 
       {/* Subtitle Display */}
-      <SubtitleDisplay subtitle={currentSubtitle} />
+      {!hasPlaybackError && <SubtitleDisplay subtitle={currentSubtitle} />}
 
       {/* Playback Controls */}
-      <PlaybackControls
-        isPlaying={isPlaying}
-        currentTime={currentTime}
-        duration={duration}
-        volume={volume}
-        isMuted={isMuted}
-        isFullscreen={isFullscreen}
-        showControls={showControls}
-        activeControl={activeControl}
-        title={playbackData?.info?.title}
-        onPlayPause={handlePlayPause}
-        onSeek={handleSeek}
-        onForward={handleForward}
-        onBackward={handleBackward}
-        onVolumeChange={handleVolumeChange}
-        onToggleMute={toggleMute}
-        onToggleFullscreen={toggleFullscreen}
-        onTriggerFeedback={triggerFeedback}
-      />
+      {!hasPlaybackError && (
+        <PlaybackControls
+          isPlaying={isPlaying}
+          currentTime={currentTime}
+          duration={duration}
+          volume={volume}
+          isMuted={isMuted}
+          isFullscreen={isFullscreen}
+          showControls={showControls}
+          activeControl={activeControl}
+          title={playbackData?.info?.title}
+          onPlayPause={handlePlayPause}
+          onSeek={handleSeek}
+          onForward={handleForward}
+          onBackward={handleBackward}
+          onVolumeChange={handleVolumeChange}
+          onToggleMute={toggleMute}
+          onToggleFullscreen={toggleFullscreen}
+          onTriggerFeedback={triggerFeedback}
+        />
+      )}
     </div>
   );
 }

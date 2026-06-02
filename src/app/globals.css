@@ -141,10 +141,11 @@
 
   /* Volume slider gradient track via CSS variable */
   .volume-slider-track {
+    accent-color: rgb(95, 95, 96);
     background: linear-gradient(
       to right,
-      white var(--vol, 0%),
-      rgba(255, 255, 255, 0.2) var(--vol, 0%)
+      rgb(39 39 42) var(--vol, 0%),
+      rgb(161 161 170) var(--vol, 0%)
     );
   }
 

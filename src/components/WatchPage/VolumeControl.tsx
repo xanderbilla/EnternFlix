@@ -7,6 +7,7 @@ interface VolumeControlProps {
   isActive: boolean;
   onToggleMute: () => void;
   onVolumeChange: (volume: number) => void;
+  buttonClassName?: string;
 }
 
 export default function VolumeControl({
@@ -15,6 +16,7 @@ export default function VolumeControl({
   isActive,
   onToggleMute,
   onVolumeChange,
+  buttonClassName = "",
 }: VolumeControlProps) {
   const getVolumeIcon = () => {
     if (isMuted || volume === 0) {
@@ -98,6 +100,7 @@ export default function VolumeControl({
         onClick={onToggleMute}
         isActive={isActive}
         title={isMuted ? "Unmute" : "Mute"}
+        className={buttonClassName}
       >
         {getVolumeIcon()}
       </ControlButton>
@@ -111,7 +114,7 @@ export default function VolumeControl({
           step="0.01"
           value={volume}
           onChange={(e) => onVolumeChange(parseFloat(e.target.value))}
-          className="w-full h-1 bg-white/20 rounded-lg appearance-none cursor-pointer slider volume-slider-track"
+          className="w-full h-1 bg-zinc-400/70 rounded-lg appearance-none cursor-pointer slider volume-slider-track accent-zinc-800"
           style={{ "--vol": `${volume * 100}%` } as CSSProperties}
           aria-label="Volume"
           aria-valuetext={

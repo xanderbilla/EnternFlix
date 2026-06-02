@@ -19,9 +19,11 @@ export function LoadingState() {
 export function ErrorState({
   error,
   onBack,
+  showBackButton = true,
 }: {
   error: string;
   onBack: () => void;
+  showBackButton?: boolean;
 }) {
   return (
     <div
@@ -29,14 +31,17 @@ export function ErrorState({
       role="alert"
     >
       <div className="text-center">
-        <div className="text-red-500 text-xl mb-4">{error}</div>
-        <button
-          type="button"
-          onClick={onBack}
-          className="px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
-        >
-          Go Back
-        </button>
+        <h1 className="text-2xl text-white mb-4">Error</h1>
+        <p className="text-gray-400 mb-6">{error}</p>
+        {showBackButton && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="px-6 py-2 bg-white text-black rounded hover:bg-gray-200 transition-colors"
+          >
+            Go Back
+          </button>
+        )}
       </div>
     </div>
   );

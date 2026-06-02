@@ -4,17 +4,21 @@ interface VideoHeaderProps {
   showControls: boolean;
   onBack: () => void;
   onReport?: () => void;
+  forceVisible?: boolean;
+  isFullscreen?: boolean;
 }
 
 export default function VideoHeader({
   showControls,
   onBack,
   onReport,
+  forceVisible = false,
+  isFullscreen = false,
 }: VideoHeaderProps) {
   return (
     <div
       className={`absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-black to-transparent p-3 sm:p-5 md:p-6 lg:p-8 z-20 transition-opacity duration-300 flex items-center justify-between ${
-        showControls ? "opacity-100" : "opacity-0"
+        showControls || forceVisible ? "opacity-100" : "opacity-0"
       }`}
     >
       {/* Back Button */}
@@ -24,7 +28,9 @@ export default function VideoHeader({
         aria-label="Back to Browse"
       >
         <ArrowLeft
-          className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"
+          className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${
+            isFullscreen ? "max-md:w-9 max-md:h-9" : ""
+          }`}
           color="white"
           strokeWidth={2.5}
         />
@@ -39,7 +45,9 @@ export default function VideoHeader({
       >
         <svg
           viewBox="0 0 24 24"
-          className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10"
+          className={`w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 ${
+            isFullscreen ? "max-md:w-9 max-md:h-9" : ""
+          }`}
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           role="img"

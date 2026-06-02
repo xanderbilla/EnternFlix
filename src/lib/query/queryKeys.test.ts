@@ -19,6 +19,8 @@ describe("queryKeys", () => {
       "playback",
       "movie",
       "id",
+      null,
+      null,
     ]);
     expect(queryKeys.search("q")).toEqual(["search", "q", "all", "recent"]);
     expect(queryKeys.search("q", "tv", "popular")).toEqual([

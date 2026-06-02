@@ -151,11 +151,9 @@ const Banner = () => {
     if (shouldPauseBanner) {
       wasPlayingRef.current = !videoRef.current.paused;
       videoRef.current.pause();
-      setIsVideoPlaying(false);
     } else {
       if (wasPlayingRef.current && !videoEnded) {
         videoRef.current.play().catch(() => {});
-        setIsVideoPlaying(true);
       }
       wasPlayingRef.current = false;
     }
@@ -240,6 +238,8 @@ const Banner = () => {
           muted={isMuted}
           playsInline
           disablePictureInPicture
+          onPlay={() => setIsVideoPlaying(true)}
+          onPause={() => setIsVideoPlaying(false)}
           onCanPlay={() => setIsVideoPlaying(true)}
           onEnded={handleVideoEnd}
         />

@@ -1,5 +1,19 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.31.0 - 2026-06-02
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.31.0
+Commit SHA: dbc99ba88c5ed8492c58a9880497c5832302cb39
+
+Changes:
+- fix(playback): update video playing state management in Banner component (dbc99ba)
+- style(docs): improve table formatting in Playback Controls documentation (9f0e8ae)
+- feat(docs): add Playback Controls documentation detailing player controls and visibility rules (c5e1bb6)
+- fix(playback): update playback data structure to use new preview URL format (b8d6023)
+- feat: enhance playback functionality with season and episode support, update related components and hooks (61c4352)
+
 ## v0.30.0 - 2026-05-31
 
 Environment: dev

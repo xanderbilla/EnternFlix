@@ -21,10 +21,10 @@ The watch player has 4 control surfaces:
 
 Implemented in `src/components/WatchPage/VideoHeader.tsx`.
 
-| Control | Action |
-| --- | --- |
-| Back button (left arrow) | Calls `onBack`, which navigates back from the watch page |
-| Report button (flag icon) | Calls `onReport` (currently logs a playback issue) |
+| Control                   | Action                                                   |
+| ------------------------- | -------------------------------------------------------- |
+| Back button (left arrow)  | Calls `onBack`, which navigates back from the watch page |
+| Report button (flag icon) | Calls `onReport` (currently logs a playback issue)       |
 
 ### Visibility
 
@@ -38,36 +38,36 @@ Implemented in `src/components/WatchPage/PlaybackControls.tsx`.
 
 ### Timeline and Seek
 
-| Control | Action |
-| --- | --- |
-| Progress bar click | Seeks to clicked position (`onSeek`) |
-| Remaining time text | Shows `-(duration - currentTime)` formatted via `formatTime` |
-| Slider keyboard controls | Left/Right: +/-10 seconds, Home: 0, End: duration |
+| Control                  | Action                                                       |
+| ------------------------ | ------------------------------------------------------------ |
+| Progress bar click       | Seeks to clicked position (`onSeek`)                         |
+| Remaining time text      | Shows `-(duration - currentTime)` formatted via `formatTime` |
+| Slider keyboard controls | Left/Right: +/-10 seconds, Home: 0, End: duration            |
 
 ### Transport Controls
 
-| Control | Action |
-| --- | --- |
-| Play/Pause | Toggles playback (`onPlayPause`) |
-| Rewind | Seeks backward 10 seconds (`onBackward`) |
-| Forward | Seeks forward 10 seconds (`onForward`) |
+| Control    | Action                                   |
+| ---------- | ---------------------------------------- |
+| Play/Pause | Toggles playback (`onPlayPause`)         |
+| Rewind     | Seeks backward 10 seconds (`onBackward`) |
+| Forward    | Seeks forward 10 seconds (`onForward`)   |
 
 ### Audio Controls
 
 Implemented by `src/components/WatchPage/VolumeControl.tsx`.
 
-| Control | Action |
-| --- | --- |
-| Mute toggle button | Toggles muted/unmuted state (`onToggleMute`) |
-| Volume slider | Sets explicit volume (`onVolumeChange`) |
+| Control            | Action                                              |
+| ------------------ | --------------------------------------------------- |
+| Mute toggle button | Toggles muted/unmuted state (`onToggleMute`)        |
+| Volume slider      | Sets explicit volume (`onVolumeChange`)             |
 | Volume icon states | Muted/0, low (<0.33), medium (<0.66), high (>=0.66) |
 
 ### Display Controls
 
-| Control | Action |
-| --- | --- |
-| Fullscreen toggle | Calls `onToggleFullscreen` |
-| Center title | Displays `title` when available |
+| Control           | Action                          |
+| ----------------- | ------------------------------- |
+| Fullscreen toggle | Calls `onToggleFullscreen`      |
+| Center title      | Displays `title` when available |
 
 ### Visibility
 
@@ -109,15 +109,15 @@ Implemented in `src/components/WatchPage/SubtitleDisplay.tsx`.
 
 Implemented in `src/hooks/video/useKeyboardShortcuts.ts`.
 
-| Key | Action |
-| --- | --- |
-| Space | Play/Pause |
-| ArrowLeft | Seek backward 10 seconds |
-| ArrowRight | Seek forward 10 seconds |
-| ArrowUp | Volume up (`+0.1`) |
-| ArrowDown | Volume down (`-0.1`) |
-| f or F | Toggle fullscreen |
-| Escape | Exit fullscreen (if active) or navigate back |
+| Key        | Action                                       |
+| ---------- | -------------------------------------------- |
+| Space      | Play/Pause                                   |
+| ArrowLeft  | Seek backward 10 seconds                     |
+| ArrowRight | Seek forward 10 seconds                      |
+| ArrowUp    | Volume up (`+0.1`)                           |
+| ArrowDown  | Volume down (`-0.1`)                         |
+| f or F     | Toggle fullscreen                            |
+| Escape     | Exit fullscreen (if active) or navigate back |
 
 Notes:
 
@@ -140,13 +140,13 @@ Implemented in `src/hooks/video/useControlsVisibility.ts`.
 
 Defined in `src/constants/video.ts`.
 
-| Constant | Value | Meaning |
-| --- | --- | --- |
-| `SEEK_FORWARD` | 10 | Seconds jumped on forward action |
-| `SEEK_BACKWARD` | 10 | Seconds jumped on backward action |
-| `VOLUME_STEP` | 0.1 | Volume step for keyboard up/down |
-| `CONTROLS_HIDE_DELAY` | 3000 | Milliseconds before auto-hide while playing |
-| `CONTROL_FEEDBACK_DURATION` | 300 | Milliseconds for active control feedback |
+| Constant                    | Value | Meaning                                     |
+| --------------------------- | ----- | ------------------------------------------- |
+| `SEEK_FORWARD`              | 10    | Seconds jumped on forward action            |
+| `SEEK_BACKWARD`             | 10    | Seconds jumped on backward action           |
+| `VOLUME_STEP`               | 0.1   | Volume step for keyboard up/down            |
+| `CONTROLS_HIDE_DELAY`       | 3000  | Milliseconds before auto-hide while playing |
+| `CONTROL_FEEDBACK_DURATION` | 300   | Milliseconds for active control feedback    |
 
 ## Related Files
 

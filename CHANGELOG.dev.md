@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.32.0 - 2026-06-02
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.32.0
+Commit SHA: 75836547647314238da58a3faae6ef38a413d341
+
+Changes:
+- feat(playback): enhance playback controls with hover progress tooltip and fullscreen adjustments style(playback): update volume slider track colors and button sizes for better UI fix(video): improve error handling and visibility in video header and playback components (7583654)
+
 ## v0.31.0 - 2026-06-02
 
 Environment: dev

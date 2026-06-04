@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.35.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.35.0
+Commit SHA: 2d6bb8da97b6c7c9e29ef650be4817d97c38aaa4
+
+Changes:
+- feat(playback): implement touch double-tap for fullscreen toggle and restrict auto-rotation to fullscreen only (2d6bb8d)
+
 ## v0.34.0 - 2026-06-04
 
 Environment: dev

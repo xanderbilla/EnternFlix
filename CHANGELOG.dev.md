@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.37.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.37.0
+Commit SHA: 78519be4e1262d520f94d56facf1ca4333ab9e6f
+
+Changes:
+- feat(banner): set opacity to 50% for audio/replay buttons and content rating, rising to 90% for audio on hover (78519be)
+
 ## v0.36.0 - 2026-06-04
 
 Environment: dev

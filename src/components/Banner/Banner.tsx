@@ -258,7 +258,7 @@ const Banner = () => {
       />
 
       {/* Audio Toggle and Content Rating - Bottom Right */}
-      <div className="absolute bottom-[30%] md:bottom-[32%] lg:bottom-[35%] right-2 sm:right-4 md:right-8 lg:right-12 flex items-center gap-2 sm:gap-3">
+      <div className="absolute top-24 bottom-auto right-4 md:top-auto md:bottom-[32%] md:right-8 lg:bottom-[35%] lg:right-12 flex items-center gap-2 sm:gap-3">
         {/* Volume/Replay Button Container - Same position for both */}
         <div className="relative w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 lg:w-11 lg:h-11">
           {/* Mute/Unmute Button - Only show when video is playing */}

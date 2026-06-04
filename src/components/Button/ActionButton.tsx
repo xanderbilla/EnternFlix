@@ -11,27 +11,25 @@ interface NetflixButtonProps {
   className?: string;
 }
 
-const PlayIcon = () => (
+const PlayIcon = ({ className = "" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
-    width="24"
-    height="24"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
+    className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 flex-shrink-0 ${className}`}
   >
     <path d="M5 2.7a1 1 0 0 1 1.48-.88l16.93 9.3a1 1 0 0 1 0 1.76l-16.93 9.3A1 1 0 0 1 5 21.31z" />
   </svg>
 );
 
-const InfoIcon = () => (
+const InfoIcon = ({ className = "" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
-    width="24"
-    height="24"
     fill="currentColor"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
+    className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 flex-shrink-0 ${className}`}
   >
     <path
       fill="currentColor"
@@ -42,14 +40,13 @@ const InfoIcon = () => (
   </svg>
 );
 
-const HomeIcon = () => (
+const HomeIcon = ({ className = "" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
-    width="24"
-    height="24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
+    className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 flex-shrink-0 ${className}`}
   >
     <path
       d="M3 10.5L12 3L21 10.5V21H14.5V14.5H9.5V21H3V10.5Z"
@@ -58,14 +55,13 @@ const HomeIcon = () => (
   </svg>
 );
 
-const SearchIcon = () => (
+const SearchIcon = ({ className = "" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
-    width="24"
-    height="24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
+    className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 flex-shrink-0 ${className}`}
   >
     <path
       fillRule="evenodd"
@@ -76,14 +72,13 @@ const SearchIcon = () => (
   </svg>
 );
 
-const RetryIcon = () => (
+const RetryIcon = ({ className = "" }: { className?: string }) => (
   <svg
     viewBox="0 0 24 24"
-    width="24"
-    height="24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
+    className={`w-4 h-4 md:w-5 md:h-5 lg:w-6 lg:h-6 flex-shrink-0 ${className}`}
   >
     <path
       d="M20 12A8 8 0 1 1 17.66 6.34L20 9M20 9V3M20 9H14"

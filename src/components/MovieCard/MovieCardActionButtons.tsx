@@ -18,8 +18,10 @@ export default function MovieCardActionButtons({
   const handlePlayClick = (e: React.SyntheticEvent) => {
     e.stopPropagation();
     const type = contentType === "TV" ? "tv" : "movie";
-    const pathname = typeof window === "undefined" ? "/" : window.location.pathname;
-    const currentParams = typeof window === "undefined" ? "" : window.location.search;
+    const pathname =
+      typeof window === "undefined" ? "/" : window.location.pathname;
+    const currentParams =
+      typeof window === "undefined" ? "" : window.location.search;
 
     let watchUrl = `/watch?id=${contentId}&type=${type}&from=${pathname}`;
     if (currentParams) {

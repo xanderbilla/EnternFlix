@@ -18,8 +18,10 @@ export default function BannerContent({
 
   const handlePlayClick = () => {
     const type = contentType === "TV" ? "tv" : "movie";
-    const pathname = typeof window === "undefined" ? "/" : window.location.pathname;
-    const currentParams = typeof window === "undefined" ? "" : window.location.search;
+    const pathname =
+      typeof window === "undefined" ? "/" : window.location.pathname;
+    const currentParams =
+      typeof window === "undefined" ? "" : window.location.search;
 
     let watchUrl = `/watch?id=${movieId}&type=${type}&from=${pathname}`;
     if (currentParams) {

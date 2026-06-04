@@ -61,11 +61,10 @@ export function useFullscreen(containerRef: RefObject<HTMLElement | null>) {
   }, [lockLandscapeOnSmallScreens, unlockOrientation]);
 
   useEffect(() => {
-    lockLandscapeOnSmallScreens();
     return () => {
       unlockOrientation();
     };
-  }, [lockLandscapeOnSmallScreens, unlockOrientation]);
+  }, [unlockOrientation]);
 
   const toggleFullscreen = useCallback(async () => {
     if (!document.fullscreenElement) {

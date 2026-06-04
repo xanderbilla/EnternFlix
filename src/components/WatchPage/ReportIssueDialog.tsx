@@ -8,6 +8,7 @@ interface ReportIssueDialogProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (issueType: string) => void;
+  isFullscreen?: boolean;
 }
 
 const ISSUE_OPTIONS = [
@@ -33,6 +34,7 @@ export default function ReportIssueDialog({
   isOpen,
   onClose,
   onSubmit,
+  isFullscreen = false,
 }: ReportIssueDialogProps) {
   const [selectedIssue, setSelectedIssue] = useState<string>("");
 
@@ -52,7 +54,7 @@ export default function ReportIssueDialog({
       zIndex={11000}
       ariaLabel="Report playback issue"
       className="w-[94vw] sm:w-[88vw] md:w-[75vw] lg:w-[640px] max-w-[640px]"
-      overlayClassName="force-landscape"
+      overlayClassName={isFullscreen ? "force-landscape" : ""}
       contentAlignment="center"
     >
       {({ handleClose }) => (

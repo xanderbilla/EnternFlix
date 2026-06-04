@@ -81,6 +81,29 @@ export default function WatchPageContent({
 
   const sourcePath = searchParams.get("from");
 
+  const lastTapRef = useRef<number>(0);
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(max-width: 1023px)").matches) return;
+
+    const target = e.target as HTMLElement;
+    if (
+      target.closest("button") ||
+      target.closest("input") ||
+      target.closest("a") ||
+      target.closest("[role='button']")
+    ) {
+      return;
+    }
+
+    const now = Date.now();
+    const DOUBLE_TAP_DELAY = 300;
+    if (now - lastTapRef.current < DOUBLE_TAP_DELAY) {
+      toggleFullscreen();
+    }
+    lastTapRef.current = now;
+  };
+
   useEffect(() => {
     resetDialogRestorationGuard();
   }, []);
@@ -131,11 +154,12 @@ export default function WatchPageContent({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] bg-black force-landscape"
+      className={`fixed inset-0 z-[9999] bg-black ${isFullscreen ? "force-landscape" : ""}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onFocus={handleMouseMove}
       onBlur={handleMouseLeave}
+      onTouchStart={handleTouchStart}
       role="application"
       aria-label="Video playback"
     >
@@ -222,6 +246,7 @@ export default function WatchPageContent({
           });
           setIsReportDialogOpen(false);
         }}
+        isFullscreen={isFullscreen}
       />
     </div>
   );

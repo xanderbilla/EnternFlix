@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.36.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.36.0
+Commit SHA: f6101541c91738594410b1753648627e7b9956f9
+
+Changes:
+- feat(banner): reposition audio controls on mobile and make icons responsive (f610154)
+
 ## v0.35.0 - 2026-06-04
 
 Environment: dev

@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.33.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.33.0
+Commit SHA: bf5e1e184ec3ce654679b400f3c7421851799cc1
+
+Changes:
+- feat(reporting): add Report Issue dialog for playback issues and enhance navigation with source tracking (bf5e1e1)
+
 ## v0.32.0 - 2026-06-02
 
 Environment: dev

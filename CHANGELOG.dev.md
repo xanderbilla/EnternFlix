@@ -1,5 +1,16 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.34.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.34.0
+Commit SHA: 18a65da03680a4345643e917d2750a5dfb78b30b
+
+Changes:
+- style: apply prettier formatting to navigation files (18a65da)
+- feat(playback): implement landscape mode for video player on small screens and enhance navigation URL handling (9988a0a)
+
 ## v0.33.0 - 2026-06-04
 
 Environment: dev

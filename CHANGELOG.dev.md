@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.38.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.38.0
+Commit SHA: d61b20fbc71d6b4796ccf887f5463191a80dc2e1
+
+Changes:
+- refactor: update page titles and metadata formatting (d61b20f)
+
 ## v0.37.0 - 2026-06-04
 
 Environment: dev

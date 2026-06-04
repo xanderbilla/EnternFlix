@@ -44,23 +44,23 @@ function DialogInfoSection({
   return (
     <div>
       {/* Year, Duration/Seasons, Rating */}
-      <div className="flex items-center text-white/50">
-        <span className="text-base">{releaseYear}</span>
+      <div className="flex items-center text-white/50 text-xs sm:text-sm md:text-base">
+        <span>{releaseYear}</span>
         {isTV ? (
-          <span className="text-base ml-2">
+          <span className="ml-2">
             {numberOfSeasons} Season{numberOfSeasons > 1 ? "s" : ""}
           </span>
         ) : (
-          <span className="text-base ml-2">{duration}</span>
+          <span className="ml-2">{duration}</span>
         )}
-        <span className="border border-white/50 p-0.5 text-xs ml-2">
+        <span className="border border-white/50 p-0.5 text-[10px] sm:text-xs ml-2">
           {quality}
         </span>
       </div>
 
       {/* Rating */}
-      <div className="flex items-center text-white/80 mb-6">
-        <span className="border border-white/40 px-2 py-0.5 text-xs">
+      <div className="flex items-center text-white/80 mb-4 sm:mb-6 mt-1 sm:mt-2">
+        <span className="border border-white/40 px-2 py-0.5 text-[10px] sm:text-xs">
           {rating}
         </span>
       </div>
@@ -83,7 +83,7 @@ function DialogInfoSection({
                 : undefined
             }
           >
-            <p className="text-white/80 text-[15px] leading-relaxed">
+            <p className="text-white/80 text-xs sm:text-sm md:text-[15px] leading-relaxed">
               {isOverviewExpanded ? overview : truncatedOverview}
               {shouldShowOverviewToggle && (
                 <>
@@ -91,7 +91,7 @@ function DialogInfoSection({
                   <button
                     type="button"
                     onClick={() => setIsOverviewExpanded((current) => !current)}
-                    className="italic text-white/80 text-[15px] hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
+                    className="italic text-white/80 text-xs sm:text-sm md:text-[15px] hover:underline hover:underline-offset-2 cursor-pointer hover:text-white transition-colors"
                   >
                     {isOverviewExpanded ? "less" : "more"}
                   </button>

@@ -70,10 +70,10 @@ export default function DialogVideoSection({
             variant="secondary"
             size="md"
             aria-label="Close dialog"
-            className="absolute top-6 right-6 z-50 !border-0"
+            className="absolute top-4 right-4 sm:top-6 sm:right-6 z-50 !border-0 !w-8 !h-8 sm:!w-10 sm:!h-10"
             icon={
               <svg
-                className="w-5 h-5"
+                className="w-4 h-4 sm:w-5 sm:h-5"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -105,17 +105,17 @@ export default function DialogVideoSection({
 
           {/* Replay Button - Only show when video has ended */}
           {videoEnded && (
-            <div className="absolute bottom-6 right-6">
+            <div className="absolute bottom-4 sm:bottom-5 md:bottom-6 right-4 sm:right-5 md:right-6">
               <CircularButton
                 onClick={handleReplayVideo}
                 variant="secondary"
                 size="md"
                 aria-label="Replay video"
+                className="!w-8 !h-8 sm:!w-10 sm:!h-10"
                 icon={
                   <svg
                     viewBox="0 0 24 24"
-                    width="20"
-                    height="20"
+                    className="w-4 h-4 sm:w-5 sm:h-5 text-white"
                     fill="none"
                     role="img"
                   >

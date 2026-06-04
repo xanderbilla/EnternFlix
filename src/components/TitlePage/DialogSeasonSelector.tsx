@@ -37,7 +37,7 @@ function DialogSeasonSelector({
         <Button
           variant="secondary"
           size="md"
-          className="flex items-center min-w-[120px] justify-center focus:ring-0 focus:ring-offset-0 cursor-default"
+          className="flex items-center min-w-[100px] sm:min-w-[120px] justify-center focus:ring-0 focus:ring-offset-0 cursor-default text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4"
           disabled
         >
           Season {selectedSeason}
@@ -51,16 +51,14 @@ function DialogSeasonSelector({
       <Button
         variant="secondary"
         size="md"
-        className="flex items-center gap-2 min-w-[120px] justify-between focus:ring-0 focus:ring-offset-0"
+        className="flex items-center gap-2 min-w-[100px] sm:min-w-[120px] justify-between focus:ring-0 focus:ring-offset-0 text-xs sm:text-sm py-1.5 sm:py-2 px-3 sm:px-4"
         onClick={() => setShowSeasonDropdown(!showSeasonDropdown)}
       >
         Season {selectedSeason}
         <svg
           viewBox="0 0 24 24"
-          width="16"
-          height="16"
           fill="none"
-          className="text-white"
+          className="text-white w-3.5 h-3.5 sm:w-4 sm:h-4"
         >
           <path
             fill="currentColor"

@@ -7,6 +7,7 @@ import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import MovieGrid from "@/components/UI/MovieGrid";
 import { useInfiniteDiscover } from "@/hooks/api/useMovies";
 import type { Movie } from "@/types/movie";
+import { siteConfig } from "@/config/site";
 
 interface DiscoverPageData {
   items: Movie[];
@@ -27,6 +28,20 @@ export default function ExploreDialog({
 }: ExploreDialogProps) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const paginationLockRef = useRef(false);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalTitle = document.title;
+
+    if (title) {
+      document.title = `${title} | ${siteConfig.name}`;
+    }
+
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [isOpen, title]);
 
   // Use infinite query for paginated results if enabled
   const {

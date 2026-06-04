@@ -10,6 +10,7 @@ import { useDialogManager } from "@/hooks/ui/useDialogManager";
 import { TitleDialogProps } from "@/types/components";
 import { useMovieTransition } from "@/hooks/ui/useMovieTransition";
 import { useExploreNavigation } from "@/hooks/ui/useExploreNavigation";
+import { siteConfig } from "@/config/site";
 
 export default function TitleDialog({
   isOpen,
@@ -22,6 +23,20 @@ export default function TitleDialog({
   const [shouldFetchData, setShouldFetchData] = useState(false);
   const { data, error } = useTitle(titleId, shouldFetchData);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalTitle = document.title;
+
+    if (data?.content?.title) {
+      document.title = `${data.content.title} | ${siteConfig.name}`;
+    }
+
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [isOpen, data?.content?.title]);
 
   const handleExploreClick = useCallback(
     (idOrName: string, title: string, isCast?: boolean) => {

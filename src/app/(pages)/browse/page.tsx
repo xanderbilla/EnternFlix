@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo/metadata";
 import { prefetchContentPage } from "@/lib/query/serverPrefetch";
 
 export const metadata = createPageMetadata({
-  title: "Browse",
+  title: "Home",
   description:
     "Discover unlimited movies, TV shows, and anime on EnternFlix. Watch trending content, explore new releases, and stream your favorite entertainment.",
   path: "/browse",

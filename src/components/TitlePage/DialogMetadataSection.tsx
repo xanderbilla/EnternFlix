@@ -26,7 +26,7 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
       {/* Tagline - First, before cast */}
       {tagline && (
         <div className="pb-1">
-          <p className="text-white/70 text-sm italic leading-relaxed">
+          <p className="text-white/70 text-xs sm:text-sm italic leading-relaxed">
             {tagline}
           </p>
         </div>
@@ -34,7 +34,7 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
 
       {/* Cast */}
       {casts.length > 0 && (
-        <div className="text-sm">
+        <div className="text-xs sm:text-sm">
           <span className="text-gray-400">Cast: </span>
           <span className="text-white/80">
             {casts.slice(0, 3).map((cast, index) => (
@@ -67,7 +67,7 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
 
       {/* Genres */}
       {genres.length > 0 && (
-        <div className="text-sm">
+        <div className="text-xs sm:text-sm">
           <span className="text-gray-400">Genres: </span>
           <span className="text-white/80">
             {genres.slice(0, 3).map((genre, index) => (
@@ -104,7 +104,7 @@ const DialogMetadataSection: React.FC<DialogMetadataSectionProps> = ({
 
       {/* This Movie/Show Is (Mood Tags) */}
       {moodTags.length > 0 && (
-        <div className="text-sm">
+        <div className="text-xs sm:text-sm">
           <span className="text-gray-400">
             This {isTV ? "Show" : "Movie"} Is:{" "}
           </span>

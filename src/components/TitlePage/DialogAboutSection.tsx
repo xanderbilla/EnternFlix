@@ -73,14 +73,14 @@ export default function DialogAboutSection({
 
   return (
     <div id="about-section" className="mt-12">
-      <h2 className="text-white/80 text-xl mb-6">
-        About <span className="font-medium text-2xl">{title}</span>
+      <h2 className="text-white/80 text-lg sm:text-xl mb-4 sm:mb-6">
+        About <span className="font-medium text-xl sm:text-2xl">{title}</span>
       </h2>
 
       <div className="space-y-2">
         {/* Release Date */}
         {formattedDate && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">Release Date: </span>
             <span className="text-white/80">{formattedDate}</span>
           </div>
@@ -88,7 +88,7 @@ export default function DialogAboutSection({
 
         {/* Original Language */}
         {formattedLanguage && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">Original Language: </span>
             <span className="text-white/80">{formattedLanguage}</span>
           </div>
@@ -96,7 +96,7 @@ export default function DialogAboutSection({
 
         {/* Origin Country */}
         {formattedCountries && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">Origin Country: </span>
             <span className="text-white/80">{formattedCountries}</span>
           </div>
@@ -104,7 +104,7 @@ export default function DialogAboutSection({
 
         {/* Production Companies */}
         {productionCompanies && productionCompanies.length > 0 && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">Studio: </span>
             <span className="text-white/80">
               {productionCompanies.slice(0, 2).map((company, index) => (
@@ -126,7 +126,7 @@ export default function DialogAboutSection({
 
         {/* Cast */}
         {casts && casts.length > 0 && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">Cast: </span>
             <span className="text-white/80">
               {casts.map((cast, index) => (
@@ -148,7 +148,7 @@ export default function DialogAboutSection({
 
         {/* Genres */}
         {genres && genres.length > 0 && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">Genres: </span>
             <span className="text-white/80">
               {genres.map((genre, index) => (
@@ -174,7 +174,7 @@ export default function DialogAboutSection({
 
         {/* Tags */}
         {tags && tags.length > 0 && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">Tags: </span>
             <span className="text-white/80">
               {tags.map((tag, index) => (
@@ -196,7 +196,7 @@ export default function DialogAboutSection({
 
         {/* Mood Tags */}
         {moodTags && moodTags.length > 0 && (
-          <div className="text-sm">
+          <div className="text-xs sm:text-sm">
             <span className="text-gray-400">
               This {isTV ? "Show" : "Movie"} Is:{" "}
             </span>
@@ -219,14 +219,14 @@ export default function DialogAboutSection({
         )}
 
         {/* Maturity Rating */}
-        <div className="text-sm">
+        <div className="text-xs sm:text-sm">
           <span className="text-gray-400">Maturity Rating: </span>
           <div className="inline-flex items-center gap-2 mt-1">
-            <span className="border border-white/40 px-2 text-xs text-white/80">
+            <span className="border border-white/40 px-2 text-[10px] sm:text-xs text-white/80">
               {rating}
             </span>
           </div>
-          <p className="text-white/90 text-xs mt-2 leading-relaxed">
+          <p className="text-white/90 text-[11px] sm:text-xs mt-2 leading-relaxed">
             {contentRating === "21_PLUS"
               ? "Suitable for persons aged 21 and above"
               : contentRating === "18_PLUS"

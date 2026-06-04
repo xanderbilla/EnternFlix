@@ -14,11 +14,11 @@ describe("createPageMetadata", () => {
     expect(metadata.alternates?.canonical).toBe(
       "https://enternflix.vercel.app/browse",
     );
-    expect(metadata.openGraph?.title).toBe("Browse - EnternFlix");
+    expect(metadata.openGraph?.title).toBe("Browse | EnternFlix");
     expect(metadata.openGraph?.url).toBe(
       "https://enternflix.vercel.app/browse",
     );
-    expect(metadata.twitter?.title).toBe("Browse - EnternFlix");
+    expect(metadata.twitter?.title).toBe("Browse | EnternFlix");
     expect(metadata.authors).toEqual([{ name: "EnternFlix" }]);
     expect(metadata.keywords).toEqual(
       expect.arrayContaining(["streaming platform", "browse"]),

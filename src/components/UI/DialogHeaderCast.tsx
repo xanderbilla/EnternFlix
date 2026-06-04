@@ -27,7 +27,7 @@ export default function CastDialogHeader({
     !!roles?.includes("CONTENT_CREATOR");
 
   return (
-    <div className="relative h-[36rem] overflow-hidden bg-transparent">
+    <div className="relative h-[20rem] sm:h-[28rem] md:h-[32rem] lg:h-[36rem] overflow-hidden bg-transparent">
       {/* Backdrop Image. Keying on backdropUrl remounts this subtree when the
           URL changes, which naturally resets `imageLoaded` without an effect. */}
       {backdropUrl && (
@@ -51,7 +51,7 @@ export default function CastDialogHeader({
       <div className="absolute inset-0 bg-gradient-to-t from-zinc-900 via-transparent to-transparent" />
 
       {/* Content */}
-      <div className="relative h-full flex items-end justify-start pb-16 px-4 sm:px-8 md:px-12 lg:px-16">
+      <div className="relative h-full flex items-end justify-start pb-8 sm:pb-12 md:pb-16 px-4 sm:px-8 md:px-12 lg:px-16">
         <div className="w-full max-w-full lg:flex lg:items-center lg:gap-3">
           <h2 className="text-white text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-none tracking-tight">
             {title}
@@ -130,11 +130,11 @@ export default function CastDialogHeader({
       {showBackButton && onBack && (
         <button
           onClick={onBack}
-          className="absolute left-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm z-10"
+          className="absolute left-4 top-4 sm:left-6 sm:top-6 text-white hover:text-gray-300 transition-colors p-1.5 sm:p-2 bg-black/30 rounded-full backdrop-blur-sm z-10"
           aria-label="Go back"
         >
           <svg
-            className="w-6 h-6"
+            className="w-5 h-5 sm:w-6 sm:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -153,11 +153,11 @@ export default function CastDialogHeader({
       {!showBackButton && (
         <button
           onClick={onClose}
-          className="absolute right-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm z-10"
+          className="absolute right-4 top-4 sm:right-6 sm:top-6 text-white hover:text-gray-300 transition-colors p-1.5 sm:p-2 bg-black/30 rounded-full backdrop-blur-sm z-10"
           aria-label="Close"
         >
           <svg
-            className="w-6 h-6"
+            className="w-5 h-5 sm:w-6 sm:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

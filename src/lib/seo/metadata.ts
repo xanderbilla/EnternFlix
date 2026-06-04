@@ -12,7 +12,7 @@ interface CreatePageMetadataOptions {
 }
 
 function buildDocumentTitle(title: string) {
-  return title === siteConfig.name ? title : `${title} - ${siteConfig.name}`;
+  return title === siteConfig.name ? title : `${title} | ${siteConfig.name}`;
 }
 
 function resolveImageUrl(image?: string) {

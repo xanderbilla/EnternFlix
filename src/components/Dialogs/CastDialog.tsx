@@ -6,7 +6,8 @@ import { DynamicDialogHeader as DialogHeader } from "@/utils/dynamicImports";
 import CastInfo from "./CastInfo";
 import { usePerson, usePersonMovies } from "@/hooks/api/usePerson";
 import { getImageUrl } from "@/utils/movieHelpers";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
+import { siteConfig } from "@/config/site";
 
 export default function CastDialog({
   isOpen,
@@ -20,6 +21,20 @@ export default function CastDialog({
 }: CastDialogProps) {
   const { data: personData } = usePerson(castId, isOpen);
   const { data: personMovies } = usePersonMovies(castId, "all", isOpen);
+
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const originalTitle = document.title;
+
+    if (castName) {
+      document.title = `${castName} | ${siteConfig.name}`;
+    }
+
+    return () => {
+      document.title = originalTitle;
+    };
+  }, [isOpen, castName]);
 
   const movies = useMemo(() => personMovies || [], [personMovies]);
 

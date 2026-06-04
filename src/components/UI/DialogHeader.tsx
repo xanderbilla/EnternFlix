@@ -37,16 +37,16 @@ export default function DialogHeader({
   }
 
   return (
-    <div className="flex items-center justify-center py-32 px-6 sticky top-0 bg-zinc-900 z-10">
+    <div className="flex items-center justify-center py-16 sm:py-24 md:py-32 px-4 sm:px-6 sticky top-0 bg-zinc-900 z-10">
       {/* Back Button */}
       {showBackButton && onBack && (
         <button
           onClick={onBack}
-          className="absolute left-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm"
+          className="absolute left-4 top-4 sm:left-6 sm:top-6 text-white hover:text-gray-300 transition-colors p-1.5 sm:p-2 bg-black/30 rounded-full backdrop-blur-sm"
           aria-label="Go back"
         >
           <svg
-            className="w-6 h-6"
+            className="w-5 h-5 sm:w-6 sm:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -61,17 +61,19 @@ export default function DialogHeader({
         </button>
       )}
 
-      <h2 className="text-white text-5xl font-bold text-center">{title}</h2>
+      <h2 className="text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center">
+        {title}
+      </h2>
 
       {/* Close Button - only show if no back button */}
       {!showBackButton && (
         <button
           onClick={onClose}
-          className="absolute right-6 top-6 text-white hover:text-gray-300 transition-colors p-2 bg-black/30 rounded-full backdrop-blur-sm"
+          className="absolute right-4 top-4 sm:right-6 sm:top-6 text-white hover:text-gray-300 transition-colors p-1.5 sm:p-2 bg-black/30 rounded-full backdrop-blur-sm"
           aria-label="Close"
         >
           <svg
-            className="w-6 h-6"
+            className="w-5 h-5 sm:w-6 sm:h-6"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"

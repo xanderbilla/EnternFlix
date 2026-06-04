@@ -18,17 +18,16 @@ function IconButton({
   ariaLabel,
 }: IconButtonProps) {
   const baseClasses =
-    "bg-zinc-800/80 hover:bg-zinc-700/80 border-2 border-zinc-600 hover:border-zinc-500 text-white p-2 rounded-full transition-colors";
+    "bg-zinc-800/80 hover:bg-zinc-700/80 border-2 border-zinc-600 hover:border-zinc-500 text-white p-1.5 sm:p-2 rounded-full transition-colors";
 
   const icons = {
     add: (
       <svg
         viewBox="0 0 24 24"
-        width="24"
-        height="24"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 flex-shrink-0"
       >
         <path
           fillRule="evenodd"
@@ -40,11 +39,10 @@ function IconButton({
     like: (
       <svg
         viewBox="0 0 24 24"
-        width="24"
-        height="24"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 flex-shrink-0"
       >
         <path
           fillRule="evenodd"
@@ -56,11 +54,10 @@ function IconButton({
     check: (
       <svg
         viewBox="0 0 24 24"
-        width="24"
-        height="24"
         fill="currentColor"
         xmlns="http://www.w3.org/2000/svg"
         aria-hidden="true"
+        className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 flex-shrink-0"
       >
         <path
           fillRule="evenodd"

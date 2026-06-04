@@ -79,16 +79,16 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
               {/* Left Column - Bio */}
               {personData.bio && (
                 <div>
-                  <p className="text-white/80 text-[15px] leading-relaxed">
+                  <p className="text-white/80 text-xs sm:text-sm md:text-[15px] leading-relaxed">
                     {truncatedBio}
                   </p>
                 </div>
               )}
 
               {/* Right Column - Quick Info */}
-              <div>
+              <div className="space-y-1.5 sm:space-y-2">
                 {personData.aliases && personData.aliases.length > 0 && (
-                  <div className="text-sm mb-2">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Also Known As: </span>
                     <span className="text-white/80">
                       {personData.aliases.slice(0, 4).map((alias, index) => (
@@ -114,7 +114,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.careerStatus && (
-                  <div className="text-sm mb-2">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Career Status: </span>
                     <span className="text-white/80">
                       {personData.careerStatus}
@@ -123,7 +123,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {(personData.debutYear ?? personData.career?.startYear) && (
-                  <div className="text-sm mb-2">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Debut Year: </span>
                     <span className="text-white/80">
                       {personData.debutYear ?? personData.career?.startYear}
@@ -132,7 +132,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.career?.previousProfession && (
-                  <div className="text-sm mb-2">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Previous Profession: </span>
                     <span className="text-white/80">
                       {personData.career.previousProfession}
@@ -142,7 +142,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
 
                 {personData.career?.knownFor &&
                   personData.career.knownFor.length > 0 && (
-                    <div className="text-sm mb-2">
+                    <div className="text-xs sm:text-sm">
                       <span className="text-gray-400">Known For: </span>
                       <span className="text-white/80">
                         {personData.career.knownFor.slice(0, 5).join(", ")}
@@ -162,7 +162,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                   )}
 
                 {personData.tags && personData.tags.length > 0 && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Tags: </span>
                     <span className="text-white/80">
                       {personData.tags.slice(0, 3).map((tag, index) => (
@@ -193,13 +193,16 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
 
             {/* About Section */}
             <div id="about-section" className="mt-12">
-              <h2 className="text-white/80 text-xl mb-6">
-                About <span className="font-medium text-2xl">{castName}</span>
+              <h2 className="text-white/80 text-lg sm:text-xl mb-4 sm:mb-6">
+                About{" "}
+                <span className="font-medium text-xl sm:text-2xl">
+                  {castName}
+                </span>
               </h2>
 
               <div className="space-y-2">
                 {personData.aliases && personData.aliases.length > 0 && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Also Known As: </span>
                     <span className="text-white/80">
                       {personData.aliases.join(", ")}
@@ -208,14 +211,14 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {formattedBirthDate && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Birth Date: </span>
                     <span className="text-white/80">{formattedBirthDate}</span>
                   </div>
                 )}
 
                 {personData.birthPlace && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Birth Place: </span>
                     <span className="text-white/80">
                       {personData.birthPlace}
@@ -224,7 +227,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.nationality && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Nationality: </span>
                     <span className="text-white/80">
                       {personData.nationality}
@@ -233,7 +236,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.height && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Height: </span>
                     <span className="text-white/80">
                       {personData.height} cm
@@ -242,7 +245,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.weight && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Weight: </span>
                     <span className="text-white/80">
                       {personData.weight} kg
@@ -251,7 +254,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.stageName && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Stage Name: </span>
                     <span className="text-white/80">
                       {personData.stageName}
@@ -260,7 +263,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.measurements?.bodyType && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Body Type: </span>
                     <span className="text-white/80">
                       {personData.measurements.bodyType}
@@ -271,7 +274,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 {(personData.measurements?.bust ||
                   personData.measurements?.waist ||
                   personData.measurements?.hips) && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">
                       {`Measurements${personData.measurements?.unit ? ` (${personData.measurements.unit})` : ""}: `}
                     </span>
@@ -291,7 +294,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.measurements?.eyeColor && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Eye Color: </span>
                     <span className="text-white/80">
                       {personData.measurements.eyeColor}
@@ -300,7 +303,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.measurements?.hairColor && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Hair Color: </span>
                     <span className="text-white/80">
                       {personData.measurements.hairColor}
@@ -309,7 +312,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                 )}
 
                 {personData.categories && personData.categories.length > 0 && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Categories: </span>
                     <span className="text-white/80">
                       {personData.categories.map((category, index) => (
@@ -326,7 +329,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
 
                 {personData.specialties &&
                   personData.specialties.length > 0 && (
-                    <div className="text-sm">
+                    <div className="text-xs sm:text-sm">
                       <span className="text-gray-400">Specialties: </span>
                       <span className="text-white/80">
                         {personData.specialties.map((specialty, index) => (
@@ -343,7 +346,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
 
                 {personData.career?.knownFor &&
                   personData.career.knownFor.length > 0 && (
-                    <div className="text-sm">
+                    <div className="text-xs sm:text-sm">
                       <span className="text-gray-400">Known For: </span>
                       <span className="text-white/80">
                         {personData.career.knownFor.join(", ")}
@@ -352,7 +355,7 @@ function CastInfo({ castId, castName, movies, onMovieClick }: CastInfoProps) {
                   )}
 
                 {personData.tags && personData.tags.length > 0 && (
-                  <div className="text-sm">
+                  <div className="text-xs sm:text-sm">
                     <span className="text-gray-400">Tags: </span>
                     <span className="text-white/80">
                       {personData.tags.map((tag, index) => (

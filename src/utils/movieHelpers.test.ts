@@ -51,7 +51,6 @@ describe("getReleaseYear", () => {
       getReleaseYear({
         id: "1",
         backdropPath: null,
-        posterPath: null,
         firstAirDate: "2022-11-20",
       }),
     ).toBe("2022");
@@ -62,7 +61,6 @@ describe("getReleaseYear", () => {
       getReleaseYear({
         id: "2",
         backdropPath: null,
-        posterPath: null,
         releaseDate: "0001-01-01",
         firstAirDate: "2021-08-15",
       }),

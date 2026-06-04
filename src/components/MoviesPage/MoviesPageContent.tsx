@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { twMerge } from "tailwind-merge";
 import PageLayout from "@/components/Layout/PageLayout";
-import { DynamicMovieList } from "@/utils/dynamicImports";
+import MovieGridSection from "@/components/MovieList/MovieGridSection";
 import { MovieListItem } from "@/types/components";
 import {
   useBanner,
@@ -198,7 +198,7 @@ export default function MoviesPageContent({
       >
         {/* Configured Movie Lists */}
         {movieLists.map((list) => (
-          <DynamicMovieList
+          <MovieGridSection
             key={list.hookName}
             title={list.title}
             hookName={list.hookName}

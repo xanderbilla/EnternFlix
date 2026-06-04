@@ -41,7 +41,6 @@ export interface Movie {
   title?: string;
   overview?: string;
   backdropPath: string | null;
-  posterPath: string | null;
   releaseDate?: string;
   firstAirDate?: string;
   adult?: boolean;

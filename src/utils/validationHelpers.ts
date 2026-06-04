@@ -40,14 +40,6 @@ export function validateMovie(data: unknown): ValidationResult<Movie> {
     });
   }
 
-  if (movie.posterPath !== null && typeof movie.posterPath !== "string") {
-    errors.push({
-      field: "posterPath",
-      message: "Poster path must be a string or null",
-      code: "INVALID_TYPE",
-    });
-  }
-
   if (typeof movie.voteAverage !== "number") {
     errors.push({
       field: "voteAverage",

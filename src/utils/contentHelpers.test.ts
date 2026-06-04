@@ -6,7 +6,6 @@ function makeMovie(partial: Partial<Movie> = {}): Movie {
   return {
     id: "m-1",
     backdropPath: "/backdrop.jpg",
-    posterPath: "/poster.jpg",
     ...partial,
   };
 }

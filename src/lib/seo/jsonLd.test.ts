@@ -12,7 +12,6 @@ const movie: Movie = {
   title: "Test Movie",
   overview: "A test.",
   backdropPath: "/back.jpg",
-  posterPath: "/poster.jpg",
   releaseDate: "2024-01-15",
   originalLanguage: "en",
   runtime: 124,
@@ -45,7 +44,7 @@ describe("jsonLd builders", () => {
     expect(data.name).toBe("Test Movie");
     expect(data.duration).toBe("PT124M");
     expect(data.url).toContain("/watch?id=abc123&type=movie");
-    expect(data.image).toMatch(/^https?:\/\/.+\/poster\.jpg$/);
+    expect(data.image).toMatch(/^https?:\/\/.+\/back\.jpg$/);
     expect(data.genre).toEqual(["Action", "Drama"]);
   });
 
@@ -67,7 +66,6 @@ describe("jsonLd builders", () => {
     const minimal: Movie = {
       id: "x",
       backdropPath: null,
-      posterPath: null,
     };
     const data = buildMovieJsonLd(minimal);
     expect(data.image).toBeUndefined();

@@ -1,11 +1,11 @@
 import PageLayout from "@/components/Layout/PageLayout";
-import { DynamicMovieList } from "@/utils/dynamicImports";
+import MovieGridSection from "@/components/MovieList/MovieGridSection";
 
 const Home = () => {
   return (
     <PageLayout showBanner={true} bannerVariant="home">
-      <DynamicMovieList title="Recently Added" hookName="trending" />
-      <DynamicMovieList title="Latest Release" hookName="latestRelease" />
+      <MovieGridSection title="Recently Added" hookName="trending" />
+      <MovieGridSection title="Latest Release" hookName="latestRelease" />
     </PageLayout>
   );
 };

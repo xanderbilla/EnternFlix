@@ -19,7 +19,6 @@ describe("Property 1: Utility Function Determinism", () => {
     title: fc.option(fc.string(), { nil: undefined }),
     overview: fc.string(),
     backdropPath: fc.option(fc.string(), { nil: null }),
-    posterPath: fc.option(fc.string(), { nil: null }),
     releaseDate: fc.option(fc.string(), { nil: undefined }),
     firstAirDate: fc.option(fc.string(), { nil: undefined }),
     voteAverage: fc.float({ min: 0, max: 10 }),
@@ -283,7 +282,7 @@ describe("Property 1: Utility Function Determinism", () => {
       fc.assert(
         fc.property(movieArbitrary, (movie) => {
           const sequence1 = {
-            imageUrl: getImageUrl(movie.posterPath, "w500"),
+            imageUrl: getImageUrl(movie.backdropPath, "w500"),
             releaseYear: getReleaseYear(movie),
             contentType: getContentType(movie),
             contentRating: getContentRating(movie),
@@ -292,7 +291,7 @@ describe("Property 1: Utility Function Determinism", () => {
           };
 
           const sequence2 = {
-            imageUrl: getImageUrl(movie.posterPath, "w500"),
+            imageUrl: getImageUrl(movie.backdropPath, "w500"),
             releaseYear: getReleaseYear(movie),
             contentType: getContentType(movie),
             contentRating: getContentRating(movie),
@@ -301,7 +300,7 @@ describe("Property 1: Utility Function Determinism", () => {
           };
 
           const sequence3 = {
-            imageUrl: getImageUrl(movie.posterPath, "w500"),
+            imageUrl: getImageUrl(movie.backdropPath, "w500"),
             releaseYear: getReleaseYear(movie),
             contentType: getContentType(movie),
             contentRating: getContentRating(movie),
@@ -326,7 +325,7 @@ describe("Property 1: Utility Function Determinism", () => {
         fc.property(movieArbitrary, (movie) => {
           const originalMovie = structuredClone(movie);
 
-          getImageUrl(movie.posterPath, "w500");
+          getImageUrl(movie.backdropPath, "w500");
           getReleaseYear(movie);
           getContentType(movie);
           getContentRating(movie);

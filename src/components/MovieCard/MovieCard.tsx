@@ -117,7 +117,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
             md:group-hover/item:opacity-0 delay-300"
           fill
           sizes="(max-width: 640px) 150px, (max-width: 1024px) 180px, 200px"
-          src={movieData.posterUrl}
+          src={movieData.backdropUrl}
           alt={data?.title || "Movie poster"}
           loading={isFirst ? "eager" : "lazy"}
           priority={isFirst}

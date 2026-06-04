@@ -43,7 +43,6 @@ export function useExploreNavigation({
           id: `sample-${i + 1}`,
           title: `${query} Content ${i + 1}`,
           backdropPath: "/sample-backdrop.jpg",
-          posterPath: "/sample-poster.jpg",
           overview: `Content related to ${query}`,
           releaseDate: "2023-01-01",
           originalLanguage: "en",

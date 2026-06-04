@@ -32,15 +32,13 @@ describe("exploreContent service", () => {
   it("fetches discover data for discover hooks", async () => {
     (customAxios.get as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       data: {
-        data: { items: [{ id: "d1", backdropPath: null, posterPath: null }] },
+        data: { items: [{ id: "d1", backdropPath: null }] },
       },
     });
 
     const result = await fetchFreshExploreMovies("latestRelease", []);
 
-    expect(result).toEqual([
-      { id: "d1", backdropPath: null, posterPath: null },
-    ]);
+    expect(result).toEqual([{ id: "d1", backdropPath: null }]);
     expect(customAxios.get).toHaveBeenCalledWith(
       "c/discover?type=latest&content=all",
     );
@@ -49,20 +47,18 @@ describe("exploreContent service", () => {
   it("fetches all-content fallback for non-discover mapped hooks", async () => {
     (customAxios.get as ReturnType<typeof vi.fn>).mockResolvedValueOnce({
       data: {
-        data: { items: [{ id: "m1", backdropPath: null, posterPath: null }] },
+        data: { items: [{ id: "m1", backdropPath: null }] },
       },
     });
 
     const result = await fetchFreshExploreMovies("allMovies", []);
 
-    expect(result).toEqual([
-      { id: "m1", backdropPath: null, posterPath: null },
-    ]);
+    expect(result).toEqual([{ id: "m1", backdropPath: null }]);
     expect(customAxios.get).toHaveBeenCalledWith("c/content?type=movie");
   });
 
   it("returns provided fallback movies for unknown hook names", async () => {
-    const fallback = [{ id: "local", backdropPath: null, posterPath: null }];
+    const fallback = [{ id: "local", backdropPath: null }];
 
     const result = await fetchFreshExploreMovies("unknownHook", fallback);
 

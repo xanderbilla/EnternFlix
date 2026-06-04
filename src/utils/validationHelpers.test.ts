@@ -34,10 +34,6 @@ describe("Property 2: Validation Error Completeness", () => {
             fc.oneof(fc.string(), fc.integer(), fc.boolean()),
             { nil: undefined },
           ),
-          posterPath: fc.option(
-            fc.oneof(fc.string(), fc.integer(), fc.boolean()),
-            { nil: undefined },
-          ),
           voteAverage: fc.option(
             fc.oneof(fc.float(), fc.string(), fc.constant(null)),
             { nil: undefined },

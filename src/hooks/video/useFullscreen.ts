@@ -47,13 +47,18 @@ export function useFullscreen(containerRef: RefObject<HTMLElement | null>) {
     const handleFullscreenChange = () => {
       const inFullscreen = !!document.fullscreenElement;
       setIsFullscreen(inFullscreen);
+      if (inFullscreen) {
+        lockLandscapeOnSmallScreens();
+      } else {
+        unlockOrientation();
+      }
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
     return () => {
       document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
-  }, [unlockOrientation]);
+  }, [lockLandscapeOnSmallScreens, unlockOrientation]);
 
   useEffect(() => {
     lockLandscapeOnSmallScreens();

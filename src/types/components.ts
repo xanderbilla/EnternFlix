@@ -422,6 +422,7 @@ export interface BaseDialogProps {
       }) => ReactNode);
   zIndex?: number;
   className?: string;
+  overlayClassName?: string;
   contentAlignment?: "start" | "center";
   /** Accessible name for the dialog (used as aria-label). */
   ariaLabel?: string;

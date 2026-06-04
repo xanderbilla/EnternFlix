@@ -16,6 +16,7 @@ export default function BaseDialog({
   contentAlignment = "center",
   ariaLabel,
   ariaLabelledBy,
+  overlayClassName = "",
 }: BaseDialogProps) {
   const [isClosing, setIsClosing] = useState(false);
   const [isEntering, setIsEntering] = useState(false);
@@ -147,7 +148,7 @@ export default function BaseDialog({
     <div
       className={`fixed inset-0 bg-black/50 overflow-y-auto no-scrollbar [overflow-anchor:none] z-dynamic transition-opacity duration-500 ease-in-out ${
         isClosing ? "opacity-0" : isEntering ? "opacity-100" : "opacity-0"
-      }`}
+      } ${overlayClassName}`}
       style={{ "--z-idx": zIndex } as CSSProperties}
       onClick={onBack ? handleBack : handleClose}
       role="presentation"

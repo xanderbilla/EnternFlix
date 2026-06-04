@@ -81,13 +81,25 @@ export default function WatchPageContent({
 
   const sourcePath = searchParams.get("from");
 
+  useEffect(() => {
+    resetDialogRestorationGuard();
+  }, []);
+
   const handleBack = () => {
     if (sourcePath) {
       const decodedPath = decodeURIComponent(sourcePath);
-      // Clear the restoration guard so the target page can re-open its dialog
-      // from the URL params (e.g. ?title=xxx) when it remounts.
+      const params = new URLSearchParams();
+      const watchPageParams = ["id", "type", "season", "episode", "from"];
+      searchParams.forEach((value, key) => {
+        if (!watchPageParams.includes(key)) {
+          params.set(key, value);
+        }
+      });
+      const queryStr = params.toString();
+      const backUrl = queryStr ? `${decodedPath}?${queryStr}` : decodedPath;
+
       resetDialogRestorationGuard();
-      router.push(decodedPath);
+      router.push(backUrl);
       return;
     }
     router.back();
@@ -119,7 +131,7 @@ export default function WatchPageContent({
   return (
     <div
       ref={containerRef}
-      className="fixed inset-0 z-[9999] bg-black"
+      className="fixed inset-0 z-[9999] bg-black force-landscape"
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       onFocus={handleMouseMove}
@@ -142,13 +154,13 @@ export default function WatchPageContent({
       )}
 
       {/* Paused Overlay */}
-      {!hasPlaybackError && !isPlaying && playbackData?.info && (
+      {!hasPlaybackError && !isLoading && !isPlaying && playbackData?.info && (
         <PausedOverlay info={playbackData.info} onPlay={handlePlayPause} />
       )}
 
       {/* Video Header */}
       <VideoHeader
-        showControls={showControls}
+        showControls={showControls && !isLoading}
         forceVisible={hasPlaybackError}
         isFullscreen={isFullscreen}
         onBack={handleBack}
@@ -177,7 +189,7 @@ export default function WatchPageContent({
       {!hasPlaybackError && <SubtitleDisplay subtitle={currentSubtitle} />}
 
       {/* Playback Controls */}
-      {!hasPlaybackError && (
+      {!hasPlaybackError && !isLoading && (
         <PlaybackControls
           isPlaying={isPlaying}
           currentTime={currentTime}

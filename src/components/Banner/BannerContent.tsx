@@ -18,13 +18,14 @@ export default function BannerContent({
 
   const handlePlayClick = () => {
     const type = contentType === "TV" ? "tv" : "movie";
-    const sourcePath =
-      typeof window === "undefined"
-        ? "/"
-        : `${window.location.pathname}${window.location.search}${window.location.hash}`;
-    navigateWithTransition(
-      `/watch?id=${movieId}&type=${type}&from=${encodeURIComponent(sourcePath)}`,
-    );
+    const pathname = typeof window === "undefined" ? "/" : window.location.pathname;
+    const currentParams = typeof window === "undefined" ? "" : window.location.search;
+
+    let watchUrl = `/watch?id=${movieId}&type=${type}&from=${pathname}`;
+    if (currentParams) {
+      watchUrl += `&${currentParams.substring(1)}`;
+    }
+    navigateWithTransition(watchUrl);
   };
 
   return (

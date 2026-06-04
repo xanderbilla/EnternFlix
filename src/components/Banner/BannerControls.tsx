@@ -48,7 +48,7 @@ export default function BannerControls({
           variant="secondary"
           size="lg"
           aria-label={isMuted ? "Unmute" : "Mute"}
-          className="mr-6"
+          className="mr-6 opacity-60 hover:opacity-100 transition-opacity duration-300"
           icon={
             isMuted ? (
               <svg

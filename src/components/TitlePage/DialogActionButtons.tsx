@@ -18,11 +18,14 @@ function DialogActionButtons({
 
   const handlePlayClick = () => {
     const type = contentType === "TV" ? "tv" : "movie";
-    navigateWithTransition(`/watch?id=${contentId}&type=${type}`, () => {
-      if (onClose) {
-        onClose();
-      }
-    });
+    const pathname = typeof window === "undefined" ? "/" : window.location.pathname;
+    const currentParams = typeof window === "undefined" ? "" : window.location.search;
+
+    let watchUrl = `/watch?id=${contentId}&type=${type}&from=${pathname}`;
+    if (currentParams) {
+      watchUrl += `&${currentParams.substring(1)}`;
+    }
+    navigateWithTransition(watchUrl);
   };
 
   return (

@@ -15,9 +15,14 @@ export default function EpisodeItem({
 
   const handleClick = () => {
     if (contentId && episode.seasonId && episode.episodeId) {
-      navigateWithTransition(
-        `/watch?id=${contentId}&type=tv&season=${episode.seasonId}&episode=${episode.episodeId}`,
-      );
+      const pathname = typeof window === "undefined" ? "/" : window.location.pathname;
+      const currentParams = typeof window === "undefined" ? "" : window.location.search;
+
+      let watchUrl = `/watch?id=${contentId}&type=tv&season=${episode.seasonId}&episode=${episode.episodeId}&from=${pathname}`;
+      if (currentParams) {
+        watchUrl += `&${currentParams.substring(1)}`;
+      }
+      navigateWithTransition(watchUrl);
     }
   };
 

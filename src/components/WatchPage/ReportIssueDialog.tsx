@@ -51,13 +51,14 @@ export default function ReportIssueDialog({
       }}
       zIndex={11000}
       ariaLabel="Report playback issue"
-      className="w-[92vw] sm:w-[86vw] md:w-[70vw] lg:w-[520px] max-w-[520px]"
+      className="w-[94vw] sm:w-[88vw] md:w-[75vw] lg:w-[640px] max-w-[640px]"
+      overlayClassName="force-landscape"
       contentAlignment="center"
     >
       {({ handleClose }) => (
-        <div className="bg-zinc-800/95 text-white px-6 sm:px-8 py-6 sm:py-7">
+        <div className="bg-zinc-800/95 text-white px-4 sm:px-8 py-4 sm:py-6">
           <div className="flex items-start justify-between gap-4 mb-4">
-            <h2 className="text-xl sm:text-2xl font-semibold">
+            <h2 className="text-lg sm:text-xl md:text-2xl font-semibold">
               What&apos;s the issue?
             </h2>
             <button
@@ -83,7 +84,7 @@ export default function ReportIssueDialog({
             </button>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {ISSUE_OPTIONS.map((option) => {
               const isSelected = selectedIssue === option.value;
               return (
@@ -91,16 +92,16 @@ export default function ReportIssueDialog({
                   key={option.value}
                   type="button"
                   onClick={() => setSelectedIssue(option.value)}
-                  className={`w-full text-left rounded-md px-3 py-3 transition-colors ${
+                  className={`w-full text-left rounded-md px-3 py-2.5 sm:py-3 transition-colors ${
                     isSelected
                       ? "bg-zinc-700 ring-1 ring-zinc-500"
                       : "bg-transparent hover:bg-zinc-700/40"
                   }`}
                 >
-                  <p className="text-lg sm:text-xl font-semibold">
+                  <p className="text-base sm:text-lg md:text-xl font-semibold">
                     {option.value}
                   </p>
-                  <p className="text-zinc-300 text-sm sm:text-base mt-1">
+                  <p className="text-zinc-300 text-xs sm:text-sm md:text-base mt-0.5">
                     {option.description}
                   </p>
                 </button>
@@ -109,13 +110,13 @@ export default function ReportIssueDialog({
           </div>
 
           {selectedIssue && (
-            <div className="mt-6 flex justify-end">
+            <div className="mt-4 sm:mt-6 flex justify-end">
               <ActionButton
                 variant="primary"
                 label="Submit"
                 ariaLabel="Submit selected issue"
                 onClick={handleSubmit}
-                className="!text-sm sm:!text-base"
+                className="!text-xs sm:!text-sm md:!text-base"
               />
             </div>
           )}

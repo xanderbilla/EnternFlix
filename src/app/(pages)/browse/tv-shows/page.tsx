@@ -36,7 +36,7 @@ export default async function TvShowsPage() {
         heroDescription="Catch trending series, fan favorites, and fresh episodes all in one place."
         movieLists={[
           {
-            title: "Recently Added TV Shows",
+            title: "Recently Added",
             hookName: "recentlyAddedTvShows",
           },
           { title: "Latest TV Shows", hookName: "latestTvShows" },

@@ -36,7 +36,7 @@ export default async function MoviesPage() {
         heroTitle="Experience Cinema at Home"
         heroDescription="Watch the latest blockbusters and timeless classics from the comfort of your home."
         movieLists={[
-          { title: "Recently Added Movies", hookName: "recentlyAdded" },
+          { title: "Recently Added", hookName: "recentlyAdded" },
           { title: "Latest Movies", hookName: "latestMovies" },
           { title: "Trending Movies", hookName: "trendingMovies" },
           { title: "Popular Movies", hookName: "popularMovies" },

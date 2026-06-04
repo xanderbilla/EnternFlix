@@ -64,32 +64,30 @@ export default function NotFoundContent({
         {/* Content */}
         <div className="absolute top-[35%] md:top-[25%] ml-4 md:ml-16">
           {/* Subtitle */}
-          <h2 className="text-white text-2xl md:text-4xl lg:text-5xl xl:text-6xl h-full w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] font-bold drop-shadow-xl mb-4">
+          <h2 className="text-white text-xl sm:text-2xl md:text-4xl lg:text-5xl xl:text-6xl h-full w-[90%] md:w-[80%] lg:w-[70%] xl:w-[60%] font-bold drop-shadow-xl mb-3 sm:mb-4">
             {titleText}
           </h2>
 
           {/* Meta Info */}
-          <div className="flex gap-2 md:gap-4 font-light text-zinc-400 text-sm md:text-base mt-2 md:mt-4 lg:text-lg drop-shadow-xl">
-            <p className="text-xs md:text-sm lg:text-lg">Error</p>
-            <p className="border border-zinc-400 px-1 md:px-2 text-xs md:text-sm lg:text-lg">
-              {statusBadge}
-            </p>
+          <div className="flex gap-2 sm:gap-3 md:gap-4 font-light text-zinc-400 text-xs sm:text-sm md:text-base lg:text-lg mt-2 md:mt-4 drop-shadow-xl">
+            <p>Error</p>
+            <p className="border border-zinc-400 px-1 md:px-2">{statusBadge}</p>
           </div>
 
           {/* Description */}
-          <p className="text-white text-sm md:text-base mt-3 md:mt-8 w-[95%] md:w-[90%] lg:w-[70%] xl:w-[60%] lg:text-lg drop-shadow-xl">
+          <p className="text-white text-xs sm:text-sm md:text-base lg:text-lg mt-3 md:mt-6 w-[95%] md:w-[90%] lg:w-[70%] xl:w-[60%] drop-shadow-xl">
             {descriptionText}
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-row items-center mt-4 md:mt-6 gap-3">
+          <div className="flex flex-wrap items-center mt-4 md:mt-6 gap-2 sm:gap-3">
             {isErrorMode && onRetry && (
               <ActionButton
                 variant="primary"
                 icon="retry"
                 label="Try Again"
                 onClick={onRetry}
-                className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg"
+                className="py-1.5 sm:py-2 md:py-2.5 lg:py-3 px-3 sm:px-4 md:px-6 text-xs sm:text-sm md:text-base lg:text-lg w-auto"
               />
             )}
 
@@ -98,7 +96,7 @@ export default function NotFoundContent({
               icon="home"
               label="Go Home"
               onClick={() => router.push("/browse")}
-              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg"
+              className="py-1.5 sm:py-2 md:py-2.5 lg:py-3 px-3 sm:px-4 md:px-6 text-xs sm:text-sm md:text-base lg:text-lg w-auto"
             />
 
             <ActionButton
@@ -106,7 +104,7 @@ export default function NotFoundContent({
               icon="search"
               label="Search Content"
               onClick={() => router.push("/search")}
-              className="py-2 md:py-3 px-4 md:px-6 w-auto text-sm lg:text-lg"
+              className="py-1.5 sm:py-2 md:py-2.5 lg:py-3 px-3 sm:px-4 md:px-6 text-xs sm:text-sm md:text-base lg:text-lg w-auto"
             />
           </div>
         </div>

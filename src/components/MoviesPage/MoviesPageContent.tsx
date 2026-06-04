@@ -130,7 +130,7 @@ export default function MoviesPageContent({
             className="sticky top-16 md:top-[72px] z-20 px-3 sm:px-6 md:px-16 pt-2 pb-1 flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3 md:gap-4"
             ref={dropdownRef}
           >
-            <h1 className="text-white text-2xl md:text-4xl font-semibold leading-none">
+            <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-semibold leading-none">
               {pageTitle}
             </h1>
 
@@ -147,15 +147,15 @@ export default function MoviesPageContent({
                 </button>
 
                 {isGenresOpen && (
-                  <div className="absolute left-0 top-full -mt-px w-[min(90vw,560px)] max-h-80 overflow-y-auto rounded-[2px] border border-zinc-700 bg-black/95 p-2.5 shadow-xl z-30">
-                    <div className="grid grid-cols-1 gap-x-3 gap-y-0 sm:grid-cols-2 lg:grid-cols-3">
+                  <div className="absolute left-0 top-full -mt-px w-[min(90vw,560px)] max-h-80 overflow-y-auto rounded-[2px] border border-zinc-700 bg-black/95 p-2.5 shadow-xl z-30 animate-fadeIn">
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-1 sm:grid-cols-2 lg:grid-cols-3">
                       <button
                         type="button"
                         onClick={() => {
                           setIsGenresOpen(false);
                           router.push(basePageHref);
                         }}
-                        className="text-left px-2 py-0.5 text-[12px] md:text-[13px] leading-5 text-white/85 hover:text-white hover:underline hover:underline-offset-4 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+                        className="text-left px-2 py-1 text-[12px] md:text-[13px] leading-relaxed text-white/85 hover:text-white hover:underline hover:underline-offset-4 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                       >
                         All Genres
                       </button>
@@ -169,7 +169,7 @@ export default function MoviesPageContent({
                               `/browse/genre/${genre.id}?type=${contentType}&name=${encodeURIComponent(genre.name)}`,
                             );
                           }}
-                          className="text-left px-2 py-0.5 text-[12px] md:text-[13px] leading-5 text-white/90 hover:text-white hover:underline hover:underline-offset-4 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+                          className="text-left px-2 py-1 text-[12px] md:text-[13px] leading-relaxed text-white/90 hover:text-white hover:underline hover:underline-offset-4 transition-colors focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
                         >
                           {genre.name}
                         </button>
@@ -185,7 +185,7 @@ export default function MoviesPageContent({
             <h1 className="font-bold text-white mb-2 leading-tight tracking-tight text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl">
               {heroTitle}
             </h1>
-            <p className="text-white/90 max-w-3xl leading-relaxed text-base sm:text-lg md:text-xl">
+            <p className="text-white/90 max-w-3xl leading-relaxed text-xs sm:text-sm md:text-base lg:text-lg xl:text-xl">
               {heroDescription}
             </p>
           </div>

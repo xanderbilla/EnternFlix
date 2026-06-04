@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { twMerge } from "tailwind-merge";
@@ -24,6 +25,12 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
     handleClearSearch,
     handleScopeChange,
   } = useNavbarSearch();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIsMounted(true);
+  }, []);
 
   useDialogBodyScroll(showMobileMenu);
 
@@ -80,48 +87,52 @@ const Navbar = ({ classname = "" }: NavbarProps) => {
         </div>
 
         {/* Right Side - Search + Hamburger */}
-        <div
-          ref={searchContainerRef}
-          className="flex flex-row ml-auto gap-2 md:gap-4 items-center"
-        >
-          <SearchField
-            isOpen={isSearchOpen}
-            value={searchValue}
-            selectedScope={selectedScope}
-            onOpen={handleSearchOpen}
-            onChange={handleSearchChange}
-            onClear={handleClearSearch}
-            onScopeChange={handleScopeChange}
-          />
-
-          {/* Hamburger — mobile only, animates burger ↔ X */}
-          <button
-            type="button"
-            className="md:hidden flex flex-col justify-center items-center w-6 h-6 gap-0 focus:outline-none"
-            aria-label={
-              showMobileMenu ? "Close navigation menu" : "Open navigation menu"
-            }
-            aria-expanded={showMobileMenu}
-            aria-controls="mobile-nav-menu"
-            onClick={toggleMobileMenu}
+        {isMounted && (
+          <div
+            ref={searchContainerRef}
+            className="flex flex-row ml-auto gap-2 md:gap-4 items-center"
           >
-            <span
-              className={`block w-5 h-px bg-white rounded transition-all duration-300 origin-center ${
-                showMobileMenu ? "rotate-45 translate-y-[5px]" : ""
-              }`}
+            <SearchField
+              isOpen={isSearchOpen}
+              value={searchValue}
+              selectedScope={selectedScope}
+              onOpen={handleSearchOpen}
+              onChange={handleSearchChange}
+              onClear={handleClearSearch}
+              onScopeChange={handleScopeChange}
             />
-            <span
-              className={`block w-5 h-px bg-white rounded transition-all duration-200 my-[3px] ${
-                showMobileMenu ? "opacity-0 scale-x-0" : ""
-              }`}
-            />
-            <span
-              className={`block w-5 h-px bg-white rounded transition-all duration-300 origin-center ${
-                showMobileMenu ? "-rotate-45 -translate-y-[5px]" : ""
-              }`}
-            />
-          </button>
-        </div>
+
+            {/* Hamburger — mobile only, animates burger ↔ X */}
+            <button
+              type="button"
+              className="md:hidden flex flex-col justify-center items-center w-6 h-6 gap-0 focus:outline-none"
+              aria-label={
+                showMobileMenu
+                  ? "Close navigation menu"
+                  : "Open navigation menu"
+              }
+              aria-expanded={showMobileMenu}
+              aria-controls="mobile-nav-menu"
+              onClick={toggleMobileMenu}
+            >
+              <span
+                className={`block w-5 h-px bg-white rounded transition-all duration-300 origin-center ${
+                  showMobileMenu ? "rotate-45 translate-y-[5px]" : ""
+                }`}
+              />
+              <span
+                className={`block w-5 h-px bg-white rounded transition-all duration-200 my-[3px] ${
+                  showMobileMenu ? "opacity-0 scale-x-0" : ""
+                }`}
+              />
+              <span
+                className={`block w-5 h-px bg-white rounded transition-all duration-300 origin-center ${
+                  showMobileMenu ? "-rotate-45 -translate-y-[5px]" : ""
+                }`}
+              />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Mobile Menu Overlay */}

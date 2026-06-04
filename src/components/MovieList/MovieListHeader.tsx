@@ -13,7 +13,7 @@ export default function MovieListHeader({
     <div className="flex items-center gap-4">
       <button
         type="button"
-        className="text-white text-base sm:text-lg md:text-xl lg:text-2xl font-medium hover:text-gray-300 transition-colors duration-200 cursor-pointer bg-transparent border-0 p-0"
+        className="text-white text-base sm:text-lg md:text-xl lg:text-2xl font-medium hover:text-gray-300 transition-colors duration-200 cursor-pointer bg-transparent border-0 p-0 text-left whitespace-nowrap"
         onClick={onExploreClick}
         onMouseEnter={onTitleHover?.onEnter}
         onMouseLeave={onTitleHover?.onLeave}
@@ -32,7 +32,7 @@ export default function MovieListHeader({
           onMouseLeave={onTitleHover?.onLeave}
           onFocus={onTitleHover?.onEnter}
           onBlur={onTitleHover?.onLeave}
-          className={`text-gray-300 hover:text-white text-xs font-medium flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0 transition-[opacity,transform,color] duration-300 ease-out transform ${
+          className={`text-gray-300 hover:text-white text-xs font-medium flex items-center gap-1 cursor-pointer bg-transparent border-0 p-0 transition-[opacity,transform,color] duration-300 ease-out transform whitespace-nowrap text-left ${
             showExploreButton
               ? "opacity-100 translate-x-0 scale-100"
               : "opacity-0 -translate-x-4 scale-95 pointer-events-none"

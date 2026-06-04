@@ -32,10 +32,10 @@ export class ErrorBoundary extends Component<
       }
 
       return (
-        <div className="flex flex-col items-center justify-center min-h-[200px] p-8 text-center">
-          <div className="text-red-500 mb-4">
+        <div className="flex flex-col items-center justify-center min-h-[200px] p-6 sm:p-8 text-center">
+          <div className="text-red-500 mb-3 sm:mb-4">
             <svg
-              className="w-16 h-16 mx-auto"
+              className="w-12 h-12 md:w-16 md:h-16 mx-auto"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -48,16 +48,16 @@ export class ErrorBoundary extends Component<
               />
             </svg>
           </div>
-          <h3 className="text-lg font-semibold text-white mb-2">
+          <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
             Something went wrong
           </h3>
-          <p className="text-gray-400 text-sm mb-4">
+          <p className="text-gray-400 text-xs sm:text-sm mb-4">
             We&apos;re sorry for the inconvenience. Please try refreshing the
             page.
           </p>
           <button
             onClick={() => window.location.reload()}
-            className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
+            className="px-3 py-1.5 sm:px-4 sm:py-2 bg-red-600 text-white rounded hover:bg-red-700 text-xs sm:text-sm transition"
           >
             Refresh Page
           </button>

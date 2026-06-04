@@ -210,7 +210,7 @@ const Banner = () => {
 
   return (
     <section
-      className="relative h-[70vh] sm:h-[80vh] md:h-[92vh] lg:h-[100vh]"
+      className="relative h-[70vh] sm:h-[80vh] md:h-[92vh] lg:h-[100vh] overflow-hidden"
       role="region"
       aria-label={`Featured banner: ${movieTitle}`}
     >

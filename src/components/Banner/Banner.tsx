@@ -265,7 +265,7 @@ const Banner = () => {
           {isVideoPlaying && (
             <button
               aria-label={isMuted ? "Turn audio on" : "Turn audio off"}
-              className="absolute inset-0 rounded-full border-2 border-white/60 bg-transparent hover:bg-white/10 flex items-center justify-center transition-opacity duration-500"
+              className="absolute inset-0 rounded-full border-2 border-white/50 bg-transparent hover:bg-white/10 flex items-center justify-center opacity-50 hover:opacity-90 transition-opacity duration-300"
               type="button"
               onClick={toggleMute}
             >
@@ -305,7 +305,7 @@ const Banner = () => {
           {videoEnded && videoUrl && (
             <button
               aria-label={`Replay ${movieTitle} preview`}
-              className="absolute inset-0 rounded-full border-2 border-white/60 bg-transparent hover:bg-white/10 flex items-center justify-center transition-opacity duration-500"
+              className="absolute inset-0 rounded-full border-2 border-white/50 bg-transparent hover:bg-white/10 flex items-center justify-center opacity-50 hover:opacity-90 transition-opacity duration-300"
               type="button"
               onClick={handleReplay}
             >
@@ -335,11 +335,11 @@ const Banner = () => {
           }`}
         >
           {/* Vertical Divider */}
-          <div className="h-6 sm:h-7 md:h-8 lg:h-9 w-[2px] bg-white/60"></div>
+          <div className="h-6 sm:h-7 md:h-8 lg:h-9 w-[2px] bg-white/50"></div>
 
           {/* Content Rating */}
           {contentRating && (
-            <span className="text-white text-sm sm:text-base md:text-base lg:text-lg font-normal">
+            <span className="text-white/50 text-sm sm:text-base md:text-base lg:text-lg font-normal">
               {contentRating}
             </span>
           )}

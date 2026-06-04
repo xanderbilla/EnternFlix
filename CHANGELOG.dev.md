@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.40.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.40.0
+Commit SHA: 409990639f9ca543942f932f71a586b26c42d031
+
+Changes:
+- fix: prevent horizontal overflow in Banner component during slide-in animations (4099906)
+
 ## v0.39.0 - 2026-06-04
 
 Environment: dev

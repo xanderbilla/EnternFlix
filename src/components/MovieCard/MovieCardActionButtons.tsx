@@ -18,7 +18,13 @@ export default function MovieCardActionButtons({
   const handlePlayClick = (e: React.SyntheticEvent) => {
     e.stopPropagation();
     const type = contentType === "TV" ? "tv" : "movie";
-    navigateWithTransition(`/watch?id=${contentId}&type=${type}`);
+    const sourcePath =
+      typeof window === "undefined"
+        ? "/"
+        : `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    navigateWithTransition(
+      `/watch?id=${contentId}&type=${type}&from=${encodeURIComponent(sourcePath)}`,
+    );
   };
 
   const handleAddClick = (e: React.MouseEvent) => {

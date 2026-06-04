@@ -6,6 +6,7 @@ import {
   useState,
   useCallback,
   useEffect,
+  useRef,
 } from "react";
 import { useRouter } from "next/navigation";
 
@@ -27,6 +28,9 @@ export function TransitionProvider({
   children: React.ReactNode;
 }) {
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const isNavigatingRef = useRef(false);
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const settleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -39,21 +43,37 @@ export function TransitionProvider({
 
   const navigateWithTransition = useCallback(
     (url: string, onBeforeTransition?: () => void) => {
+      if (isNavigatingRef.current) return;
+      isNavigatingRef.current = true;
+
       if (onBeforeTransition) {
         onBeforeTransition();
       }
 
       setIsTransitioning(true);
 
-      setTimeout(() => {
+      transitionTimerRef.current = setTimeout(() => {
         router.push(url);
-        setTimeout(() => {
+        settleTimerRef.current = setTimeout(() => {
           setIsTransitioning(false);
+          isNavigatingRef.current = false;
         }, 100);
       }, 500);
     },
     [router],
   );
+
+  useEffect(() => {
+    return () => {
+      if (transitionTimerRef.current) {
+        clearTimeout(transitionTimerRef.current);
+      }
+      if (settleTimerRef.current) {
+        clearTimeout(settleTimerRef.current);
+      }
+      isNavigatingRef.current = false;
+    };
+  }, []);
 
   return (
     <TransitionContext.Provider

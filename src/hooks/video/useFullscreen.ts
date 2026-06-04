@@ -14,7 +14,7 @@ export function useFullscreen(containerRef: RefObject<HTMLElement | null>) {
 
   const lockLandscapeOnSmallScreens = useCallback(async () => {
     if (typeof window === "undefined") return;
-    if (!window.matchMedia("(max-width: 767px)").matches) return;
+    if (!window.matchMedia("(max-width: 1023px)").matches) return;
 
     const orientation = screen.orientation as ScreenOrientation & {
       lock?: (orientation: SupportedOrientationLock) => Promise<void>;
@@ -25,7 +25,7 @@ export function useFullscreen(containerRef: RefObject<HTMLElement | null>) {
     try {
       await orientation.lock("landscape");
     } catch {
-      // Some browsers/devices block orientation lock despite fullscreen.
+      // Some browsers/devices block orientation lock without user gesture.
     }
   }, []);
 
@@ -47,10 +47,6 @@ export function useFullscreen(containerRef: RefObject<HTMLElement | null>) {
     const handleFullscreenChange = () => {
       const inFullscreen = !!document.fullscreenElement;
       setIsFullscreen(inFullscreen);
-
-      if (!inFullscreen) {
-        unlockOrientation();
-      }
     };
 
     document.addEventListener("fullscreenchange", handleFullscreenChange);
@@ -59,14 +55,20 @@ export function useFullscreen(containerRef: RefObject<HTMLElement | null>) {
     };
   }, [unlockOrientation]);
 
+  useEffect(() => {
+    lockLandscapeOnSmallScreens();
+    return () => {
+      unlockOrientation();
+    };
+  }, [lockLandscapeOnSmallScreens, unlockOrientation]);
+
   const toggleFullscreen = useCallback(async () => {
     if (!document.fullscreenElement) {
       await containerRef.current?.requestFullscreen();
-      await lockLandscapeOnSmallScreens();
     } else {
       await document.exitFullscreen();
     }
-  }, [containerRef, lockLandscapeOnSmallScreens]);
+  }, [containerRef]);
 
   const exitFullscreen = useCallback(() => {
     if (document.fullscreenElement) {

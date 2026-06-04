@@ -30,9 +30,14 @@ export function ErrorState({
       className="absolute inset-0 flex items-center justify-center"
       role="alert"
     >
-      <div className="text-center">
-        <h1 className="text-2xl text-white mb-4">Error</h1>
-        <p className="text-gray-400 mb-6">{error}</p>
+      <div className="text-center max-w-xl px-6">
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-4">
+          Playback Error
+        </h1>
+        <p className="text-zinc-300 text-base md:text-lg mb-2">
+          We could not start this stream right now.
+        </p>
+        <p className="text-zinc-500 text-sm md:text-base mb-6">{error}</p>
         {showBackButton && (
           <button
             type="button"

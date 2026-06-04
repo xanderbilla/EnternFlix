@@ -18,7 +18,13 @@ export default function BannerContent({
 
   const handlePlayClick = () => {
     const type = contentType === "TV" ? "tv" : "movie";
-    navigateWithTransition(`/watch?id=${movieId}&type=${type}`);
+    const sourcePath =
+      typeof window === "undefined"
+        ? "/"
+        : `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    navigateWithTransition(
+      `/watch?id=${movieId}&type=${type}&from=${encodeURIComponent(sourcePath)}`,
+    );
   };
 
   return (

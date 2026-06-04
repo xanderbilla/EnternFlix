@@ -12,6 +12,16 @@ export type DialogType = "explore" | "info" | "cast" | "discover" | null;
 // prevents duplicate dialogs when several components share the same URL.
 let _restoredFromUrl = "";
 
+/**
+ * Call this before navigating away from a page that owns a dialog (e.g. from
+ * the watch page back handler). Clearing the guard allows the dialog to be
+ * correctly re-opened when the browser returns to a URL that carries a `title`
+ * or `discover` query param.
+ */
+export function resetDialogRestorationGuard(): void {
+  _restoredFromUrl = "";
+}
+
 export interface DialogState {
   type: DialogType;
   isOpen: boolean;

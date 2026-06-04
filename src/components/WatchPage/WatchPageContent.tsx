@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { resetDialogRestorationGuard } from "@/hooks/ui/useDialogManager";
 import { usePlayback } from "@/hooks/api/usePlayback";
 import { useKeyboardShortcuts } from "@/hooks/video/useKeyboardShortcuts";
 import { useSubtitles } from "@/hooks/video/useSubtitles";
@@ -17,6 +18,7 @@ import VideoHeader from "./VideoHeader";
 import SubtitleDisplay from "./SubtitleDisplay";
 import PlaybackControls from "./PlaybackControls";
 import PausedOverlay from "./PausedOverlay";
+import ReportIssueDialog from "./ReportIssueDialog";
 import { LoadingState, ErrorState } from "./VideoStates";
 import VideoPlayerStyles from "./VideoPlayerStyles";
 
@@ -34,11 +36,13 @@ export default function WatchPageContent({
   episodeId,
 }: WatchPageContentProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
 
   const { data: playbackData, isError } = usePlayback(
     contentType,
@@ -75,6 +79,20 @@ export default function WatchPageContent({
     currentTime,
   );
 
+  const sourcePath = searchParams.get("from");
+
+  const handleBack = () => {
+    if (sourcePath) {
+      const decodedPath = decodeURIComponent(sourcePath);
+      // Clear the restoration guard so the target page can re-open its dialog
+      // from the URL params (e.g. ?title=xxx) when it remounts.
+      resetDialogRestorationGuard();
+      router.push(decodedPath);
+      return;
+    }
+    router.back();
+  };
+
   useKeyboardShortcuts({
     isPlaying,
     volume,
@@ -88,7 +106,7 @@ export default function WatchPageContent({
       if (document.fullscreenElement) {
         exitFullscreen();
       } else {
-        router.back();
+        handleBack();
       }
     },
     onTriggerFeedback: triggerFeedback,
@@ -118,7 +136,7 @@ export default function WatchPageContent({
       {hasPlaybackError && errorMessage && (
         <ErrorState
           error={errorMessage}
-          onBack={() => router.back()}
+          onBack={handleBack}
           showBackButton={false}
         />
       )}
@@ -133,8 +151,8 @@ export default function WatchPageContent({
         showControls={showControls}
         forceVisible={hasPlaybackError}
         isFullscreen={isFullscreen}
-        onBack={() => router.back()}
-        onReport={() => logger.info("Report playback issue")}
+        onBack={handleBack}
+        onReport={() => setIsReportDialogOpen(true)}
       />
 
       {/* Video Player */}
@@ -180,6 +198,19 @@ export default function WatchPageContent({
           onTriggerFeedback={triggerFeedback}
         />
       )}
+
+      <ReportIssueDialog
+        isOpen={isReportDialogOpen}
+        onClose={() => setIsReportDialogOpen(false)}
+        onSubmit={(issueType) => {
+          logger.info("Playback issue submitted", {
+            issueType,
+            contentId,
+            contentType,
+          });
+          setIsReportDialogOpen(false);
+        }}
+      />
     </div>
   );
 }

@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.41.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.41.0
+Commit SHA: 78a66e68e8d591e491a041d62a13f5d135039bff
+
+Changes:
+- feat: replace MovieList with MovieGrid on home, movies, and TV pages (78a66e6)
+
 ## v0.40.0 - 2026-06-04
 
 Environment: dev

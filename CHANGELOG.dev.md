@@ -1,5 +1,15 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.39.0 - 2026-06-04
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.39.0
+Commit SHA: 637ec9d32bf6436589baf6bf01f0935426bc7946
+
+Changes:
+- fix: update recently added titles, fix navbar hydration FOUC, and optimize responsiveness (637ec9d)
+
 ## v0.38.0 - 2026-06-04
 
 Environment: dev

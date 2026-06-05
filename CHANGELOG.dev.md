@@ -1,5 +1,34 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.43.0 - 2026-06-05
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.43.0
+Commit SHA: 63f3e0ed6a5830b0ee44a4871f6419b1f45cad18
+
+Changes:
+- feat(ui): update MovieListSkeleton to landscape aspect-video cards (63f3e0e)
+- ci: retrigger pipeline after tag cleanup (c3d290f)
+- chore(release): dev v0.42.0 [skip ci] (6f705e9)
+- style: fix prettier formatting in MovieListRow (4ecda6b)
+- feat(ui): switch home to scrollable MovieList, fix hover card clipping (2ffda28)
+- feat(ui): landscape movie cards with backdrop, reduced grid spacing (de93795)
+- chore(release): dev v0.41.0 [skip ci] (20d6031)
+- feat: replace MovieList with MovieGrid on home, movies, and TV pages (78a66e6)
+- chore(release): dev v0.40.0 [skip ci] (de9b27a)
+- fix: prevent horizontal overflow in Banner component during slide-in animations (4099906)
+- chore(release): dev v0.39.0 [skip ci] (26ec1ad)
+- fix: update recently added titles, fix navbar hydration FOUC, and optimize responsiveness (637ec9d)
+- chore(release): dev v0.38.0 [skip ci] (01b8037)
+- refactor: update page titles and metadata formatting (d61b20f)
+- chore(release): dev v0.37.0 [skip ci] (1b03eb4)
+- feat(banner): set opacity to 50% for audio/replay buttons and content rating, rising to 90% for audio on hover (78519be)
+- chore(release): dev v0.36.0 [skip ci] (945e351)
+- feat(banner): reposition audio controls on mobile and make icons responsive (f610154)
+- chore(release): dev v0.35.0 [skip ci] (0dbb7b1)
+- feat(playback): implement touch double-tap for fullscreen toggle and restrict auto-rotation to fullscreen only (2d6bb8d)
+
 ## v0.42.0 - 2026-06-05
 
 Environment: dev

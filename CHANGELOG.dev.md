@@ -1,5 +1,17 @@
 # Changelog (dev)
 ## v0.2.0 - 2026-05-09
+## v0.42.0 - 2026-06-05
+
+Environment: dev
+Docker Image: 
+Git Tag: v0.42.0
+Commit SHA: 4ecda6b04bab37058b40b707349bd25b9515b0d6
+
+Changes:
+- style: fix prettier formatting in MovieListRow (4ecda6b)
+- feat(ui): switch home to scrollable MovieList, fix hover card clipping (2ffda28)
+- feat(ui): landscape movie cards with backdrop, reduced grid spacing (de93795)
+
 ## v0.41.0 - 2026-06-04
 
 Environment: dev

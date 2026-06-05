@@ -5,11 +5,12 @@ import { MovieListRowProps } from "@/types/components";
 
 function MovieListRow({ movies, scrollRef, onMovieClick }: MovieListRowProps) {
   return (
-    <div
-      id="movie-list"
-      ref={scrollRef}
-      className="flex gap-2 overflow-x-auto overflow-y-visible w-full h-full no-scrollbar scroll-smooth"
-    >
+    <div className="relative -mb-36">
+      <div
+        id="movie-list"
+        ref={scrollRef}
+        className="flex gap-2 overflow-x-auto overflow-y-visible w-full h-full no-scrollbar scroll-smooth pb-36"
+      >
       {movies.map((movie: Movie, index: number) => (
         <div
           key={movie.id}
@@ -26,6 +27,7 @@ function MovieListRow({ movies, scrollRef, onMovieClick }: MovieListRowProps) {
           />
         </div>
       ))}
+      </div>
     </div>
   );
 }

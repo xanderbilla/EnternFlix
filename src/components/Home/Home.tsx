@@ -1,11 +1,11 @@
 import PageLayout from "@/components/Layout/PageLayout";
-import MovieGridSection from "@/components/MovieList/MovieGridSection";
+import MovieList from "@/components/MovieList/MovieList";
 
 const Home = () => {
   return (
     <PageLayout showBanner={true} bannerVariant="home">
-      <MovieGridSection title="Recently Added" hookName="trending" />
-      <MovieGridSection title="Latest Release" hookName="latestRelease" />
+      <MovieList title="Recently Added" hookName="trending" />
+      <MovieList title="Latest Release" hookName="latestRelease" />
     </PageLayout>
   );
 };

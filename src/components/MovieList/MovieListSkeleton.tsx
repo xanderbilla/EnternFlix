@@ -21,7 +21,7 @@ export default function MovieListSkeleton({ title }: MovieListSkeletonProps) {
         {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
           <div
             key={index}
-            className={`flex-none w-[130px] sm:w-[160px] md:w-[200px] lg:w-[240px] aspect-[2/3] rounded-md bg-zinc-800/40 animate-pulse${
+            className={`flex-none w-[200px] sm:w-[240px] md:w-[280px] lg:w-[320px] aspect-video rounded-md bg-zinc-800/40 animate-pulse${
               index === 0 ? " ml-3 sm:ml-4 md:ml-12" : ""
             }${index === SKELETON_COUNT - 1 ? " mr-3 sm:mr-4 md:mr-12" : ""}`}
           />

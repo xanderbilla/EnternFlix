@@ -104,7 +104,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
   return (
     <div
       ref={cardRef}
-      className="relative w-full aspect-[2/3] opacity-0 scale-95 animate-fadeInScale transition-all duration-300 ease-in-out"
+      className="relative w-full aspect-video opacity-0 scale-95 animate-fadeInScale transition-all duration-300 ease-in-out"
       style={{ "--card-delay": `${index * 50}ms` } as React.CSSProperties}
     >
       <button
@@ -113,7 +113,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
         aria-label={`View details for ${data?.title || "this title"}`}
       >
         <RemoteImage
-          className="object-contain transition duration-300 shadow-xl w-full h-full rounded-md
+          className="object-cover transition duration-300 shadow-xl w-full h-full rounded-md
             md:group-hover/item:opacity-0 delay-300"
           fill
           sizes="(max-width: 640px) 150px, (max-width: 1024px) 180px, 200px"

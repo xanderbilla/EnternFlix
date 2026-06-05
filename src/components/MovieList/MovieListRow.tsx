@@ -13,7 +13,7 @@ function MovieListRow({ movies, scrollRef, onMovieClick }: MovieListRowProps) {
       {movies.map((movie: Movie, index: number) => (
         <div
           key={movie.id}
-          className={`group/item flex-none w-[130px] sm:w-[160px] md:w-[200px] lg:w-[240px] relative z-0 hover:z-50 ${
+          className={`group/item flex-none w-[200px] sm:w-[240px] md:w-[280px] lg:w-[320px] relative z-0 hover:z-50 ${
             index === 0 ? "ml-3 sm:ml-4 md:ml-12" : ""
           } ${index === movies.length - 1 ? "mr-3 sm:mr-4 md:mr-12" : ""}`}
         >

@@ -23,12 +23,12 @@ export default function MovieGridSkeleton({
 
   return (
     <div
-      className={`pb-16 sm:pb-24 md:pb-32 ${fullWidth ? "px-0" : "px-4 sm:px-8 md:px-12 lg:px-16"}`}
+      className={`pb-6 sm:pb-8 md:pb-10 ${fullWidth ? "px-0" : "px-4 sm:px-8 md:px-12 lg:px-16"}`}
       role="status"
       aria-label="Loading content"
     >
       <div
-        className={`grid ${gridCols} gap-x-2 gap-y-6 sm:gap-x-3 sm:gap-y-8 md:gap-y-16 lg:gap-y-16`}
+        className={`grid ${gridCols} gap-x-2 gap-y-3 sm:gap-x-3 sm:gap-y-4 md:gap-y-5 lg:gap-y-5`}
       >
         {Array.from({ length: SKELETON_COUNT }).map((_, index) => (
           <div

@@ -114,12 +114,12 @@ function MovieGrid({
 
   return (
     <div
-      className={`pb-16 sm:pb-24 md:pb-32 ${
+      className={`pb-6 sm:pb-8 md:pb-10 ${
         fullWidth ? "px-0" : "px-4 sm:px-8 md:px-12 lg:px-16"
       }`}
     >
       <div
-        className={`grid ${gridCols} gap-x-2 gap-y-6 sm:gap-x-3 sm:gap-y-8 md:gap-y-16 lg:gap-y-16`}
+        className={`grid ${gridCols} gap-x-2 gap-y-3 sm:gap-x-3 sm:gap-y-4 md:gap-y-5 lg:gap-y-5`}
       >
         {movies.map((movie, index) => (
           <MovieCardItem
